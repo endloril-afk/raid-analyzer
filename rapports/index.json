@@ -1,0 +1,44 @@
+[
+ {
+  "code": "DQL8tpg3bGjKT7Rq",
+  "title": "The Venomous Abyss",
+  "zone": "The Venomous Abyss",
+  "raid_date": 1792005216467,
+  "generated": 1792141014857,
+  "pulls": 21,
+  "note": 8.9,
+  "bosses": [
+   {
+    "name": "Nek'zali the Soulcoiler",
+    "difficulty": "Mythique",
+    "kills": 1,
+    "best_pct": 0,
+    "pulls": 1
+   },
+   {
+    "name": "The Lost Explorers",
+    "difficulty": "Mythique",
+    "kills": 1,
+    "best_pct": 0,
+    "pulls": 4
+   },
+   {
+    "name": "Entombed Sentinels",
+    "difficulty": "Mythique",
+    "kills": 1,
+    "best_pct": 0,
+    "pulls": 14
+   },
+   {
+    "name": "Vashnik the Malignant",
+    "difficulty": "Mythique",
+    "kills": 0,
+    "best_pct": 70.3,
+    "pulls": 2
+   }
+  ],
+  "complete": false,
+  "auto": true,
+  "file": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.html"
+ }
+]
