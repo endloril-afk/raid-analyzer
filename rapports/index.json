@@ -7,9 +7,9 @@
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792155900714,
+  "generated": 1792156959307,
   "pulls": 21,
-  "note": 8.9,
+  "note": 7.9,
   "bosses": [
    {
     "name": "Nek'zali the Soulcoiler",
@@ -24,140 +24,140 @@
       "name": "Höjö",
       "class": "Warrior",
       "role": "dps",
-      "note": 6.4,
+      "note": 6.8,
       "pulls": 1
      },
      {
       "name": "Endloril",
       "class": "Druid",
       "role": "healer",
-      "note": 6.6,
+      "note": 8,
       "pulls": 1
      },
      {
       "name": "Luluisback",
       "class": "Hunter",
       "role": "dps",
-      "note": 7.3,
+      "note": 7.7,
       "pulls": 1
      },
      {
       "name": "Drtyrran",
       "class": "Shaman",
       "role": "dps",
-      "note": 7.6,
+      "note": 7.8,
       "pulls": 1
      },
      {
       "name": "Darlkira",
       "class": "DemonHunter",
       "role": "dps",
-      "note": 8,
+      "note": 7.4,
       "pulls": 1
      },
      {
       "name": "Lücîøle",
       "class": "Rogue",
       "role": "dps",
-      "note": 8.1,
+      "note": 6.8,
       "pulls": 1
      },
      {
       "name": "Harmoniaque",
       "class": "Priest",
       "role": "dps",
-      "note": 8.1,
+      "note": 8,
       "pulls": 1
      },
      {
       "name": "Jeangrip",
       "class": "DeathKnight",
       "role": "dps",
-      "note": 8.4,
+      "note": 5.8,
       "pulls": 1
      },
      {
       "name": "Toufoux",
       "class": "Hunter",
       "role": "dps",
-      "note": 8.5,
+      "note": 7.9,
       "pulls": 1
      },
      {
       "name": "Lauenat",
       "class": "Druid",
       "role": "dps",
-      "note": 8.7,
+      "note": 8.9,
       "pulls": 1
      },
      {
       "name": "Yörr",
       "class": "Hunter",
       "role": "dps",
-      "note": 8.7,
+      "note": 8.6,
       "pulls": 1
      },
      {
       "name": "Tyry",
       "class": "Priest",
       "role": "dps",
-      "note": 8.8,
+      "note": 8.6,
       "pulls": 1
      },
      {
       "name": "Aelminster",
       "class": "Mage",
       "role": "dps",
-      "note": 9,
+      "note": 9.3,
       "pulls": 1
      },
      {
       "name": "Shrakle",
       "class": "Evoker",
       "role": "healer",
-      "note": 9.4,
+      "note": 6.2,
       "pulls": 1
      },
      {
       "name": "Dyâlise",
       "class": "Paladin",
       "role": "dps",
-      "note": 9.4,
+      "note": 8.9,
       "pulls": 1
      },
      {
       "name": "Môy",
       "class": "Paladin",
       "role": "healer",
-      "note": 10,
+      "note": 6.1,
       "pulls": 1
      },
      {
       "name": "Hazizoul",
       "class": "Priest",
       "role": "healer",
-      "note": 10,
+      "note": 6.7,
       "pulls": 1
      },
      {
       "name": "Snøz",
       "class": "Monk",
       "role": "tank",
-      "note": 10,
+      "note": 4.6,
       "pulls": 1
      },
      {
       "name": "Dèàthstrôke",
       "class": "Paladin",
       "role": "dps",
-      "note": 10,
+      "note": 9.7,
       "pulls": 1
      },
      {
       "name": "Pattopaprika",
       "class": "DemonHunter",
       "role": "tank",
-      "note": 10,
+      "note": 6.1,
       "pulls": 1
      }
     ]
@@ -175,140 +175,140 @@
       "name": "Lauenat",
       "class": "Druid",
       "role": "dps",
-      "note": 4.5,
+      "note": 7.8,
       "pulls": 12
      },
      {
       "name": "Harmoniaque",
       "class": "Priest",
       "role": "dps",
-      "note": 4.6,
+      "note": 7.2,
       "pulls": 12
      },
      {
       "name": "Lücîøle",
       "class": "Rogue",
       "role": "dps",
-      "note": 5.9,
+      "note": 7.2,
       "pulls": 12
      },
      {
       "name": "Dèàthstrôke",
       "class": "Paladin",
       "role": "dps",
-      "note": 7.4,
+      "note": 7.8,
       "pulls": 12
      },
      {
       "name": "Endloril",
       "class": "Druid",
       "role": "healer",
-      "note": 8.6,
+      "note": 7.9,
       "pulls": 12
      },
      {
       "name": "Shrakle",
       "class": "Evoker",
       "role": "healer",
-      "note": 8.9,
+      "note": 6.9,
       "pulls": 12
      },
      {
       "name": "Hazizoul",
       "class": "Priest",
       "role": "healer",
-      "note": 9,
+      "note": 6.9,
       "pulls": 12
      },
      {
       "name": "Höjö",
       "class": "Warrior",
       "role": "dps",
-      "note": 9.1,
+      "note": 8.4,
       "pulls": 12
      },
      {
       "name": "Drtyrran",
       "class": "Shaman",
       "role": "dps",
-      "note": 9.1,
+      "note": 8.4,
       "pulls": 12
      },
      {
       "name": "Tyry",
       "class": "Priest",
       "role": "dps",
-      "note": 9.1,
+      "note": 8.1,
       "pulls": 12
      },
      {
       "name": "Aelminster",
       "class": "Mage",
       "role": "dps",
-      "note": 9.2,
+      "note": 8.5,
       "pulls": 12
      },
      {
       "name": "Dyâlise",
       "class": "Paladin",
       "role": "dps",
-      "note": 9.2,
+      "note": 9.1,
       "pulls": 12
      },
      {
       "name": "Snøz",
       "class": "Monk",
       "role": "tank",
-      "note": 9.2,
+      "note": 4.3,
       "pulls": 12
      },
      {
       "name": "Môy",
       "class": "Paladin",
       "role": "healer",
-      "note": 9.4,
+      "note": 7.1,
       "pulls": 12
      },
      {
       "name": "Pattopaprika",
       "class": "DemonHunter",
       "role": "tank",
-      "note": 9.4,
+      "note": 7.1,
       "pulls": 12
      },
      {
       "name": "Jeangrip",
       "class": "DeathKnight",
       "role": "dps",
-      "note": 9.4,
+      "note": 8.6,
       "pulls": 12
      },
      {
       "name": "Darlkira",
       "class": "DemonHunter",
       "role": "dps",
-      "note": 9.4,
+      "note": 9.2,
       "pulls": 12
      },
      {
       "name": "Luluisback",
       "class": "Hunter",
       "role": "dps",
-      "note": 10,
+      "note": 9.7,
       "pulls": 12
      },
      {
       "name": "Toufoux",
       "class": "Hunter",
       "role": "dps",
-      "note": 10,
+      "note": 9.4,
       "pulls": 12
      },
      {
       "name": "Yörr",
       "class": "Hunter",
       "role": "dps",
-      "note": 10,
+      "note": 9.1,
       "pulls": 12
      }
     ]
@@ -326,140 +326,140 @@
       "name": "Toufoux",
       "class": "Hunter",
       "role": "dps",
-      "note": 7.5,
+      "note": 5.7,
       "pulls": 2
      },
      {
       "name": "Drtyrran",
       "class": "Shaman",
       "role": "dps",
-      "note": 7.5,
+      "note": 6,
       "pulls": 2
      },
      {
       "name": "Jeangrip",
       "class": "DeathKnight",
       "role": "dps",
-      "note": 8.3,
+      "note": 5.7,
       "pulls": 2
      },
      {
       "name": "Dèàthstrôke",
       "class": "Paladin",
       "role": "dps",
-      "note": 10,
+      "note": 7.3,
       "pulls": 2
      },
      {
       "name": "Pattopaprika",
       "class": "DemonHunter",
       "role": "tank",
-      "note": 10,
+      "note": 6.1,
       "pulls": 2
      },
      {
       "name": "Harmoniaque",
       "class": "Priest",
       "role": "dps",
-      "note": 10,
+      "note": 7.3,
       "pulls": 2
      },
      {
       "name": "Tyry",
       "class": "Priest",
       "role": "dps",
-      "note": 10,
+      "note": 7,
       "pulls": 2
      },
      {
       "name": "Luluisback",
       "class": "Hunter",
       "role": "dps",
-      "note": 10,
+      "note": 8.2,
       "pulls": 2
      },
      {
       "name": "Höjö",
       "class": "Warrior",
       "role": "dps",
-      "note": 10,
+      "note": 7.9,
       "pulls": 2
      },
      {
       "name": "Hazizoul",
       "class": "Priest",
       "role": "healer",
-      "note": 10,
+      "note": 8.5,
       "pulls": 2
      },
      {
       "name": "Shrakle",
       "class": "Evoker",
       "role": "healer",
-      "note": 10,
+      "note": 6.1,
       "pulls": 2
      },
      {
       "name": "Snøz",
       "class": "Monk",
       "role": "tank",
-      "note": 10,
+      "note": 5.5,
       "pulls": 2
      },
      {
       "name": "Môy",
       "class": "Paladin",
       "role": "healer",
-      "note": 10,
+      "note": 6.4,
       "pulls": 2
      },
      {
       "name": "Endloril",
       "class": "Druid",
       "role": "healer",
-      "note": 10,
+      "note": 8.5,
       "pulls": 2
      },
      {
       "name": "Lauenat",
       "class": "Druid",
       "role": "dps",
-      "note": 10,
+      "note": 9.4,
       "pulls": 2
      },
      {
       "name": "Lücîøle",
       "class": "Rogue",
       "role": "dps",
-      "note": 10,
+      "note": 7.3,
       "pulls": 2
      },
      {
       "name": "Darlkira",
       "class": "DemonHunter",
       "role": "dps",
-      "note": 10,
+      "note": 9.4,
       "pulls": 2
      },
      {
       "name": "Yörr",
       "class": "Hunter",
       "role": "dps",
-      "note": 10,
+      "note": 7.6,
       "pulls": 2
      },
      {
       "name": "Aelminster",
       "class": "Mage",
       "role": "dps",
-      "note": 10,
+      "note": 8.2,
       "pulls": 2
      },
      {
       "name": "Dyâlise",
       "class": "Paladin",
       "role": "dps",
-      "note": 10,
+      "note": 8.2,
       "pulls": 2
      }
     ]
@@ -477,140 +477,140 @@
       "name": "Höjö",
       "class": "Warrior",
       "role": "dps",
-      "note": 5,
+      "note": 6.2,
       "pulls": 4
      },
      {
       "name": "Pattopaprika",
       "class": "DemonHunter",
       "role": "tank",
-      "note": 7.6,
+      "note": 6.3,
       "pulls": 4
      },
      {
       "name": "Lücîøle",
       "class": "Rogue",
       "role": "dps",
-      "note": 10,
+      "note": 7.3,
       "pulls": 4
      },
      {
       "name": "Jeangrip",
       "class": "DeathKnight",
       "role": "dps",
-      "note": 10,
+      "note": 7.9,
       "pulls": 4
      },
      {
       "name": "Toufoux",
       "class": "Hunter",
       "role": "dps",
-      "note": 10,
+      "note": 8.2,
       "pulls": 4
      },
      {
       "name": "Tyry",
       "class": "Priest",
       "role": "dps",
-      "note": 10,
+      "note": 8.8,
       "pulls": 4
      },
      {
       "name": "Luluisback",
       "class": "Hunter",
       "role": "dps",
-      "note": 10,
+      "note": 9.1,
       "pulls": 4
      },
      {
       "name": "Hazizoul",
       "class": "Priest",
       "role": "healer",
-      "note": 10,
+      "note": 8.2,
       "pulls": 4
      },
      {
       "name": "Shrakle",
       "class": "Evoker",
       "role": "healer",
-      "note": 10,
+      "note": 7.6,
       "pulls": 4
      },
      {
       "name": "Môy",
       "class": "Paladin",
       "role": "healer",
-      "note": 10,
+      "note": 8.8,
       "pulls": 4
      },
      {
       "name": "Endloril",
       "class": "Druid",
       "role": "healer",
-      "note": 10,
+      "note": 9.4,
       "pulls": 4
      },
      {
       "name": "Lauenat",
       "class": "Druid",
       "role": "dps",
-      "note": 10,
+      "note": 9.4,
       "pulls": 4
      },
      {
       "name": "Dèàthstrôke",
       "class": "Paladin",
       "role": "dps",
-      "note": 10,
+      "note": 9.4,
       "pulls": 4
      },
      {
       "name": "Drtyrran",
       "class": "Shaman",
       "role": "dps",
-      "note": 10,
+      "note": 9.4,
       "pulls": 4
      },
      {
       "name": "Yörr",
       "class": "Hunter",
       "role": "dps",
-      "note": 10,
+      "note": 9.7,
       "pulls": 4
      },
      {
       "name": "Aelminster",
       "class": "Mage",
       "role": "dps",
-      "note": 10,
+      "note": 9.4,
       "pulls": 4
      },
      {
       "name": "Dyâlise",
       "class": "Paladin",
       "role": "dps",
-      "note": 10,
+      "note": 9.1,
       "pulls": 4
      },
      {
       "name": "Harmoniaque",
       "class": "Priest",
       "role": "dps",
-      "note": 10,
+      "note": 8.2,
       "pulls": 4
      },
      {
       "name": "Snøz",
       "class": "Monk",
       "role": "tank",
-      "note": 10,
+      "note": 4.9,
       "pulls": 4
      },
      {
       "name": "Darlkira",
       "class": "DemonHunter",
       "role": "dps",
-      "note": 10,
+      "note": 9.7,
       "pulls": 4
      }
     ]
@@ -682,7 +682,7 @@
     "class": "Warrior",
     "role": "dps",
     "sub": "melee",
-    "note": 8.2,
+    "note": 7.8,
     "pulls": 19
    },
    {
@@ -690,7 +690,7 @@
     "class": "Druid",
     "role": "healer",
     "sub": null,
-    "note": 8.9,
+    "note": 8.3,
     "pulls": 19
    },
    {
@@ -698,7 +698,7 @@
     "class": "Hunter",
     "role": "dps",
     "sub": "melee",
-    "note": 9.9,
+    "note": 9.3,
     "pulls": 19
    },
    {
@@ -706,7 +706,7 @@
     "class": "Shaman",
     "role": "dps",
     "sub": "ranged",
-    "note": 9,
+    "note": 8.3,
     "pulls": 19
    },
    {
@@ -714,7 +714,7 @@
     "class": "DemonHunter",
     "role": "dps",
     "sub": "ranged",
-    "note": 9.5,
+    "note": 9.2,
     "pulls": 19
    },
    {
@@ -722,7 +722,7 @@
     "class": "Rogue",
     "role": "dps",
     "sub": "melee",
-    "note": 7.3,
+    "note": 7.2,
     "pulls": 19
    },
    {
@@ -730,7 +730,7 @@
     "class": "Priest",
     "role": "dps",
     "sub": "ranged",
-    "note": 6.5,
+    "note": 7.5,
     "pulls": 19
    },
    {
@@ -738,7 +738,7 @@
     "class": "DeathKnight",
     "role": "dps",
     "sub": "melee",
-    "note": 9.4,
+    "note": 8,
     "pulls": 19
    },
    {
@@ -746,7 +746,7 @@
     "class": "Hunter",
     "role": "dps",
     "sub": "ranged",
-    "note": 9.7,
+    "note": 8.7,
     "pulls": 19
    },
    {
@@ -754,7 +754,7 @@
     "class": "Druid",
     "role": "dps",
     "sub": "ranged",
-    "note": 6.5,
+    "note": 8.4,
     "pulls": 19
    },
    {
@@ -762,7 +762,7 @@
     "class": "Hunter",
     "role": "dps",
     "sub": "ranged",
-    "note": 9.9,
+    "note": 9,
     "pulls": 19
    },
    {
@@ -770,7 +770,7 @@
     "class": "Priest",
     "role": "dps",
     "sub": "ranged",
-    "note": 9.4,
+    "note": 8.2,
     "pulls": 19
    },
    {
@@ -778,7 +778,7 @@
     "class": "Mage",
     "role": "dps",
     "sub": "ranged",
-    "note": 9.4,
+    "note": 8.7,
     "pulls": 19
    },
    {
@@ -786,7 +786,7 @@
     "class": "Evoker",
     "role": "healer",
     "sub": null,
-    "note": 9.3,
+    "note": 6.9,
     "pulls": 19
    },
    {
@@ -794,7 +794,7 @@
     "class": "Paladin",
     "role": "dps",
     "sub": "melee",
-    "note": 9.5,
+    "note": 9,
     "pulls": 19
    },
    {
@@ -802,7 +802,7 @@
     "class": "Paladin",
     "role": "healer",
     "sub": null,
-    "note": 9.6,
+    "note": 7.3,
     "pulls": 19
    },
    {
@@ -810,7 +810,7 @@
     "class": "Priest",
     "role": "healer",
     "sub": null,
-    "note": 9.4,
+    "note": 7.3,
     "pulls": 19
    },
    {
@@ -818,7 +818,7 @@
     "class": "Monk",
     "role": "tank",
     "sub": null,
-    "note": 9.5,
+    "note": 4.6,
     "pulls": 19
    },
    {
@@ -826,7 +826,7 @@
     "class": "Paladin",
     "role": "dps",
     "sub": "melee",
-    "note": 8.4,
+    "note": 8.2,
     "pulls": 19
    },
    {
@@ -834,12 +834,13 @@
     "class": "DemonHunter",
     "role": "tank",
     "sub": null,
-    "note": 9.1,
+    "note": 6.8,
     "pulls": 19
    }
   ],
   "complete": true,
   "auto": false,
-  "file": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.html"
+  "file": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.html",
+  "json": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.json"
  }
 ]
