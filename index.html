@@ -1,0 +1,30 @@
+<!doctype html><html lang="fr" data-site-version="1"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Raid Analyzer — rapports de raid</title>
+<style>:root{--bg:#f5f4f0;--card:#fff;--fg:#1c1c1e;--muted:#6e6e73;--line:#e5e3dd;--acc:#2f6f5e;--good:#2e7d32;--warn:#a15c00;--bad:#c0392b}
+@media (prefers-color-scheme:dark){:root{--bg:#141416;--card:#1e1e21;--fg:#eceae4;--muted:#9a9a9f;--line:#2e2e33;--acc:#5fb39a;--good:#5cb85c;--warn:#e0a03c;--bad:#e2685a}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}.wrap{max-width:1100px;margin:0 auto;padding:28px 16px 60px}
+h1{margin:0 0 4px;font-size:28px}.muted{color:var(--muted)}nav{display:flex;gap:6px;margin:18px 0 22px;padding:6px;border-radius:14px;background:color-mix(in srgb,var(--line) 45%,transparent);width:max-content;max-width:100%}
+nav a{padding:8px 16px;border-radius:10px;color:var(--fg);text-decoration:none}nav a.on{background:var(--card);font-weight:600;box-shadow:0 1px 3px #0002}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}.card{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;color:inherit;text-decoration:none;transition:transform .1s,box-shadow .1s}
+a.card:hover{transform:translateY(-2px);box-shadow:0 6px 18px #0001}.card h2{margin:0;font-size:18px}.date{font-weight:600;color:var(--acc);font-size:13px}.date::first-letter{text-transform:uppercase}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.chip{font-size:12px;padding:2px 9px;border-radius:999px;background:color-mix(in srgb,var(--line) 70%,transparent)}.chip.good{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good)}.chip.warn{background:color-mix(in srgb,var(--warn) 15%,transparent);color:var(--warn)}
+.note{float:right;font-size:22px;font-weight:700}.sec{max-width:760px}.sec h3{margin:22px 0 6px}.sec li{margin:4px 0}</style></head>
+<body><div class="wrap"><h1>Rapports de raid</h1><div class="muted">Analyses Warcraft Logs générées par Raid Analyzer et mises à jour automatiquement.</div>
+<nav><a href="#/" data-r="/">Soirées</a><a href="#/methode" data-r="/methode">Méthode</a></nav><main id="app"><p class="muted">Chargement…</p></main></div>
+<script>
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const day=t=>t?new Date(t).toLocaleDateString("fr-BE",{weekday:"long",day:"numeric",month:"long",year:"numeric"}):"?";
+let data=null;
+async function load(){if(data)return data;try{const r=await fetch("rapports/index.json?"+Date.now());data=r.ok?await r.json():[]}catch(e){data=[]}return data}
+const METHODE=`<div class="sec"><h3>Ce qui est analysé</h3><p>Chaque soirée est analysée en entier : tous les boss et tous les pulls. La note de la soirée est la moyenne de tous les pulls de chaque joueur.</p>
+<h3>Comment un joueur est noté</h3><ul><li>Chaque joueur est comparé à la moyenne du raid sur le même pull, mécanique par mécanique.</li><li>Un écart compte s'il est d'au moins 1,5× la moyenne, sur au moins 30 % des pulls, et pèse au moins 1 % des dégâts subis par le joueur.</li><li>Les pénalités sont plafonnées à 2,5 points par mécanique ; la note va de 1 à 10.</li><li>Morts : au moins 2× le raid sur 3 pulls (tanks : 1,25× sur 2 pulls).</li></ul>
+<h3>Ce qui est gardé d'un wipe</h3><p>Un wipe est analysé jusqu'à l'événement qui le cause (2e mort, tank mort non relevé, ou 1er fail majeur), plus le fail suivant. Ce qui arrive après n'est reproché à personne.</p>
+<h3>Healers et stuff</h3><p>Healers et stuff sont comparés aux meilleurs logs mondiaux de la même spé, sur le même boss et la même difficulté. Note des healers : 60 % gameplay comparé au top, 40 % respect de la strat.</p>
+<h3>Mise à jour</h3><p>Pendant et après la soirée, les rapports sont complétés automatiquement : nouveaux pulls et données manquantes (limite de l'API Warcraft Logs). Un rapport est clôturé quand tout est chargé et qu'aucun pull n'a été ajouté depuis 1 h.</p></div>`;
+async function route(){const r=location.hash.replace(/^#/,"")||"/";document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("on",a.dataset.r===r));const app=document.getElementById("app");
+if(r==="/methode"){app.innerHTML=METHODE;return}
+const list=await load();if(!list.length){app.innerHTML='<p class="muted">Aucun rapport publié pour l\'instant.</p>';return}
+app.innerHTML='<div class="grid">'+list.map(x=>{const k=(x.bosses||[]).filter(b=>b.kills).length;return '<a class="card" href="'+esc(x.file)+'">'+(x.note!=null?'<span class="note">'+x.note+'</span>':'')+'<div class="date">'+esc(day(x.raid_date))+'</div><h2>'+esc(x.title)+'</h2><div class="muted">'+esc(x.zone||"")+' · '+(x.bosses||[]).length+' boss · '+(x.pulls??"?")+' pulls</div><div class="chips">'+(x.bosses||[]).map(b=>'<span class="chip '+(b.kills?"good":"warn")+'">'+esc(b.name)+(b.kills?" ✓":" "+(b.best_pct??"?")+" %")+'</span>').join("")+(x.auto?'<span class="chip">mise à jour en cours</span>':'')+'</div></a>'}).join("")+'</div><p class="muted" style="margin-top:18px">'+k0(list)+'</p>';}
+const k0=l=>l.length+" soirée(s) publiée(s).";
+addEventListener("hashchange",route);route();
+</script></body></html>
