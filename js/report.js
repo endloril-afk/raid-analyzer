@@ -1,0 +1,105 @@
+/* Raid Analyzer : page d'un rapport (une soirée), rapports/Raid_*.html.
+   Données : window.RAID_EXPORT (un RaidExport, docs/raid-analyzer.d.ts), chargé par le fichier .js du même nom que la page. */
+const X = window.RAID_EXPORT;
+
+/* ---------- Navigation : menu du haut identique à l'accueil (tous ses liens y renvoient) ; menu latéral : un bouton par boss tenté ---------- */
+const tried = () => X.roster.filter(r => r.tried).map(r => X.bosses.find(b => b.key === r.key)).filter(Boolean);
+const nav = () => topNav(ROOT + "index.html");
+function side() {
+  return `<aside class="snav">${tried().map(b => `<button data-bossgo="${b.key}"><i class="d ${b.summary.kills ? "kill" : "best"}"></i>${esc(b.name)}</button>`).join("")}</aside>`;
+}
+/* Boss ouvert par #auto (clic sur l'encadré du raid à l'accueil) : le seul boss non vaincu s'il n'y en a qu'un, sinon le boss tenté le plus tard.
+   L'export ne date pas les pulls : « le plus tard » = plus grand numéro de combat Warcraft Logs (fight=N) des liens des morts, à défaut l'ordre de X.bosses (première tentative). */
+function defaultBoss() {
+  const bs = tried(), alive = bs.filter(b => !b.summary.kills);
+  if (alive.length === 1) return alive[0].key;
+  const fight = b => Math.max(-1, ...b.views.flatMap(v => v.raid?.extras?.deaths || []).map(d => +(/fight=(\d+)/.exec(d.link || "")?.[1] ?? -1)));
+  return bs.map(b => ({ k: b.key, f: fight(b), i: X.bosses.indexOf(b) })).sort((a, c) => c.f - a.f || c.i - a.i)[0]?.k ?? "ov";
+}
+
+/* ---------- Soirée ---------- */
+/* Note d'un boss sur cette soirée = history[].avg_score de l'entrée de ce rapport */
+const bossNote = b => b.history.find(e => e.code === X.report.code)?.avg_score ?? null;
+/* Note du raid = moyenne des notes des boss, pondérée par le nombre de pulls */
+function raidNote() {
+  const h = X.bosses.flatMap(b => b.history.filter(e => e.code === X.report.code));
+  const pulls = h.reduce((n, e) => n + e.pulls, 0);
+  return pulls ? h.reduce((n, e) => n + e.avg_score * e.pulls, 0) / pulls : null;
+}
+const raidName = () => X.bosses[0]?.views[0]?.raid.raid ?? X.report.zone;
+/* Une carte par boss du raid (ordre de `roster`) ; seules celles des boss vaincus ou tentés sont affichées. */
+function bossTile(b) {
+  const s = b.summary, n = bossNote(b), body = s.kills ? '<p class="bf">Boss vaincu cette soirée.</p>'
+    : `<div class="big">${fr(s.best_pct)} %</div><p class="bf">PV restants au plus bas</p>`;
+  return `<article class="btile" data-bossgo="${b.key}" tabindex="0">${ban(TILE_HUE, initials(b.name), bossImg(b.name))}<div class="bt"><h3>${esc(b.name)}</h3>${s.kills ? st("kill") : '<span class="st best"><i>◎</i>Meilleure tentative</span>'}<hr>${body}<p class="bf small">${s.pulls} pull${s.pulls > 1 ? "s" : ""}${n != null ? ` · note ${fr(n)}/10` : ""}</p></div></article>`;
+}
+const offTile = name => `<article class="btile off" hidden>${ban(TILE_HUE, initials(name), bossImg(name))}<div class="bt"><h3>${esc(name)}</h3>${st("none")}<hr><p class="bf">Pas tenté cette soirée.</p></div></article>`;
+function overview() {
+  const note = raidNote(), nc = note == null ? "" : lvl(note), raid = raidName();
+  const diffs = [...new Set(X.bosses.map(b => b.difficulty))].sort((a, b) => Object.keys(DIFF).indexOf(a) - Object.keys(DIFF).indexOf(b));
+  const killed = X.bosses.filter(b => b.summary.kills).length, pulls = X.bosses.reduce((n, b) => n + b.summary.pulls, 0);
+  return `<div class="boss" data-boss="ov" hidden><div class="panel"><section class="shero">${ban(TILE_HUE, "", raidImg(raid))}
+    <div class="hl"><div class="hd">${ico("cal")}${dateFr(X.report.raid_date)}</div><h2 class="htitle">${titleDiff(raid, diffs)}</h2><div class="hs">${SKULL("hskull")}${killed} boss vaincu${killed > 1 ? "s" : ""} <b>·</b> ${pulls} pulls</div></div>
+    <div class="hr"><div class="hk">Note du raid</div>${note == null ? '<div class="hn">–</div>' : `<div class="hn ${nc}">${fr(note)}<span>/10</span></div><div class="bar10 ${nc}"><i style="width:${note * 10}%"></i></div><div class="hv ${nc}">${ico("trophy")}${verdict(note)}</div>`}</div></section>
+    <section class="inner"><div class="sechead"><h2>${SKULL()}Progression des boss</h2><div class="leg"><span><i class="d kill"></i>Vaincu</span><span><i class="d best"></i>Meilleure tentative</span></div></div>
+    <div class="bgrid">${X.roster.map(r => r.tried ? bossTile(X.bosses.find(b => b.key === r.key)) : offTile(r.name)).join("")}</div></section></div></div>`;
+}
+
+/* ---------- Membres (onglet « Membres » de chaque fiche de boss, colonne du boss affiché en gras) ----------
+   1) note du fight de chaque joueur sur chaque boss, tous les pulls (summary.players) ; 2) sur les kills seulement (summary.kill) ;
+   3) enchantements manquants sur la soirée (stuff). Une note se clique : elle ouvre la fiche du joueur dans l'onglet Gameplay du boss. */
+const ngo = (v, name, role, key, view, title) => v == null ? { h: "–", v: "" } : { h: `<button class="ngo" data-goplayer="${esc(name)}" data-gorole="${esc(role)}" data-goboss="${esc(key)}"${view ? ` data-goview="${esc(view)}"` : ""} title="${esc(title)}">${chip(fr(v), noteCls(v))}</button>`, v };
+const catsTitle = p => p && p.categories && p.categories.length ? p.categories.map(c => `${c.label} ${fr(c.score)}/10${(c.weight ?? 1) !== 1 ? ` (poids ${String(c.weight).replace(".", ",")})` : ""}`).join(" · ") + " · clique pour le détail" : "Clique pour le détail";
+function members(cur) {
+  const bs = tried(), P = {};
+  bs.forEach((b, i) => b.summary.players.forEach(p => {
+    const m = P[p.player] ||= { name: p.player, cls: p.class, role: p.role, sub: p.sub, vals: [], rows: [], pulls: 0, sum: 0 };
+    m.vals[i] = p.score; m.rows[i] = p; m.pulls += p.pulls; m.sum += p.score * p.pulls;
+  }));
+  const list = Object.values(P).sort((a, b) => b.sum / b.pulls - a.sum / a.pulls);
+  const cols = [{ l: "Joueur" }, { l: "Rôle" }, ...bs.map(b => ({ l: `${b.key === cur ? `<b>${esc(b.name)}</b>` : esc(b.name)}<br><small class="muted">${b.summary.pulls} pulls</small>`, num: 1 })), { l: "Soirée", num: 1 }, { l: "Pulls", num: 1 }];
+  const rows = list.map(m => [{ h: pl(m.name, m.cls, m.role, m.sub), v: m.name }, ROLE_FR[m.role] || m.role,
+    ...bs.map((b, i) => ngo(m.vals[i], m.name, m.role, b.key, null, catsTitle(m.rows[i]))),
+    { h: `<b>${fr(m.sum / m.pulls)}</b>`, v: m.sum / m.pulls }, { h: m.pulls, v: m.pulls }]);
+  return `<div class="sechead"><h2>Membres — tous les pulls</h2><span class="muted small">${list.length} joueurs · note du fight sur chaque boss (moyenne des catégories du rôle, survole une note) · note de la soirée = moyenne de tous leurs pulls · clique une note pour voir son détail</span></div>
+    <section class="card">${table(cols, rows, "sortable grid")}</section>` + membersKills(cur) + stuffRecap();
+}
+function membersKills(cur) {
+  const kb = tried().filter(b => b.summary.kill && b.summary.kill.players && b.summary.kill.players.length);
+  if (!kb.length) return `<div class="sechead"><h2>Kills de la soirée</h2></div><section class="card">${muted("Aucun boss tué ce soir.")}</section>`;
+  const P = new Map(); for (const b of kb) for (const p of b.summary.kill.players) if (!P.has(p.player)) P.set(p.player, p);
+  const list = [...P.values()].map(p => { const mine = kb.map(b => b.summary.kill.players.find(x => x.player === p.player)), v = mine.filter(Boolean);
+    return { p, mine, avg: v.length ? v.reduce((a, x) => a + x.score, 0) / v.length : null, n: v.length }; }).sort((a, b) => (b.avg ?? -1) - (a.avg ?? -1));
+  const cols = [{ l: "Joueur" }, { l: "Rôle" }, ...kb.map(b => ({ l: `${b.key === cur ? `<b>${esc(b.name)}</b>` : esc(b.name)}<br><small class="muted">${b.summary.kill.pulls.length > 1 ? `${b.summary.kill.pulls.length} kills` : `pull ${b.summary.kill.pulls[0]}`}</small>`, num: 1 })), { l: "Moyenne", num: 1 }, { l: "Boss tués", num: 1 }];
+  const rows = list.map(r => [{ h: pl(r.p.player, r.p.class, r.p.role, r.p.sub), v: r.p.player }, ROLE_FR[r.p.role] || r.p.role,
+    ...r.mine.map((x, i) => ngo(x ? x.score : null, r.p.player, r.p.role, kb[i].key, x ? "p" + x.pull : null, "Note du fight sur le kill · clique pour le détail")),
+    { h: `<b>${r.avg == null ? "–" : fr(r.avg)}</b>`, v: r.avg ?? -1 }, { h: r.n, v: r.n }]);
+  return `<div class="sechead"><h2>Kills de la soirée</h2><span class="muted small">Note du fight sur les pulls tués uniquement · moyenne des boss tués · clique une note pour voir le détail du kill</span></div><section class="card">${table(cols, rows, "sortable grid")}</section>`;
+}
+/* Enchantements manquants par joueur, sur combien de boss (une pièce changée en cours de soirée n'est pas enchantée partout) */
+function stuffRecap() {
+  const bs = tried(), per = new Map();
+  for (const b of bs) for (const p of (b.stuff && b.stuff.players) || []) {
+    const o = per.get(p.name) || per.set(p.name, { name: p.name, cls: p.class, role: p.role, n: 0, slots: new Map() }).get(p.name); o.n++;
+    for (const e of (p.enchants || []).filter(x => x.present && x.required && !x.has)) (o.slots.get(e.slot) || o.slots.set(e.slot, []).get(e.slot)).push(b.name);
+  }
+  if (!per.size) return "";
+  const rows = [...per.values()].filter(o => o.slots.size).sort((a, b) => b.slots.size - a.slots.size || a.name.localeCompare(b.name, "fr"));
+  return `<div class="sechead"><h2>Stuff de la soirée</h2><span class="muted small">Enchantements manquants, sur combien des ${bs.length} boss</span></div><section class="card">${rows.length ? table([{ l: "Joueur" }, { l: "Enchantements manquants" }],
+    rows.map(o => [{ h: pl(o.name, o.cls, o.role), v: o.name }, { h: [...o.slots].map(([slot, l]) => `<span class="chip ${l.length === o.n ? "bad" : "warn"}" title="${esc(l.join(", "))}">${esc(slot)} : ${l.length === o.n ? "tous les boss" : `${l.length} boss sur ${o.n}`}</span>`).join(" "), v: o.slots.size }]), "sortable") : '<p class="good">Tout le monde est enchanté sur tous les boss.</p>'}</section>`;
+}
+
+/* Bandeaux : suivi automatique et données incomplètes */
+function banners() {
+  const a = X.auto_update, c = X.completeness, hm = t => new Date(t).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+  let s = "";
+  if (a) s += `<div class="auto ${a.active ? "on" : "done"}">${a.active ? `<b>Mise à jour automatique en cours.</b>${a.next ? ` Prochaine mise à jour vers <b>${hm(a.next)}</b>.` : ""} ${a.live ? "Le rapport reçoit encore des pulls : vérification toutes les 10 min." : "Des données manquent : nouvel essai juste après la remise à zéro du quota."} La page se recharge toute seule quand tu ne la lis pas.` : "<b>Rapport clôturé.</b> Toutes les données sont chargées et aucun pull n'a été ajouté depuis 1 h."}</div>`;
+  if (c && !c.complete) s += `<div class="banner"><b>Données incomplètes.</b> ${c.missing ? `${c.missing} partie(s) manquante(s) (détail dans chaque boss)` : ""}${c.requests_missing ? `${c.missing ? ", " : ""}${c.requests_missing} requête(s) non chargée(s)` : ""}${c.stale ? ` · ${c.stale} donnée(s) lue(s) dans un cache expiré` : ""}. ${a && a.active ? "Elles seront complétées automatiquement" : `Relance l'analyse${c.retry_in_min ? ` dans <b>${c.retry_in_min} min</b>` : " plus tard"}`} : seules les données manquantes et les nouveaux pulls seront téléchargés.</div>`;
+  return s;
+}
+function footer() {
+  return `<footer class="foot"><span>${ico("cal")}Rapport généré le ${timeFr(X.generated)}</span><span class="muted">Raid Analyzer, par Endloril &amp; Dalrkïra</span><span>${ico("sync")}${X.auto_update && X.auto_update.active ? "Mise à jour automatique en cours" : "Rapport clôturé"}${X.extension_version ? ` · v${esc(X.extension_version)}` : ""}</span></footer>`;
+}
+
+document.title = `${raidName()} — ${dateFr(X.report.raid_date)}`;
+document.getElementById("app").innerHTML = header() + nav() + banners() + `<div class="rlay">${side()}<div class="rmain">${overview() + X.bosses.map(b => bossPage(b.key, b, members(b.key))).join("")}</div></div>` + footer();
