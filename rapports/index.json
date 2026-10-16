@@ -7,7 +7,7 @@
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792180593173,
+  "generated": 1792180790787,
   "pulls": 21,
   "note": 8.2,
   "bosses": [
@@ -38,7 +38,7 @@
       "name": "Luluisback",
       "class": "Hunter",
       "role": "dps",
-      "note": 6.4,
+      "note": 7.2,
       "pulls": 1
      },
      {
@@ -73,14 +73,14 @@
       "name": "Jeangrip",
       "class": "DeathKnight",
       "role": "dps",
-      "note": 5.5,
+      "note": 6.3,
       "pulls": 1
      },
      {
       "name": "Toufoux",
       "class": "Hunter",
       "role": "dps",
-      "note": 7,
+      "note": 7.8,
       "pulls": 1
      },
      {
@@ -129,7 +129,7 @@
       "name": "Môy",
       "class": "Paladin",
       "role": "healer",
-      "note": 6.6,
+      "note": 7.3,
       "pulls": 1
      },
      {
@@ -326,7 +326,7 @@
       "name": "Toufoux",
       "class": "Hunter",
       "role": "dps",
-      "note": 4.7,
+      "note": 5.3,
       "pulls": 2
      },
      {
@@ -347,21 +347,21 @@
       "name": "Dèàthstrôke",
       "class": "Paladin",
       "role": "dps",
-      "note": 6.2,
+      "note": 6.8,
       "pulls": 2
      },
      {
       "name": "Pattopaprika",
       "class": "DemonHunter",
       "role": "tank",
-      "note": 7,
+      "note": 7.6,
       "pulls": 2
      },
      {
       "name": "Harmoniaque",
       "class": "Priest",
       "role": "dps",
-      "note": 6.2,
+      "note": 6.8,
       "pulls": 2
      },
      {
@@ -477,21 +477,21 @@
       "name": "Höjö",
       "class": "Warrior",
       "role": "dps",
-      "note": 6,
+      "note": 6.1,
       "pulls": 4
      },
      {
       "name": "Lücîøle",
       "class": "Rogue",
       "role": "dps",
-      "note": 6.6,
+      "note": 6.7,
       "pulls": 4
      },
      {
       "name": "Pattopaprika",
       "class": "DemonHunter",
       "role": "tank",
-      "note": 7.5,
+      "note": 7.6,
       "pulls": 4
      },
      {
@@ -682,7 +682,7 @@
     "class": "Warrior",
     "role": "dps",
     "sub": "melee",
-    "note": 8,
+    "note": 8.1,
     "pulls": 19
    },
    {
@@ -698,7 +698,7 @@
     "class": "Hunter",
     "role": "dps",
     "sub": "melee",
-    "note": 8.9,
+    "note": 9,
     "pulls": 19
    },
    {
@@ -746,7 +746,7 @@
     "class": "Hunter",
     "role": "dps",
     "sub": "ranged",
-    "note": 8,
+    "note": 8.1,
     "pulls": 19
    },
    {
@@ -826,7 +826,7 @@
     "class": "Paladin",
     "role": "dps",
     "sub": "melee",
-    "note": 7.8,
+    "note": 7.9,
     "pulls": 19
    },
    {
