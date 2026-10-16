@@ -4,10 +4,10 @@
   "title": "The Venomous Abyss",
   "guild": null,
   "server": null,
-  "next_update": null,
+  "next_update": 1792154621741,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792152238777,
+  "generated": 1792152386734,
   "pulls": 21,
   "note": 8.9,
   "bosses": [
@@ -838,8 +838,8 @@
     "pulls": 19
    }
   ],
-  "complete": true,
-  "auto": false,
+  "complete": false,
+  "auto": true,
   "file": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.html"
  }
 ]
