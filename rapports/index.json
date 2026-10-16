@@ -4,10 +4,10 @@
   "title": "The Venomous Abyss",
   "guild": null,
   "server": null,
-  "next_update": 1792146404423,
+  "next_update": 1792146855382,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792145504626,
+  "generated": 1792145955556,
   "pulls": 21,
   "note": 8.9,
   "bosses": [
@@ -89,6 +89,7 @@
     "name": "Höjö",
     "class": "Warrior",
     "role": "dps",
+    "sub": "melee",
     "note": 8.2,
     "pulls": 19
    },
@@ -96,6 +97,7 @@
     "name": "Endloril",
     "class": "Druid",
     "role": "healer",
+    "sub": null,
     "note": 8.9,
     "pulls": 19
    },
@@ -103,6 +105,7 @@
     "name": "Luluisback",
     "class": "Hunter",
     "role": "dps",
+    "sub": "melee",
     "note": 9.9,
     "pulls": 19
    },
@@ -110,6 +113,7 @@
     "name": "Drtyrran",
     "class": "Shaman",
     "role": "dps",
+    "sub": "ranged",
     "note": 9,
     "pulls": 19
    },
@@ -117,6 +121,7 @@
     "name": "Darlkira",
     "class": "DemonHunter",
     "role": "dps",
+    "sub": "ranged",
     "note": 9.5,
     "pulls": 19
    },
@@ -124,6 +129,7 @@
     "name": "Lücîøle",
     "class": "Rogue",
     "role": "dps",
+    "sub": "melee",
     "note": 7.3,
     "pulls": 19
    },
@@ -131,6 +137,7 @@
     "name": "Harmoniaque",
     "class": "Priest",
     "role": "dps",
+    "sub": "ranged",
     "note": 6.5,
     "pulls": 19
    },
@@ -138,6 +145,7 @@
     "name": "Jeangrip",
     "class": "DeathKnight",
     "role": "dps",
+    "sub": "melee",
     "note": 9.4,
     "pulls": 19
    },
@@ -145,6 +153,7 @@
     "name": "Toufoux",
     "class": "Hunter",
     "role": "dps",
+    "sub": "ranged",
     "note": 9.7,
     "pulls": 19
    },
@@ -152,6 +161,7 @@
     "name": "Lauenat",
     "class": "Druid",
     "role": "dps",
+    "sub": "ranged",
     "note": 6.5,
     "pulls": 19
    },
@@ -159,6 +169,7 @@
     "name": "Yörr",
     "class": "Hunter",
     "role": "dps",
+    "sub": "ranged",
     "note": 9.9,
     "pulls": 19
    },
@@ -166,6 +177,7 @@
     "name": "Tyry",
     "class": "Priest",
     "role": "dps",
+    "sub": "ranged",
     "note": 9.4,
     "pulls": 19
    },
@@ -173,6 +185,7 @@
     "name": "Aelminster",
     "class": "Mage",
     "role": "dps",
+    "sub": "ranged",
     "note": 9.4,
     "pulls": 19
    },
@@ -180,6 +193,7 @@
     "name": "Shrakle",
     "class": "Evoker",
     "role": "healer",
+    "sub": null,
     "note": 9.3,
     "pulls": 19
    },
@@ -187,6 +201,7 @@
     "name": "Dyâlise",
     "class": "Paladin",
     "role": "dps",
+    "sub": "melee",
     "note": 9.5,
     "pulls": 19
    },
@@ -194,6 +209,7 @@
     "name": "Môy",
     "class": "Paladin",
     "role": "healer",
+    "sub": null,
     "note": 9.6,
     "pulls": 19
    },
@@ -201,6 +217,7 @@
     "name": "Hazizoul",
     "class": "Priest",
     "role": "healer",
+    "sub": null,
     "note": 9.4,
     "pulls": 19
    },
@@ -208,6 +225,7 @@
     "name": "Snøz",
     "class": "Monk",
     "role": "tank",
+    "sub": null,
     "note": 9.5,
     "pulls": 19
    },
@@ -215,6 +233,7 @@
     "name": "Dèàthstrôke",
     "class": "Paladin",
     "role": "dps",
+    "sub": "melee",
     "note": 8.4,
     "pulls": 19
    },
@@ -222,6 +241,7 @@
     "name": "Pattopaprika",
     "class": "DemonHunter",
     "role": "tank",
+    "sub": null,
     "note": 9.1,
     "pulls": 19
    }
