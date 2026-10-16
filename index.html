@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr" data-site-version="1"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<!doctype html><html lang="fr" data-site-version="2"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Raid Analyzer — rapports de raid</title>
 <style>:root{--bg:#f5f4f0;--card:#fff;--fg:#1c1c1e;--muted:#6e6e73;--line:#e5e3dd;--acc:#2f6f5e;--good:#2e7d32;--warn:#a15c00;--bad:#c0392b}
 @media (prefers-color-scheme:dark){:root{--bg:#141416;--card:#1e1e21;--fg:#eceae4;--muted:#9a9a9f;--line:#2e2e33;--acc:#5fb39a;--good:#5cb85c;--warn:#e0a03c;--bad:#e2685a}}
@@ -8,7 +8,7 @@ nav a{padding:8px 16px;border-radius:10px;color:var(--fg);text-decoration:none}n
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}.card{display:block;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;color:inherit;text-decoration:none;transition:transform .1s,box-shadow .1s}
 a.card:hover{transform:translateY(-2px);box-shadow:0 6px 18px #0001}.card h2{margin:0;font-size:18px}.date{font-weight:600;color:var(--acc);font-size:13px}.date::first-letter{text-transform:uppercase}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.chip{font-size:12px;padding:2px 9px;border-radius:999px;background:color-mix(in srgb,var(--line) 70%,transparent)}.chip.good{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good)}.chip.warn{background:color-mix(in srgb,var(--warn) 15%,transparent);color:var(--warn)}
-.note{float:right;font-size:22px;font-weight:700}.sec{max-width:760px}.sec h3{margin:22px 0 6px}.sec li{margin:4px 0}</style></head>
+.gname{font-weight:700;font-size:13px;margin-top:2px}.note{float:right;font-size:22px;font-weight:700}.sec{max-width:760px}.sec h3{margin:22px 0 6px}.sec li{margin:4px 0}</style></head>
 <body><div class="wrap"><h1>Rapports de raid</h1><div class="muted">Analyses Warcraft Logs générées par Raid Analyzer et mises à jour automatiquement.</div>
 <nav><a href="#/" data-r="/">Soirées</a><a href="#/methode" data-r="/methode">Méthode</a></nav><main id="app"><p class="muted">Chargement…</p></main></div>
 <script>
@@ -24,7 +24,7 @@ const METHODE=`<div class="sec"><h3>Ce qui est analysé</h3><p>Chaque soirée es
 async function route(){const r=location.hash.replace(/^#/,"")||"/";document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("on",a.dataset.r===r));const app=document.getElementById("app");
 if(r==="/methode"){app.innerHTML=METHODE;return}
 const list=await load();if(!list.length){app.innerHTML='<p class="muted">Aucun rapport publié pour l\'instant.</p>';return}
-app.innerHTML='<div class="grid">'+list.map(x=>{const k=(x.bosses||[]).filter(b=>b.kills).length;return '<a class="card" href="'+esc(x.file)+'">'+(x.note!=null?'<span class="note">'+x.note+'</span>':'')+'<div class="date">'+esc(day(x.raid_date))+'</div><h2>'+esc(x.title)+'</h2><div class="muted">'+esc(x.zone||"")+' · '+(x.bosses||[]).length+' boss · '+(x.pulls??"?")+' pulls</div><div class="chips">'+(x.bosses||[]).map(b=>'<span class="chip '+(b.kills?"good":"warn")+'">'+esc(b.name)+(b.kills?" ✓":" "+(b.best_pct??"?")+" %")+'</span>').join("")+(x.auto?'<span class="chip">mise à jour en cours</span>':'')+'</div></a>'}).join("")+'</div><p class="muted" style="margin-top:18px">'+k0(list)+'</p>';}
+app.innerHTML='<div class="grid">'+list.map(x=>{const k=(x.bosses||[]).filter(b=>b.kills).length;return '<a class="card" href="'+esc(x.file)+'">'+(x.note!=null?'<span class="note">'+x.note+'</span>':'')+'<div class="date">'+esc(day(x.raid_date))+'</div>'+(x.guild?'<div class="gname">&lt;'+esc(x.guild)+'&gt;'+(x.server?' <span class="muted">'+esc(x.server)+'</span>':'')+'</div>':'')+'<h2>'+esc(x.title)+'</h2><div class="muted">'+esc(x.zone||"")+' · '+(x.bosses||[]).length+' boss · '+(x.pulls??"?")+' pulls</div><div class="chips">'+(x.bosses||[]).map(b=>'<span class="chip '+(b.kills?"good":"warn")+'">'+esc(b.name)+(b.kills?" ✓":" "+(b.best_pct??"?")+" %")+'</span>').join("")+(x.auto?'<span class="chip">prochaine mise à jour'+(x.next_update?' vers '+new Date(x.next_update).toLocaleTimeString("fr-BE",{hour:"2-digit",minute:"2-digit"}):'')+'</span>':'')+'</div></a>'}).join("")+'</div><p class="muted" style="margin-top:18px">'+k0(list)+'</p>';}
 const k0=l=>l.length+" soirée(s) publiée(s).";
 addEventListener("hashchange",route);route();
 </script></body></html>
