@@ -4,10 +4,10 @@
   "title": "The Venomous Abyss",
   "guild": null,
   "server": null,
-  "next_update": 1792144816526,
+  "next_update": 1792145127361,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792143916685,
+  "generated": 1792144227540,
   "pulls": 21,
   "note": 8.9,
   "bosses": [
@@ -89,7 +89,7 @@
     "name": "Höjö",
     "class": "Warrior",
     "role": "dps",
-    "note": 8.1,
+    "note": 8.2,
     "pulls": 19
    },
    {
@@ -103,7 +103,7 @@
     "name": "Luluisback",
     "class": "Hunter",
     "role": "dps",
-    "note": 9.8,
+    "note": 9.9,
     "pulls": 19
    },
    {
@@ -117,7 +117,7 @@
     "name": "Darlkira",
     "class": "DemonHunter",
     "role": "dps",
-    "note": 9.4,
+    "note": 9.5,
     "pulls": 19
    },
    {
@@ -131,14 +131,14 @@
     "name": "Harmoniaque",
     "class": "Priest",
     "role": "dps",
-    "note": 6.4,
+    "note": 6.5,
     "pulls": 19
    },
    {
     "name": "Jeangrip",
     "class": "DeathKnight",
     "role": "dps",
-    "note": 9.3,
+    "note": 9.4,
     "pulls": 19
    },
    {
@@ -152,7 +152,7 @@
     "name": "Lauenat",
     "class": "Druid",
     "role": "dps",
-    "note": 6.4,
+    "note": 6.5,
     "pulls": 19
    },
    {
@@ -173,7 +173,7 @@
     "name": "Aelminster",
     "class": "Mage",
     "role": "dps",
-    "note": 9.3,
+    "note": 9.4,
     "pulls": 19
    },
    {
@@ -187,7 +187,7 @@
     "name": "Dyâlise",
     "class": "Paladin",
     "role": "dps",
-    "note": 9.4,
+    "note": 9.5,
     "pulls": 19
    },
    {
@@ -201,14 +201,14 @@
     "name": "Hazizoul",
     "class": "Priest",
     "role": "healer",
-    "note": 9.3,
+    "note": 9.4,
     "pulls": 19
    },
    {
     "name": "Snøz",
     "class": "Monk",
     "role": "tank",
-    "note": 9.4,
+    "note": 9.5,
     "pulls": 19
    },
    {
@@ -222,7 +222,7 @@
     "name": "Pattopaprika",
     "class": "DemonHunter",
     "role": "tank",
-    "note": 9,
+    "note": 9.1,
     "pulls": 19
    }
   ],
