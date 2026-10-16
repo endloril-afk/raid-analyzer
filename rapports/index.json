@@ -4,40 +4,226 @@
   "title": "The Venomous Abyss",
   "guild": null,
   "server": null,
-  "next_update": 1792146815090,
+  "next_update": 1792144816526,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792143240190,
+  "generated": 1792143916685,
   "pulls": 21,
   "note": 8.9,
   "bosses": [
    {
     "name": "Nek'zali the Soulcoiler",
+    "key": "b0",
     "difficulty": "Mythique",
+    "tried": true,
     "kills": 1,
     "best_pct": 0,
     "pulls": 1
    },
    {
-    "name": "The Lost Explorers",
-    "difficulty": "Mythique",
-    "kills": 1,
-    "best_pct": 0,
-    "pulls": 4
-   },
-   {
     "name": "Entombed Sentinels",
+    "key": "b2",
     "difficulty": "Mythique",
+    "tried": true,
     "kills": 1,
     "best_pct": 0,
     "pulls": 14
    },
    {
-    "name": "Vashnik the Malignant",
+    "name": "The Lost Explorers",
+    "key": "b1",
     "difficulty": "Mythique",
+    "tried": true,
+    "kills": 1,
+    "best_pct": 0,
+    "pulls": 4
+   },
+   {
+    "name": "Vashnik the Malignant",
+    "key": "b3",
+    "difficulty": "Mythique",
+    "tried": true,
     "kills": 0,
     "best_pct": 70.3,
     "pulls": 2
+   },
+   {
+    "name": "Sszorak",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": null
+   },
+   {
+    "name": "The Twin Fangs",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": null
+   },
+   {
+    "name": "The Coiled Altar",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": null
+   },
+   {
+    "name": "Ula'tek",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": null
+   }
+  ],
+  "players": [
+   {
+    "name": "Höjö",
+    "class": "Warrior",
+    "role": "dps",
+    "note": 8.1,
+    "pulls": 19
+   },
+   {
+    "name": "Endloril",
+    "class": "Druid",
+    "role": "healer",
+    "note": 8.9,
+    "pulls": 19
+   },
+   {
+    "name": "Luluisback",
+    "class": "Hunter",
+    "role": "dps",
+    "note": 9.8,
+    "pulls": 19
+   },
+   {
+    "name": "Drtyrran",
+    "class": "Shaman",
+    "role": "dps",
+    "note": 9,
+    "pulls": 19
+   },
+   {
+    "name": "Darlkira",
+    "class": "DemonHunter",
+    "role": "dps",
+    "note": 9.4,
+    "pulls": 19
+   },
+   {
+    "name": "Lücîøle",
+    "class": "Rogue",
+    "role": "dps",
+    "note": 7.3,
+    "pulls": 19
+   },
+   {
+    "name": "Harmoniaque",
+    "class": "Priest",
+    "role": "dps",
+    "note": 6.4,
+    "pulls": 19
+   },
+   {
+    "name": "Jeangrip",
+    "class": "DeathKnight",
+    "role": "dps",
+    "note": 9.3,
+    "pulls": 19
+   },
+   {
+    "name": "Toufoux",
+    "class": "Hunter",
+    "role": "dps",
+    "note": 9.7,
+    "pulls": 19
+   },
+   {
+    "name": "Lauenat",
+    "class": "Druid",
+    "role": "dps",
+    "note": 6.4,
+    "pulls": 19
+   },
+   {
+    "name": "Yörr",
+    "class": "Hunter",
+    "role": "dps",
+    "note": 9.9,
+    "pulls": 19
+   },
+   {
+    "name": "Tyry",
+    "class": "Priest",
+    "role": "dps",
+    "note": 9.4,
+    "pulls": 19
+   },
+   {
+    "name": "Aelminster",
+    "class": "Mage",
+    "role": "dps",
+    "note": 9.3,
+    "pulls": 19
+   },
+   {
+    "name": "Shrakle",
+    "class": "Evoker",
+    "role": "healer",
+    "note": 9.3,
+    "pulls": 19
+   },
+   {
+    "name": "Dyâlise",
+    "class": "Paladin",
+    "role": "dps",
+    "note": 9.4,
+    "pulls": 19
+   },
+   {
+    "name": "Môy",
+    "class": "Paladin",
+    "role": "healer",
+    "note": 9.6,
+    "pulls": 19
+   },
+   {
+    "name": "Hazizoul",
+    "class": "Priest",
+    "role": "healer",
+    "note": 9.3,
+    "pulls": 19
+   },
+   {
+    "name": "Snøz",
+    "class": "Monk",
+    "role": "tank",
+    "note": 9.4,
+    "pulls": 19
+   },
+   {
+    "name": "Dèàthstrôke",
+    "class": "Paladin",
+    "role": "dps",
+    "note": 8.4,
+    "pulls": 19
+   },
+   {
+    "name": "Pattopaprika",
+    "class": "DemonHunter",
+    "role": "tank",
+    "note": 9,
+    "pulls": 19
    }
   ],
   "complete": false,
