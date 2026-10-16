@@ -2,9 +2,12 @@
  {
   "code": "DQL8tpg3bGjKT7Rq",
   "title": "The Venomous Abyss",
+  "guild": null,
+  "server": null,
+  "next_update": 1792146815090,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792141014857,
+  "generated": 1792143240190,
   "pulls": 21,
   "note": 8.9,
   "bosses": [
