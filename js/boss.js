@@ -28,9 +28,9 @@ function cause(c) {
       c.rows.map(r => [{ h: sp(r.name, r.icon, 18, true, r.spell_id), v: r.name }, { h: short(r.ours), v: r.ours }, { h: short(r.kills), v: r.kills }, { h: fr(r.ratio), v: r.ratio }, { h: chip(r.score + "/100", r.score >= 60 ? "good" : r.score >= 30 ? "warn" : "bad"), v: r.score }]))}</details>`);
 }
 function filterPulls(pulls) {
-  return `<details class="card"><summary>Filtrage des pulls : où chaque pull a été coupé</summary>${muted("Un wipe est analysé jusqu'à l'événement qui le cause : 2e mort, mort d'un tank non rez, ou 1er fail majeur sur une mécanique. Ce qui suit n'est pas compté.")}
+  return `<details class="card"><summary>Filtrage des pulls : où chaque pull a été coupé</summary>${muted("Un wipe est analysé jusqu'à l'événement qui le cause : 2e mort, mort d'un tank non rez, ou 1er fail majeur sur une mécanique. Ce qui suit n'est pas compté. Wipe appelé : la cascade de morts de la fin du pull (3 morts ou plus à moins de 10 s d'intervalle) ne compte dans la survie de personne, pour ne pas avantager ceux qui reset sans mourir.")}
     ${table([{ l: "Pull", num: 1 }, { l: "Résultat" }, { l: "Boss %", num: 1 }, { l: "Coupé à" }, { l: "Morts", num: 1 }, { l: "Durée (s)", num: 1 }, { l: "Gardé (s)", num: 1 }],
-      pulls.map(p => [{ h: p.pull, v: p.pull }, p.result, { h: fr(p.boss_pct), v: p.boss_pct }, p.cut_reason, p.deaths, { h: p.duration_s, v: p.duration_s }, { h: p.kept_s, v: p.kept_s }]))}</details>`;
+      pulls.map(p => [{ h: p.pull, v: p.pull }, p.result, { h: fr(p.boss_pct), v: p.boss_pct }, p.cut_reason + (p.wipe_call_s != null ? ` · wipe appelé vers ${mmss(p.wipe_call_s)} (${p.wipe_call_deaths} morts non comptées)` : ""), p.deaths, { h: p.duration_s, v: p.duration_s }, { h: p.kept_s, v: p.kept_s }]))}</details>`;
 }
 const ROLE_FR = { tank: "Tank", healer: "Heal", dps: "DPS", melee: "Mêlée", ranged: "Distance" };
 function mechCards(r) {
@@ -107,11 +107,11 @@ function playersRecap(players) {
         { h: chip(fr(p.score) + "/10", noteCls(p.score)), v: p.score }, { h: p.fight_score != null ? chip(fr(p.fight_score) + "/10", noteCls(p.fight_score)) : "–", v: p.fight_score ?? -1 }])));
 }
 function deathsCard(deaths, g) {
-  return card("Revue des morts", muted(`${g.deaths_kept} morts gardées (avant la coupe du pull) sur ${g.deaths_total}, dont <b>${deaths.filter(d => d.avoidable).length}</b> sur une mécanique évitable.`) +
+  return card("Revue des morts", muted(`${g.deaths_kept} morts gardées (avant la coupe du pull, hors morts après l'appel du wipe) sur ${g.deaths_total}, dont <b>${deaths.filter(d => d.avoidable).length}</b> sans défensif récent${deaths.some(d => d.excused) ? ` et <b>${deaths.filter(d => d.excused).length}</b> excusée(s) : aucun soin reçu des healers dans les 8 s avant la mort, alors que le joueur s'était protégé (défensif ou potion / healthstone dans les 20 s, ou plus rien de disponible), sur une mécanique qui n'est pas à éviter (non comptées dans la survie)` : ""}.`) +
     table([{ l: "Pull", num: 1 }, { l: "Temps", num: 1 }, { l: "Joueur" }, { l: "Rôle" }, { l: "Tué par" }, { l: "Défensifs récents" }, { l: "Healthstone" }, { l: "Défensifs non utilisés" }, { l: "Évitable" }, { l: "" }],
       deaths.map(d => [d.pull, { h: mmss(d.time_s), v: d.time_s }, d.player, ROLE_FR[d.role] || d.role, { h: sp(d.killer, d.killer_icon, 18, true, d.killer_id), v: d.killer },
         d.recent_def.length ? d.recent_def.join(", ") : "—", d.healthstone ? "oui" : "non", d.unused_def.length ? d.unused_def.join(", ") : "—",
-        { h: d.avoidable ? chip("évitable", "bad") : chip("non", "good"), v: d.avoidable ? 1 : 0 }, { h: link(d.link), v: "" }])));
+        { h: (d.avoidable ? chip("évitable", "bad") : chip("non", "good")) + (d.excused ? ` <span title="${esc(d.excused)}">${chip("excusée : aucun soin reçu", "warn")}</span>` : ""), v: d.avoidable ? 1 : 0 }, { h: link(d.link), v: "" }])));
 }
 
 /* Frise chronologique d'un pull (extras.timelines) */
