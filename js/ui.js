@@ -6,6 +6,10 @@ const ROOT = window.ROOT || "";
    Ajouter un boss ici quand son intermission est analysée. */
 const INTERMISSION_BOSSES = ["Entombed Sentinels"];
 
+/* Note partielle : une catégorie principale manque (gameplay ou référence du top non chargés, quota) → « ≈ » après la note */
+const partialTitle = m => `Note partielle : ${Array.isArray(m) ? m.join(", ") + " manquant(s)" : "une catégorie manque"} (données non chargées, quota de l'API). La note sera complétée à la prochaine mise à jour.`;
+const pmark = m => m ? `<sup class="partial" title="${esc(partialTitle(m))}">≈</sup>` : "";
+
 /* Classes jouables : l'export ne donne que leur nom anglais */
 const CLASSES = {
   DeathKnight: ["Chevalier de la mort", "#C41E3A"], DemonHunter: ["Chasseur de démons", "#A330C9"], Druid: ["Druide", "#FF7C0A"],
