@@ -48,7 +48,7 @@ function overview() {
 /* ---------- Membres (onglet « Membres » de chaque fiche de boss, colonne du boss affiché en gras) ----------
    1) note du fight de chaque joueur sur chaque boss, tous les pulls (summary.players) ; 2) sur les kills seulement (summary.kill) ;
    3) enchantements manquants sur la soirée (stuff). Une note se clique : elle ouvre la fiche du joueur dans l'onglet Gameplay du boss. */
-const ngo = (v, name, role, key, view, title) => v == null ? { h: "–", v: "" } : { h: `<button class="ngo" data-goplayer="${esc(name)}" data-gorole="${esc(role)}" data-goboss="${esc(key)}"${view ? ` data-goview="${esc(view)}"` : ""} title="${esc(title)}">${chip(fr(v), noteCls(v))}</button>`, v };
+const ngo = (v, name, role, key, view, title, partial = null) => v == null ? { h: "–", v: "" } : { h: `<button class="ngo" data-goplayer="${esc(name)}" data-gorole="${esc(role)}" data-goboss="${esc(key)}"${view ? ` data-goview="${esc(view)}"` : ""} title="${esc(title)}">${chip(fr(v), noteCls(v))}</button>${pmark(partial)}`, v };
 const catsTitle = p => p && p.categories && p.categories.length ? p.categories.map(c => `${c.label} ${fr(c.score)}/10${(c.weight ?? 1) !== 1 ? ` (poids ${String(c.weight).replace(".", ",")})` : ""}`).join(" · ") + " · clique pour le détail" : "Clique pour le détail";
 function members(cur) {
   const bs = tried(), P = {};
@@ -59,7 +59,7 @@ function members(cur) {
   const list = Object.values(P).sort((a, b) => b.sum / b.pulls - a.sum / a.pulls);
   const cols = [{ l: "Joueur" }, { l: "Rôle" }, ...bs.map(b => ({ l: `${b.key === cur ? `<b>${esc(b.name)}</b>` : esc(b.name)}<br><small class="muted">${b.summary.pulls} pulls</small>`, num: 1 })), { l: "Soirée", num: 1 }, { l: "Pulls", num: 1 }];
   const rows = list.map(m => [{ h: pl(m.name, m.cls, m.role, m.sub), v: m.name }, ROLE_FR[m.role] || m.role,
-    ...bs.map((b, i) => ngo(m.vals[i], m.name, m.role, b.key, null, catsTitle(m.rows[i]))),
+    ...bs.map((b, i) => ngo(m.vals[i], m.name, m.role, b.key, null, catsTitle(m.rows[i]), m.rows[i]?.partial)),
     { h: `<b>${fr(m.sum / m.pulls)}</b>`, v: m.sum / m.pulls }, { h: m.pulls, v: m.pulls }]);
   return `<div class="sechead"><h2>Membres — tous les pulls</h2><span class="muted small">${list.length} joueurs · note du fight sur chaque boss (moyenne des catégories du rôle, survole une note) · note de la soirée = moyenne de tous leurs pulls · clique une note pour voir son détail</span></div>
     <section class="card">${table(cols, rows, "sortable grid")}</section>` + membersKills(cur) + stuffRecap();
@@ -72,7 +72,7 @@ function membersKills(cur) {
     return { p, mine, avg: v.length ? v.reduce((a, x) => a + x.score, 0) / v.length : null, n: v.length }; }).sort((a, b) => (b.avg ?? -1) - (a.avg ?? -1));
   const cols = [{ l: "Joueur" }, { l: "Rôle" }, ...kb.map(b => ({ l: `${b.key === cur ? `<b>${esc(b.name)}</b>` : esc(b.name)}<br><small class="muted">${b.summary.kill.pulls.length > 1 ? `${b.summary.kill.pulls.length} kills` : `pull ${b.summary.kill.pulls[0]}`}</small>`, num: 1 })), { l: "Moyenne", num: 1 }, { l: "Boss tués", num: 1 }];
   const rows = list.map(r => [{ h: pl(r.p.player, r.p.class, r.p.role, r.p.sub), v: r.p.player }, ROLE_FR[r.p.role] || r.p.role,
-    ...r.mine.map((x, i) => ngo(x ? x.score : null, r.p.player, r.p.role, kb[i].key, x ? "p" + x.pull : null, "Note du fight sur le kill · clique pour le détail")),
+    ...r.mine.map((x, i) => ngo(x ? x.score : null, r.p.player, r.p.role, kb[i].key, x ? "p" + x.pull : null, "Note du fight sur le kill · clique pour le détail", x?.partial)),
     { h: `<b>${r.avg == null ? "–" : fr(r.avg)}</b>`, v: r.avg ?? -1 }, { h: r.n, v: r.n }]);
   return `<div class="sechead"><h2>Kills de la soirée</h2><span class="muted small">Note du fight sur les pulls tués uniquement · moyenne des boss tués · clique une note pour voir le détail du kill</span></div><section class="card">${table(cols, rows, "sortable grid")}</section>`;
 }
