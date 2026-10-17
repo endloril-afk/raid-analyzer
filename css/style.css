@@ -575,3 +575,4 @@ table.mini{border-collapse:collapse}table.mini td{padding:4px 6px;border-bottom:
 .lcmp{background:#8b5cf6}.mana .ccmp{fill:none;stroke:#8b5cf6;stroke-width:2;stroke-dasharray:2 4}.mana .hit{fill:transparent}.mana .hit:hover{fill:var(--fg)}
 .gpwrap>.gpp>.card{margin-top:12px}.gpp .gph .clsic{flex:none}
 .gpp,tr{scroll-margin-top:80px}
+.astat{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 16px;font-size:14px;cursor:help}.apill{display:inline-flex;align-items:center;gap:7px;padding:3px 12px 3px 9px;border-radius:999px;font-weight:600;font-size:13px;border:1px solid currentColor;background:color-mix(in srgb,currentColor 12%,transparent)}.apill i{width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor}.apill.good{color:var(--good)}.apill.warn{color:var(--warn)}.apill.bad{color:var(--bad)}
