@@ -2,6 +2,10 @@
 /* Chemin de la racine du site depuis la page courante : "" pour index.html, "../" pour rapports/*.html */
 const ROOT = window.ROOT || "";
 
+/* Boss qui ont l'onglet « Intermission » (mini-carte des paires, erreurs par joueur) dans Raid : nom exact du boss (anglais, comme dans l'export).
+   Ajouter un boss ici quand son intermission est analysée. */
+const INTERMISSION_BOSSES = ["Entombed Sentinels"];
+
 /* Classes jouables : l'export ne donne que leur nom anglais */
 const CLASSES = {
   DeathKnight: ["Chevalier de la mort", "#C41E3A"], DemonHunter: ["Chasseur de démons", "#A330C9"], Druid: ["Druide", "#FF7C0A"],
