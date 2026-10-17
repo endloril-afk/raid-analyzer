@@ -5,7 +5,7 @@
 function rings(roles) {
   return `<div class="rings">${roles.map(r => {
     const c = 2 * Math.PI * 34, col = r.avg >= 8 ? "var(--good)" : r.avg >= 6 ? "var(--warn)" : "var(--bad)";
-    return `<div class="ring" title="${esc(r.label)} : note moyenne ${fr(r.avg)}/10 sur ${r.players} joueur(s)"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" class="bg"/><circle cx="40" cy="40" r="34" style="stroke:${col}" stroke-dasharray="${(c * r.pct / 100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 40 40)"/><text x="40" y="45" text-anchor="middle">${r.pct}%</text></svg><b>${esc(r.label)}</b><small>${fr(r.avg)}/10 · ${r.players} joueur(s)</small></div>`;
+    return `<div class="ring" title="${esc(r.label)} : note moyenne ${fr(r.avg)}/10 sur ${r.players} joueur(s)"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" class="bg"/><circle cx="40" cy="40" r="34" style="stroke:${col}" stroke-dasharray="${(c * r.pct / 100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 40 40)"/><text x="40" y="45" text-anchor="middle">${r.pct}%</text></svg><b>${esc(r.label)}</b><small>${fr(r.avg)}/10 · ${r.players} joueur(s)${r.partial ? ` · <span title="${esc(partialTitle())}">${r.partial} note(s) partielle(s)</span>` : ""}</small></div>`;
   }).join("")}</div>`;
 }
 const AVOID_T = "Part des dégâts évitables : part du total des dégâts évitables pris par tout le raid que ce joueur a prise. Plus c'est bas, mieux c'est.";
@@ -13,11 +13,11 @@ function podium(ranking) {
   const medals = ["🥇", "🥈", "🥉"];
   const pods = ranking.slice(0, 5).map((p, i) => `<div class="pod p${i + 1}">${i < 3 ? `<div class="medal">${medals[i]}</div>` : `<div class="medal num">${i + 1}</div>`}
     ${clsic(p.class, 44)}<div class="pn" style="--cc:${clsColor(p.class)}">${esc(p.player)}</div>
-    <div class="pr">${rolic(roleKey(p.role, p.sub))} <b>${fr(p.score)}/10</b></div>
-    <small>${fr(p.deaths_per_pull, 2)} mort/pull · <span title="${esc(AVOID_T)}">${pct(p.avoidable_pct)} des dégâts évitables</span></small></div>`).join("");
+    <div class="pr">${rolic(roleKey(p.role, p.sub))} <b>${fr(p.score)}/10</b>${pmark(p.partial)}</div>
+    <small>${[p.avoidable_pct ? `<span title="${esc(AVOID_T)}">${pct(p.avoidable_pct)} des dégâts évitables</span>` : ""].filter(Boolean).join(" · ") || "&nbsp;"}</small></div>`).join("");
   const full = table([{ l: "#", num: 1 }, { l: "Joueur" }, { l: "Note du fight", num: 1 }, { l: "Strat", num: 1 }, { l: "Morts / pull", num: 1 }, { l: "Part des dégâts évitables", num: 1, title: AVOID_T }],
     ranking.map(p => [{ h: p.rank, v: p.rank }, { h: pl(p.player, p.class, p.role, p.sub), v: p.player }, { h: fr(p.score), v: p.score }, { h: p.strat != null ? fr(p.strat) : "–", v: p.strat ?? "" }, { h: fr(p.deaths_per_pull, 2), v: p.deaths_per_pull }, { h: pct(p.avoidable_pct), v: p.avoidable_pct ?? "" }]));
-  return card("Top 5 du fight", `<div class="podium">${pods}</div>${muted("Classement sur la note du fight (strat, survie, dégâts ou soins, gameplay), tous rôles confondus. À moins de 0,5 point d'écart, la survie départage, puis les morts par pull et la part des dégâts évitables.")}<details><summary>Classement complet (${ranking.length} joueurs)</summary>${full}</details>`);
+  return card("Top 5 du fight", `${ranking.some(p => p.partial) ? '<p class="banner small"><b>Notes partielles</b> : le gameplay ou les références du top manquent pour certains joueurs (quota de l\'API). Le classement est indicatif jusqu\'à la prochaine mise à jour.</p>' : ""}<div class="podium">${pods}</div>${muted("Classement sur la note du fight (strat, survie, dégâts ou soins, gameplay), tous rôles confondus. À note égale, la survie départage, puis les morts par pull et la part des dégâts évitables.")}<details><summary>Classement complet (${ranking.length} joueurs)</summary>${full}</details>`);
 }
 function cause(c) {
   if (!c || !c.rows.length) return "";
@@ -104,7 +104,7 @@ function playersRecap(players) {
     table([{ l: "Joueur" }, { l: "Rôle" }, { l: "Classe" }, { l: "Pulls", num: 1 }, { l: "Morts / pull", num: 1 }, { l: "Points à améliorer" }, { l: "Strat", num: 1 }, { l: "Note du fight", num: 1 }],
       players.map(p => [{ h: pl(p.player, p.class, p.role, p.sub), v: p.player }, p.role_label, clsName(p.class), p.pulls, { h: fr(p.deaths_per_pull, 2), v: p.deaths_per_pull },
         { h: p.issues.map(i => `<span class="issue" title="${esc(i.kind)}">${i.icon ? sp(i.mechanic, i.icon, 16, false, i.spell_id) : ""}<b>${esc(i.mechanic)}</b> ${esc(i.text)} <i>${esc(i.detail)}</i></span>`).join("") || '<span class="muted">—</span>', v: p.issues.length },
-        { h: chip(fr(p.score) + "/10", noteCls(p.score)), v: p.score }, { h: p.fight_score != null ? chip(fr(p.fight_score) + "/10", noteCls(p.fight_score)) : "–", v: p.fight_score ?? -1 }])));
+        { h: chip(fr(p.score) + "/10", noteCls(p.score)), v: p.score }, { h: p.fight_score != null ? chip(fr(p.fight_score) + "/10", noteCls(p.fight_score)) + pmark(p.fight_partial) : "–", v: p.fight_score ?? -1 }])));
 }
 function deathsCard(deaths, g) {
   return card("Revue des morts", muted(`${g.deaths_kept} morts gardées (avant la coupe du pull, hors morts après l'appel du wipe) sur ${g.deaths_total}, dont <b>${deaths.filter(d => d.avoidable).length}</b> sans défensif récent${deaths.some(d => d.excused) ? ` et <b>${deaths.filter(d => d.excused).length}</b> excusée(s) : aucun soin reçu des healers dans les 8 s avant la mort, alors que le joueur s'était protégé (défensif ou potion / healthstone dans les 20 s, ou plus rien de disponible), sur une mécanique qui n'est pas à éviter (non comptées dans la survie)` : ""}.`) +
@@ -185,13 +185,13 @@ const scoreB = s => s == null ? chip("—") : chip(`${fr(s)}/10`, s >= 8 ? "good
 const ratioC = r => r == null ? chip("—") : chip(Math.round(r * 100) + " %", r < .7 ? "bad" : r > 1.5 ? "warn" : "good");
 const kk = n => n == null ? "—" : n >= 1e6 ? fr(n / 1e6, 2) + " M" : n >= 1e3 ? Math.round(n / 1e3) + "k" : String(Math.round(n));
 /* Notes par catégorie (strat, dégâts, soins, survie ou mitigation, gameplay) : la note du fight en est la moyenne pondérée */
-function catsStrip(cats, total = null) {
+function catsStrip(cats, total = null, partial = null) {
   if (!cats || !cats.length) return "";
   const w$ = w => String(w).replace(".", ",");
   return `<div class="cats">${total != null ? `<span class="cat tot"><span><b>${fr(total)}</b>/10</span><small>note du fight</small></span>` : ""}${cats.map(c => {
     const q = c.score / 10, w = c.weight ?? 1;
     return `<span class="cat ${q >= .8 ? "good" : q >= .5 ? "warn" : "bad"}" title="${esc(`${w === 1 ? "Catégorie principale (poids 1)" : `Catégorie secondaire : poids ${w$(w)}, elle compte ${w === .5 ? "deux" : "quatre"} fois moins`}${c.note ? " · " + c.note : ""}`)}"><span><b>${fr(c.score)}</b>/10</span><small>${esc(c.label)}${w !== 1 ? ` · poids ${w$(w)}` : ""}${c.note ? " ⓘ" : ""}</small></span>`;
-  }).join("")}</div>${muted(`Note du fight = moyenne des catégories, pondérée par leur poids.${cats.filter(c => c.detail).map(c => `<br>${esc(c.label)} : ${esc(c.detail)}${c.note ? ` (${esc(c.note)})` : ""}.`).join("")}`)}`;
+  }).join("")}</div>${partial ? `<p class="banner small"><b>Note partielle</b> : ${esc(partial.join(", "))} manquant(s) (données non chargées, quota de l'API). Elle sera complétée à la prochaine mise à jour.</p>` : ""}${muted(`Note du fight = moyenne des catégories, pondérée par leur poids.${cats.filter(c => c.detail).map(c => `<br>${esc(c.label)} : ${esc(c.detail)}${c.note ? ` (${esc(c.note)})` : ""}.`).join("")}`)}`;
 }
 const timesH = times => !times || !times.length ? '<span class="muted small">jamais</span>'
   : `<span class="cdt">${times.map(p => `${p.pull != null ? `<i>P${p.pull}</i> ` : ""}${p.ts.map(t => `<code>${mmss(t)}</code>`).join(" ")}`).join('<span class="sep">|</span>')}</span>`;
@@ -228,7 +228,7 @@ function playerPanel(p, key, ref, shown) {
   const off = ch ? ch.spells.filter(s => s.kind === "cd" && s.lost_pct != null) : [];
   const lostAvg = off.length ? Math.round(off.reduce((a, s) => a + s.lost_pct, 0) / off.length) : null, lostTop = off.length && off.every(s => s.top_lost_pct != null) ? Math.round(off.reduce((a, s) => a + s.top_lost_pct, 0) / off.length) : null;
   const head = `<div class="gph">${clsic(p.class, 46)}<div><div class="gpn">${esc(p.name)}</div><div class="muted small">${esc(`${p.spec} ${clsName(p.class)}`)} · ${ROLEL[p.role] ?? p.role}${p.ilvl ? ` · ilvl ${p.ilvl}` : ""} · ${p.pulls} pull(s), ${fr(p.minutes)} min de combat (pulls entiers, resets exclus)${p.talents ? " · " + talentsA(p.talents) : ""}</div></div>
-    <div class="gps">${p.score != null ? scoreB(p.score) : p.gameplay_score != null ? scoreB(p.gameplay_score) : chip("sans référence")}<small class="muted">note du fight · <a href="#" data-stratgo="${esc(p.name)}">détail strat</a></small></div></div>${catsStrip(p.categories)}`;
+    <div class="gps">${p.score != null ? scoreB(p.score) : p.gameplay_score != null ? scoreB(p.gameplay_score) : chip("sans référence")}<small class="muted">note du fight · <a href="#" data-stratgo="${esc(p.name)}">détail strat</a></small></div></div>${catsStrip(p.categories, null, p.partial)}`;
   if (!p.reference) return gpp(key, null, shown, p.class, `<section class="card">${head}${muted(`${esc(p.advice[0]?.text ?? "")} Sa note sur ce boss est alors celle de la strat : <a href="#" data-stratgo="${esc(p.name)}">voir le détail strat</a>.`)}</section>`);
   const R = p.reference;
   const kpis = `<div class="kpis">${kpi("DPS (brut)", kk(p.dps), `top ${kk(R.dps)} ${dchip(p.vs_top?.dps, "%")}`)}${kpi("Sorts / min", fr(p.cpm), `top ${fr(R.cpm)} ${dchip(p.vs_top?.cpm, "%")}`)}
@@ -276,7 +276,7 @@ function manaC(m) {
 /* Fiche d'un healer : Fiche / Chronologie des CD / Soin et activité */
 function healerPanel(h, key, ref, shown) {
   const head = `<div class="gph">${clsic(h.class, 46)}<div><div class="gpn">${esc(h.name)}</div><div class="muted small">${esc(`${h.spec} ${clsName(h.class)}`)} · Healer · ilvl ${h.ilvl ?? "?"} · ${h.pulls} pull(s), ${fr(h.minutes)} min${h.talents ? " · " + talentsA(h.talents) : ""}</div></div>
-    <div class="gps">${scoreB(h.score)}<small class="muted">note du fight · <a href="#" data-stratgo="${esc(h.name)}">détail strat</a></small></div></div>${catsStrip(h.categories)}`;
+    <div class="gps">${scoreB(h.score)}<small class="muted">note du fight · <a href="#" data-stratgo="${esc(h.name)}">détail strat</a></small></div></div>${catsStrip(h.categories, null, h.partial)}`;
   if (!h.reference) return gpp(key, null, shown, h.class, `<section class="card">${head}${muted(esc(h.advice[0]?.text ?? ""))}</section>`);
   const R = h.reference, vt = h.vs_top ?? {};
   const kpis = `<div class="kpis">${kpi("Soin / dégâts du raid", h.cover != null ? fr(h.cover) + " %" : "—", R.cover != null ? `top ${fr(R.cover)} % ${dchip(vt.cover, "%")}` : "référence indisponible")}
