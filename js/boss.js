@@ -161,7 +161,7 @@ function raidView(r) {
     podium(r.ranking) + `<section class="card hero"><h2>À retenir</h2><ul>${g.key_points.map(k => `<li>${esc(k)}</li>`).join("")}</ul></section>` + filterPulls(r.pulls) +
     muted("Méthode : pour chaque mécanique, on compare les dégâts subis par chaque joueur à la moyenne du raid. Un joueur est signalé quand il prend nettement plus que les autres, sur plusieurs pulls."),
     mechCards(r)];
-  if (r.special && r.special.intermission) { labels.push("Intermission"); panes.push(intermission(r.special)); }
+  if (r.special && r.special.intermission && INTERMISSION_BOSSES.includes(r.encounter)) { labels.push("Intermission"); panes.push(intermission(r.special)); }
   labels.push("Joueurs", "Morts", "Chronologie");
   panes.push(playersRecap(r.players), deathsCard(x.deaths, g), chrono(x.timelines));
   if (x.prep_available) { labels.push("Préparation"); panes.push(prep(x.prep)); }
@@ -454,7 +454,7 @@ function bossPage(id, b, mem = "") {
   /* Vue « tous les pulls » rendue tout de suite ; les vues d'un pull sont rendues à la première sélection (js/app.js, renderView) */
   const viewed = (fn, kind) => b.views.map((v, i) => i ? `<div class="view" data-view="${v.key}" data-lazy="${kind}" hidden></div>` : `<div class="view" data-view="${v.key}">${fn(v)}</div>`).join("");
   /* En-tête : nom du boss et choix du pull, sur l'image du boss (la même que sur l'accueil), hauteur fixe */
-  return `<div class="boss" data-boss="${id}" hidden><section class="bhero">${ban(TILE_HUE, initials(b.name), bossImg(b.name))}<div class="bhin"><div class="bhead"><h2>${esc(b.name)}</h2>${diff(b.difficulty)}<span class="muted">${esc(b.subtitle)}</span></div>
+  return `<div class="boss" data-boss="${id}" hidden><section class="bhero">${ban(TILE_HUE, initials(b.name), bossImg(b.name))}<div class="bhin"><div class="bhead"><h2>${esc(b.name)}</h2>${diff(b.difficulty)}<span class="muted">${esc(String(b.subtitle ?? "").replace(/\s*·?\s*fiche intégrée/, ""))}</span></div>
     <div class="viewbar"><label><b>Pulls :</b></label><select class="viewsel">${opts}</select>${goBtn}<button class="vbtn" data-view-go="${all.key}">Tous les pulls</button><span class="muted small">Par défaut, tous les pulls du boss ; choisis le kill ou un pull précis pour le détail.</span></div></div></section>
     ${b.missing.length ? `<details class="miss"><summary>Données incomplètes pour ce boss (${b.missing.length})</summary><ul class="small">${b.missing.map(m => `<li>${esc(m)}</li>`).join("")}</ul><p class="small muted">Relance l'analyse quand le quota est revenu : seules ces données seront téléchargées.</p></details>` : ""}
     ${tabset(["Raid", "Membres", "Gameplay", "Stuff", ...(prog ? ["Progression"] : [])], [viewed(v => raidView(v.raid), "raid"), mem, viewed(v => gameplayView(v, b), "gp"), stuffView(b.stuff), ...(prog ? [progressionView(b)] : [])], true)}</div>`;
