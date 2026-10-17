@@ -5,12 +5,12 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": null,
   "server": null,
-  "next_update": 1792232638572,
+  "next_update": 1792235978268,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792231738573,
+  "generated": 1792232487834,
   "pulls": 21,
-  "note": 9.1,
+  "note": 8.8,
   "bosses": [
    {
     "name": "Nek'zali the Soulcoiler",
@@ -249,18 +249,16 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 9.3,
-      "pulls": 12,
-      "partial": true
+      "note": 8.2,
+      "pulls": 12
      },
      {
       "name": "Hazizoul",
       "class": "Priest",
       "role": "healer",
       "sub": null,
-      "note": 9.5,
-      "pulls": 12,
-      "partial": true
+      "note": 8,
+      "pulls": 12
      },
      {
       "name": "Tyry",
@@ -321,18 +319,16 @@ window.RAPPORTS_INDEX = [
       "class": "Evoker",
       "role": "healer",
       "sub": null,
-      "note": 9.3,
-      "pulls": 12,
-      "partial": true
+      "note": 7.1,
+      "pulls": 12
      },
      {
       "name": "Môy",
       "class": "Paladin",
       "role": "healer",
       "sub": null,
-      "note": 9.3,
-      "pulls": 12,
-      "partial": true
+      "note": 7.8,
+      "pulls": 12
      },
      {
       "name": "Jeangrip",
@@ -485,18 +481,16 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "healer",
       "sub": null,
-      "note": 10,
-      "pulls": 2,
-      "partial": true
+      "note": 8.8,
+      "pulls": 2
      },
      {
       "name": "Shrakle",
       "class": "Evoker",
       "role": "healer",
       "sub": null,
-      "note": 10,
-      "pulls": 2,
-      "partial": true
+      "note": 6.8,
+      "pulls": 2
      },
      {
       "name": "Snøz",
@@ -512,18 +506,16 @@ window.RAPPORTS_INDEX = [
       "class": "Paladin",
       "role": "healer",
       "sub": null,
-      "note": 10,
-      "pulls": 2,
-      "partial": true
+      "note": 6.5,
+      "pulls": 2
      },
      {
       "name": "Endloril",
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 10,
-      "pulls": 2,
-      "partial": true
+      "note": 9.2,
+      "pulls": 2
      },
      {
       "name": "Lauenat",
@@ -845,10 +837,9 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "healer",
     "sub": null,
-    "note": 9.3,
+    "note": 8.5,
     "pulls": 19,
-    "deaths": 0,
-    "partial": true
+    "deaths": 0
    },
    {
     "name": "Luluisback",
@@ -965,10 +956,9 @@ window.RAPPORTS_INDEX = [
     "class": "Evoker",
     "role": "healer",
     "sub": null,
-    "note": 8.8,
+    "note": 7.1,
     "pulls": 19,
-    "deaths": 2,
-    "partial": true
+    "deaths": 2
    },
    {
     "name": "Dyâlise",
@@ -985,20 +975,18 @@ window.RAPPORTS_INDEX = [
     "class": "Paladin",
     "role": "healer",
     "sub": null,
-    "note": 9,
+    "note": 7.7,
     "pulls": 19,
-    "deaths": 3,
-    "partial": true
+    "deaths": 3
    },
    {
     "name": "Hazizoul",
     "class": "Priest",
     "role": "healer",
     "sub": null,
-    "note": 9.3,
+    "note": 8.2,
     "pulls": 19,
-    "deaths": 0,
-    "partial": true
+    "deaths": 0
    },
    {
     "name": "Snøz",
