@@ -89,13 +89,16 @@ function stuffRecap() {
     rows.map(o => [{ h: pl(o.name, o.cls, o.role), v: o.name }, { h: [...o.slots].map(([slot, l]) => `<span class="chip ${l.length === o.n ? "bad" : "warn"}" title="${esc(l.join(", "))}">${esc(slot)} : ${l.length === o.n ? "tous les boss" : `${l.length} boss sur ${o.n}`}</span>`).join(" "), v: o.slots.size }]), "sortable") : '<p class="good">Tout le monde est enchanté sur tous les boss.</p>'}</section>`;
 }
 
-/* Bandeaux : suivi automatique et données incomplètes */
+/* Statut de l'analyse : une pastille (vert Clôturé, orange En cours, rouge En échec) ; le détail est dans l'infobulle */
 function banners() {
   const a = X.auto_update, c = X.completeness, hm = t => new Date(t).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
-  let s = "";
-  if (a) s += `<div class="auto ${a.active ? "on" : "done"}">${a.active ? `<b>Mise à jour automatique en cours.</b>${a.next ? ` Prochaine mise à jour vers <b>${hm(a.next)}</b>.` : ""} ${a.live ? "Le rapport reçoit encore des pulls : vérification toutes les 10 min." : "Des données manquent : nouvel essai juste après la remise à zéro du quota."} La page se recharge toute seule quand tu ne la lis pas.` : "<b>Rapport clôturé.</b> Toutes les données sont chargées et aucun pull n'a été ajouté depuis 1 h."}</div>`;
-  if (c && !c.complete) s += `<div class="banner"><b>Données incomplètes.</b> ${c.missing ? `${c.missing} partie(s) manquante(s) (détail dans chaque boss)` : ""}${c.requests_missing ? `${c.missing ? ", " : ""}${c.requests_missing} requête(s) non chargée(s)` : ""}${c.stale ? ` · ${c.stale} donnée(s) lue(s) dans un cache expiré` : ""}. ${a && a.active ? "Elles seront complétées automatiquement" : `Relance l'analyse${c.retry_in_min ? ` dans <b>${c.retry_in_min} min</b>` : " plus tard"}`} : seules les données manquantes et les nouveaux pulls seront téléchargés.</div>`;
-  return s;
+  const missing = c && !c.complete ? [c.missing ? `${c.missing} partie(s) manquante(s)` : "", c.requests_missing ? `${c.requests_missing} requête(s) non chargée(s)` : "", c.stale ? `${c.stale} donnée(s) d'un cache expiré` : ""].filter(Boolean).join(", ") : "";
+  const failed = (X.failed || []).length;
+  let st, label, info;
+  if (a && a.active) { st = "warn"; label = "En cours"; info = `Mise à jour automatique${a.next ? `, prochaine vers ${hm(a.next)}` : ""}. ${a.live ? "Le rapport reçoit encore des pulls (vérification toutes les 10 min)." : "Des données manquent : nouvel essai après la remise à zéro du quota."}${missing ? " Manque : " + missing + "." : ""} La page se recharge toute seule quand tu ne la lis pas.`; }
+  else if (failed || missing) { st = "bad"; label = "En échec"; info = `${failed ? `${failed} boss non analysé(s). ` : ""}${missing ? `Données incomplètes : ${missing}. ` : ""}Relance l'analyse${c && c.retry_in_min ? ` dans ${c.retry_in_min} min` : " plus tard"} : seules les données manquantes seront téléchargées.`; }
+  else { st = "good"; label = "Clôturé"; info = "Toutes les données sont chargées et aucun pull n'a été ajouté depuis 1 h."; }
+  return `<div class="astat" title="${esc(info)}"><span class="muted">Statut de l'analyse :</span><span class="apill ${st}"><i></i>${label}</span>${st !== "good" && a && a.active && a.next ? `<span class="muted small">prochaine mise à jour vers ${hm(a.next)}</span>` : ""}</div>`;
 }
 function footer() {
   return `<footer class="foot"><span>${ico("cal")}Rapport généré le ${timeFr(X.generated)}</span><span class="muted">Raid Analyzer, par Endloril &amp; Dalrkïra</span><span>${ico("sync")}${X.auto_update && X.auto_update.active ? "Mise à jour automatique en cours" : "Rapport clôturé"}${X.extension_version ? ` · v${esc(X.extension_version)}` : ""}</span></footer>`;
