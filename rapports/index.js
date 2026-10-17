@@ -5,10 +5,10 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": null,
   "server": null,
-  "next_update": 1792247048291,
+  "next_update": 1792247048903,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792243515940,
+  "generated": 1792243514918,
   "pulls": 21,
   "note": 8.1,
   "bosses": [
