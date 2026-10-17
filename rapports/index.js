@@ -5,12 +5,12 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": null,
   "server": null,
-  "next_update": 1792247048903,
+  "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792243514918,
+  "generated": 1792247077211,
   "pulls": 21,
-  "note": 8.1,
+  "note": 8,
   "bosses": [
    {
     "name": "Nek'zali the Soulcoiler",
@@ -376,9 +376,8 @@ window.RAPPORTS_INDEX = [
       "class": "Shaman",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.8,
-      "pulls": 2,
-      "partial": true
+      "note": 5.3,
+      "pulls": 2
      },
      {
       "name": "Jeangrip",
@@ -425,9 +424,8 @@ window.RAPPORTS_INDEX = [
       "class": "Hunter",
       "role": "dps",
       "sub": "melee",
-      "note": 9.7,
-      "pulls": 2,
-      "partial": true
+      "note": 8,
+      "pulls": 2
      },
      {
       "name": "Höjö",
@@ -490,9 +488,8 @@ window.RAPPORTS_INDEX = [
       "class": "Rogue",
       "role": "dps",
       "sub": "melee",
-      "note": 10,
-      "pulls": 2,
-      "partial": true
+      "note": 7.3,
+      "pulls": 2
      },
      {
       "name": "Darlkira",
@@ -784,20 +781,18 @@ window.RAPPORTS_INDEX = [
     "class": "Hunter",
     "role": "dps",
     "sub": "melee",
-    "note": 9.1,
+    "note": 8.9,
     "pulls": 19,
-    "deaths": 1,
-    "partial": true
+    "deaths": 1
    },
    {
     "name": "Drtyrran",
     "class": "Shaman",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.1,
+    "note": 7.8,
     "pulls": 19,
-    "deaths": 1,
-    "partial": true
+    "deaths": 1
    },
    {
     "name": "Darlkira",
@@ -813,10 +808,9 @@ window.RAPPORTS_INDEX = [
     "class": "Rogue",
     "role": "dps",
     "sub": "melee",
-    "note": 7.3,
+    "note": 7,
     "pulls": 19,
-    "deaths": 5,
-    "partial": true
+    "deaths": 5
    },
    {
     "name": "Harmoniaque",
@@ -945,9 +939,8 @@ window.RAPPORTS_INDEX = [
     "deaths": 6
    }
   ],
-  "complete": false,
-  "partial": true,
-  "auto": true,
+  "complete": true,
+  "auto": false,
   "extension_version": "0.39.4",
   "file": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.html",
   "json": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.json"
