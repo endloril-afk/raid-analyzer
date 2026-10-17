@@ -5,10 +5,10 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": null,
   "server": null,
-  "next_update": 1792232284135,
+  "next_update": 1792229911925,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792228714255,
+  "generated": 1792229011926,
   "pulls": 21,
   "note": 9.1,
   "bosses": [
@@ -27,7 +27,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 8.2,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      },
      {
       "name": "Endloril",
@@ -43,7 +44,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 8.3,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      },
      {
       "name": "Drtyrran",
@@ -51,7 +53,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 8.8,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      },
      {
       "name": "Darlkira",
@@ -59,7 +62,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      },
      {
       "name": "Lücîøle",
@@ -67,7 +71,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 9.1,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      },
      {
       "name": "Harmoniaque",
@@ -75,7 +80,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.1,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      },
      {
       "name": "Jeangrip",
@@ -83,7 +89,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 8.8,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      },
      {
       "name": "Toufoux",
@@ -91,7 +98,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 8.9,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      },
      {
       "name": "Lauenat",
@@ -99,7 +107,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.4,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      },
      {
       "name": "Yörr",
@@ -107,7 +116,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.4,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      },
      {
       "name": "Tyry",
@@ -115,7 +125,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.4,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      },
      {
       "name": "Aelminster",
@@ -123,14 +134,15 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.5,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      },
      {
       "name": "Shrakle",
       "class": "Evoker",
       "role": "healer",
       "sub": null,
-      "note": 6.8,
+      "note": 6.6,
       "pulls": 1
      },
      {
@@ -139,14 +151,15 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 9.7,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      },
      {
       "name": "Môy",
       "class": "Paladin",
       "role": "healer",
       "sub": null,
-      "note": 7.1,
+      "note": 7,
       "pulls": 1
      },
      {
@@ -163,7 +176,8 @@ window.RAPPORTS_INDEX = [
       "role": "tank",
       "sub": null,
       "note": 10,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      },
      {
       "name": "Dèàthstrôke",
@@ -171,7 +185,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 10,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      },
      {
       "name": "Pattopaprika",
@@ -179,7 +194,8 @@ window.RAPPORTS_INDEX = [
       "role": "tank",
       "sub": null,
       "note": 10,
-      "pulls": 1
+      "pulls": 1,
+      "partial": true
      }
     ]
    },
@@ -198,7 +214,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 7.3,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Lauenat",
@@ -206,7 +223,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 6.9,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Lücîøle",
@@ -214,7 +232,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 6.5,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Dèàthstrôke",
@@ -222,7 +241,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 8.2,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Endloril",
@@ -230,7 +250,8 @@ window.RAPPORTS_INDEX = [
       "role": "healer",
       "sub": null,
       "note": 9.3,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Hazizoul",
@@ -238,7 +259,8 @@ window.RAPPORTS_INDEX = [
       "role": "healer",
       "sub": null,
       "note": 9.5,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Tyry",
@@ -246,7 +268,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.6,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Aelminster",
@@ -254,7 +277,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 8.1,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Snøz",
@@ -262,7 +286,8 @@ window.RAPPORTS_INDEX = [
       "role": "tank",
       "sub": null,
       "note": 9.6,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Dyâlise",
@@ -270,7 +295,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 9.6,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Pattopaprika",
@@ -278,7 +304,8 @@ window.RAPPORTS_INDEX = [
       "role": "tank",
       "sub": null,
       "note": 9,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Höjö",
@@ -286,7 +313,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 9,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Shrakle",
@@ -294,7 +322,8 @@ window.RAPPORTS_INDEX = [
       "role": "healer",
       "sub": null,
       "note": 9.3,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Môy",
@@ -302,7 +331,8 @@ window.RAPPORTS_INDEX = [
       "role": "healer",
       "sub": null,
       "note": 9.3,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Jeangrip",
@@ -310,7 +340,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 10,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Toufoux",
@@ -318,7 +349,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Drtyrran",
@@ -326,7 +358,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Darlkira",
@@ -334,7 +367,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Luluisback",
@@ -342,7 +376,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 10,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      },
      {
       "name": "Yörr",
@@ -350,7 +385,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 12
+      "pulls": 12,
+      "partial": true
      }
     ]
    },
@@ -369,7 +405,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 7.9,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Drtyrran",
@@ -377,7 +414,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 8.8,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Jeangrip",
@@ -385,7 +423,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 8.9,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Dèàthstrôke",
@@ -393,7 +432,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 8.9,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Pattopaprika",
@@ -401,7 +441,8 @@ window.RAPPORTS_INDEX = [
       "role": "tank",
       "sub": null,
       "note": 9.2,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Harmoniaque",
@@ -409,7 +450,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.2,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Tyry",
@@ -417,7 +459,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Luluisback",
@@ -425,7 +468,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 9.7,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Höjö",
@@ -433,7 +477,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 9.9,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Hazizoul",
@@ -441,7 +486,8 @@ window.RAPPORTS_INDEX = [
       "role": "healer",
       "sub": null,
       "note": 10,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Shrakle",
@@ -449,7 +495,8 @@ window.RAPPORTS_INDEX = [
       "role": "healer",
       "sub": null,
       "note": 10,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Snøz",
@@ -457,7 +504,8 @@ window.RAPPORTS_INDEX = [
       "role": "tank",
       "sub": null,
       "note": 10,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Môy",
@@ -465,7 +513,8 @@ window.RAPPORTS_INDEX = [
       "role": "healer",
       "sub": null,
       "note": 10,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Endloril",
@@ -473,7 +522,8 @@ window.RAPPORTS_INDEX = [
       "role": "healer",
       "sub": null,
       "note": 10,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Lauenat",
@@ -481,7 +531,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Lücîøle",
@@ -489,7 +540,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 10,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Darlkira",
@@ -497,7 +549,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Yörr",
@@ -505,7 +558,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Aelminster",
@@ -513,7 +567,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      },
      {
       "name": "Dyâlise",
@@ -521,7 +576,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 10,
-      "pulls": 2
+      "pulls": 2,
+      "partial": true
      }
     ]
    },
@@ -540,7 +596,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 6.5,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      },
      {
       "name": "Pattopaprika",
@@ -548,7 +605,8 @@ window.RAPPORTS_INDEX = [
       "role": "tank",
       "sub": null,
       "note": 8.4,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      },
      {
       "name": "Lücîøle",
@@ -556,7 +614,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 8.4,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      },
      {
       "name": "Jeangrip",
@@ -564,7 +623,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 9,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      },
      {
       "name": "Toufoux",
@@ -572,7 +632,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      },
      {
       "name": "Harmoniaque",
@@ -580,7 +641,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      },
      {
       "name": "Tyry",
@@ -588,7 +650,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      },
      {
       "name": "Luluisback",
@@ -596,7 +659,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 10,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      },
      {
       "name": "Hazizoul",
@@ -611,7 +675,7 @@ window.RAPPORTS_INDEX = [
       "class": "Evoker",
       "role": "healer",
       "sub": null,
-      "note": 7.4,
+      "note": 7.3,
       "pulls": 4
      },
      {
@@ -620,14 +684,15 @@ window.RAPPORTS_INDEX = [
       "role": "tank",
       "sub": null,
       "note": 10,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      },
      {
       "name": "Môy",
       "class": "Paladin",
       "role": "healer",
       "sub": null,
-      "note": 8.4,
+      "note": 8.3,
       "pulls": 4
      },
      {
@@ -644,7 +709,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      },
      {
       "name": "Dèàthstrôke",
@@ -652,7 +718,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 10,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      },
      {
       "name": "Drtyrran",
@@ -660,7 +727,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      },
      {
       "name": "Darlkira",
@@ -668,7 +736,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      },
      {
       "name": "Yörr",
@@ -676,7 +745,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      },
      {
       "name": "Aelminster",
@@ -684,7 +754,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      },
      {
       "name": "Dyâlise",
@@ -692,7 +763,8 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 10,
-      "pulls": 4
+      "pulls": 4,
+      "partial": true
      }
     ]
    },
@@ -765,7 +837,8 @@ window.RAPPORTS_INDEX = [
     "sub": "melee",
     "note": 8.5,
     "pulls": 19,
-    "deaths": 3
+    "deaths": 3,
+    "partial": true
    },
    {
     "name": "Endloril",
@@ -774,7 +847,8 @@ window.RAPPORTS_INDEX = [
     "sub": null,
     "note": 9.3,
     "pulls": 19,
-    "deaths": 0
+    "deaths": 0,
+    "partial": true
    },
    {
     "name": "Luluisback",
@@ -783,7 +857,8 @@ window.RAPPORTS_INDEX = [
     "sub": "melee",
     "note": 9.9,
     "pulls": 19,
-    "deaths": 1
+    "deaths": 1,
+    "partial": true
    },
    {
     "name": "Drtyrran",
@@ -792,7 +867,8 @@ window.RAPPORTS_INDEX = [
     "sub": "ranged",
     "note": 9.8,
     "pulls": 19,
-    "deaths": 1
+    "deaths": 1,
+    "partial": true
    },
    {
     "name": "Darlkira",
@@ -801,7 +877,8 @@ window.RAPPORTS_INDEX = [
     "sub": "ranged",
     "note": 9.9,
     "pulls": 19,
-    "deaths": 1
+    "deaths": 1,
+    "partial": true
    },
    {
     "name": "Lücîøle",
@@ -810,7 +887,8 @@ window.RAPPORTS_INDEX = [
     "sub": "melee",
     "note": 7.4,
     "pulls": 19,
-    "deaths": 5
+    "deaths": 5,
+    "partial": true
    },
    {
     "name": "Harmoniaque",
@@ -819,7 +897,8 @@ window.RAPPORTS_INDEX = [
     "sub": "ranged",
     "note": 8,
     "pulls": 19,
-    "deaths": 2
+    "deaths": 2,
+    "partial": true
    },
    {
     "name": "Jeangrip",
@@ -828,7 +907,8 @@ window.RAPPORTS_INDEX = [
     "sub": "melee",
     "note": 9.6,
     "pulls": 19,
-    "deaths": 3
+    "deaths": 3,
+    "partial": true
    },
    {
     "name": "Toufoux",
@@ -837,7 +917,8 @@ window.RAPPORTS_INDEX = [
     "sub": "ranged",
     "note": 9.5,
     "pulls": 19,
-    "deaths": 4
+    "deaths": 4,
+    "partial": true
    },
    {
     "name": "Lauenat",
@@ -846,7 +927,8 @@ window.RAPPORTS_INDEX = [
     "sub": "ranged",
     "note": 8,
     "pulls": 19,
-    "deaths": 2
+    "deaths": 2,
+    "partial": true
    },
    {
     "name": "Yörr",
@@ -855,7 +937,8 @@ window.RAPPORTS_INDEX = [
     "sub": "ranged",
     "note": 10,
     "pulls": 19,
-    "deaths": 0
+    "deaths": 0,
+    "partial": true
    },
    {
     "name": "Tyry",
@@ -864,7 +947,8 @@ window.RAPPORTS_INDEX = [
     "sub": "ranged",
     "note": 9.7,
     "pulls": 19,
-    "deaths": 1
+    "deaths": 1,
+    "partial": true
    },
    {
     "name": "Aelminster",
@@ -873,7 +957,8 @@ window.RAPPORTS_INDEX = [
     "sub": "ranged",
     "note": 8.8,
     "pulls": 19,
-    "deaths": 3
+    "deaths": 3,
+    "partial": true
    },
    {
     "name": "Shrakle",
@@ -882,7 +967,8 @@ window.RAPPORTS_INDEX = [
     "sub": null,
     "note": 8.8,
     "pulls": 19,
-    "deaths": 2
+    "deaths": 2,
+    "partial": true
    },
    {
     "name": "Dyâlise",
@@ -891,16 +977,18 @@ window.RAPPORTS_INDEX = [
     "sub": "melee",
     "note": 9.7,
     "pulls": 19,
-    "deaths": 0
+    "deaths": 0,
+    "partial": true
    },
    {
     "name": "Môy",
     "class": "Paladin",
     "role": "healer",
     "sub": null,
-    "note": 9.1,
+    "note": 9,
     "pulls": 19,
-    "deaths": 3
+    "deaths": 3,
+    "partial": true
    },
    {
     "name": "Hazizoul",
@@ -909,7 +997,8 @@ window.RAPPORTS_INDEX = [
     "sub": null,
     "note": 9.3,
     "pulls": 19,
-    "deaths": 0
+    "deaths": 0,
+    "partial": true
    },
    {
     "name": "Snøz",
@@ -918,7 +1007,8 @@ window.RAPPORTS_INDEX = [
     "sub": null,
     "note": 9.7,
     "pulls": 19,
-    "deaths": 1
+    "deaths": 1,
+    "partial": true
    },
    {
     "name": "Dèàthstrôke",
@@ -927,7 +1017,8 @@ window.RAPPORTS_INDEX = [
     "sub": "melee",
     "note": 8.7,
     "pulls": 19,
-    "deaths": 3
+    "deaths": 3,
+    "partial": true
    },
    {
     "name": "Pattopaprika",
@@ -936,12 +1027,14 @@ window.RAPPORTS_INDEX = [
     "sub": null,
     "note": 8.9,
     "pulls": 19,
-    "deaths": 6
+    "deaths": 6,
+    "partial": true
    }
   ],
   "complete": false,
+  "partial": true,
   "auto": true,
-  "extension_version": "0.39.3",
+  "extension_version": "0.39.4",
   "file": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.html",
   "json": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.json"
  }
