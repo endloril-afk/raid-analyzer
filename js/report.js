@@ -100,18 +100,25 @@ function stuffRecap() {
     const o = per.get(p.name) || per.set(p.name, { name: p.name, cls: p.class, role: p.role, n: 0, slots: new Map() }).get(p.name); o.n++;
     for (const e of (p.enchants || []).filter(x => x.present && x.required && !x.has)) (o.slots.get(e.slot) || o.slots.set(e.slot, []).get(e.slot)).push(b.name);
   }
-  if (!per.size) return potionRecap();
+  if (!per.size) return trinketRecap() + potionRecap();
   const rows = [...per.values()].filter(o => o.slots.size).sort((a, b) => b.slots.size - a.slots.size || a.name.localeCompare(b.name, "fr"));
   return `<div class="sechead"><h2>Stuff de la soirée</h2><span class="muted small">Enchantements manquants, sur combien des ${bs.length} boss</span></div><section class="card">${rows.length ? table([{ l: "Joueur" }, { l: "Enchantements manquants" }],
-    rows.map(o => [{ h: pl(o.name, o.cls, o.role), v: o.name }, { h: [...o.slots].map(([slot, l]) => `<span class="chip ${l.length === o.n ? "bad" : "warn"}" title="${esc(l.join(", "))}">${esc(slot)} : ${l.length === o.n ? "tous les boss" : `${l.length} boss sur ${o.n}`}</span>`).join(" "), v: o.slots.size }]), "sortable") : '<p class="good">Tout le monde est enchanté sur tous les boss.</p>'}</section>`; + potionRecap();
+    rows.map(o => [{ h: pl(o.name, o.cls, o.role), v: o.name }, { h: [...o.slots].map(([slot, l]) => `<span class="chip ${l.length === o.n ? "bad" : "warn"}" title="${esc(l.join(", "))}">${esc(slot)} : ${l.length === o.n ? "tous les boss" : `${l.length} boss sur ${o.n}`}</span>`).join(" "), v: o.slots.size }]), "sortable") : '<p class="good">Tout le monde est enchanté sur tous les boss.</p>'}</section>` + trinketRecap() + potionRecap();
 }
 
 /* Potions de combat jamais prises sur la soirée : conseil « Potion · jamais prise » sur chaque boss où le joueur est comparé au top */
+/* Bijoux du top absents de l'équipement : une ligne par joueur et par bijou, sur la soirée (au lieu d'un conseil par boss) */
+function trinketRecap() {
+  const T = X.trinket_suggestions || [];
+  if (!T.length) return "";
+  return `<div class="sechead"><h2>Bijoux à viser</h2><span class="muted small">Bijou à activation utilisé par la majorité des meilleurs de la spé, absent de l'équipement du joueur (fiche de début de pull) · à considérer s'il tombe, sans pénalité sur la note</span></div><section class="card">${table([{ l: "Joueur" }, { l: "Bijou" }, { l: "Utilisé par" }, { l: "Boss" }],
+    T.map(t => [{ h: pl(t.player, t.class, t.role), v: t.player }, { h: t.icon ? sp(t.trinket, t.icon, 18, true) : esc(t.trinket), v: t.trinket }, t.users ? `${t.users} des meilleurs` : "—", { h: esc(t.bosses.join(", ")), v: t.bosses.length }]), "sortable")}</section>`;
+}
 function potionRecap() {
   const per = new Map();
   /* boss pris en compte : kill ou au moins 3 pulls (sur 1-2 pulls de découverte, ne pas prendre de potion est courant) */
   for (const b of tried().filter(b => b.summary.kills || b.summary.pulls >= 3)) { const v = b.views[0] || {};
-    for (const o of [...((v.gameplay && v.gameplay.players) || []), ...((v.healers && v.healers.healers) || [])]) { if (!o.reference) continue;
+    for (const o of [...((v.gameplay && v.gameplay.players) || []), ...((v.healers && v.healers.healers) || []).map(h => ({ ...h, role: "healer" }))]) { if (!o.reference) continue;
       const m = per.get(o.name) || per.set(o.name, { name: o.name, cls: o.class, role: o.role, n: 0, never: [], less: [] }).get(o.name); m.n++;
       const pa = (o.advice || []).filter(a => a.topic === "Potion");
       if (pa.some(a => /jamais prise/.test(a.text))) m.never.push(b.name); else if (pa.length) m.less.push(b.name); } }
