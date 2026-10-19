@@ -164,6 +164,7 @@ function raidView(r, b = null, v = null) {
     mechCards(r)];
   if (r.special && r.special.intermission && INTERMISSION_BOSSES.includes(r.encounter)) { labels.push("Intermission"); panes.push(intermission(r.special)); }
   if (b && b.deep && b.deep.vashnik) { labels.push("Analyse Vashnik"); panes.push(vashnikView(b.deep.vashnik, v && v.key !== "all" && /^p\d+$/.test(v.key) ? +v.key.slice(1) : null)); }
+  if (b && b.deep && b.deep.nymrissa) { labels.push("Analyse Nymrissa"); panes.push(nymrissaView(b.deep.nymrissa, v && v.key !== "all" && /^p\d+$/.test(v.key) ? +v.key.slice(1) : null)); }
   if (b && b.deep && b.deep.sszorak) { labels.push("Analyse Sszorak"); panes.push(sszorakView(b.deep.sszorak, v && v.key !== "all" && /^p\d+$/.test(v.key) ? +v.key.slice(1) : null)); }
   labels.push("Joueurs", "Morts", "Chronologie");
   panes.push(playersRecap(r.players), deathsCard(x.deaths, g), chrono(x.timelines));
@@ -644,4 +645,30 @@ function sszorakView(sz, pull) {
     (CY.length ? table([...pcol, { l: "Heure", num: 1 }, { l: "Joueurs projetés", num: 1 }, { l: "Moment" }, { l: "Posé par" }],
       CY.map(x => [...pv(x), { h: mmss(x.t_s), v: x.t_s }, x.hit, { h: x.during_int ? '<span class="good">intermission</span>' : '<span class="bad">hors intermission</span>', v: x.during_int ? 0 : 1 }, x.placed_by ? `${esc(x.placed_by)} <small class="muted">${mmss(x.placed_s)}</small>` : "—"])) : muted("Aucun kyste éclaté sur cette vue.")));
   return tl + fury + vir + cw + mut + cy + (sz.notes || []).map(n => muted(esc(n))).join("");
+}
+
+/* ---------- Nymrissa : orbes de givre prises pendant la pluie ---------- */
+function nymrissaView(ny, pull) {
+  const P = x => pull == null || x.pull === pull, pc = pull == null;
+  const pcol = pc ? [{ l: "Pull", num: 1 }] : [], pv = x => pc ? [x.pull] : [];
+  const S = ny.soaks.filter(P), bad = S.filter(x => x.in_rain && !x.after_cut), R = ny.rains.filter(P);
+  const per = new Map(); for (const x of S) for (const n of x.soakers) { const o = per.get(n) || per.set(n, { n, all: 0, rain: 0 }).get(n); o.all++; if (x.in_rain && !x.after_cut) o.rain++; }
+  const cls = new Map((ny.players || []).map(p => [p.player, p.class]));
+  const rows = [...per.values()].sort((a, b) => b.rain - a.rain || b.all - a.all);
+  /* frise : pluies (bandes bleues) et orbes (point rouge pendant la pluie, vert sinon) par pull */
+  const frise = [...new Set(S.map(x => x.pull))].map(pl => {
+    const s = S.filter(x => x.pull === pl), r = R.filter(x => x.pull === pl), end = Math.max(30, ...s.map(x => x.time_s + 10), ...r.map(x => x.end_s + 10));
+    const W = 900, L = 60, x = t => L + t / end * (W - L - 10);
+    let g = `<text x="4" y="24" class="szl">Pull ${pl}</text>`;
+    for (const w of r) g += `<rect x="${x(w.start_s)}" y="8" width="${Math.max(2, x(w.end_s) - x(w.start_s))}" height="26" fill="#38bdf8" fill-opacity=".3"><title>Abyssal Rain ${mmss(w.start_s)} → ${mmss(w.end_s)}</title></rect>`;
+    for (const o of s) g += `<circle cx="${x(o.time_s)}" cy="21" r="6" fill="${o.in_rain && !o.after_cut ? "#ef4444" : "#22c55e"}"><title>Frost Orb ${mmss(o.time_s)} : ${esc(o.soakers.join(", "))}${o.in_rain ? " (pendant la pluie)" : ""}</title></circle>`;
+    for (let t = 0; t <= end; t += 60) g += `<text x="${x(t)}" y="48" text-anchor="middle" class="szl">${mmss(t)}</text>`;
+    return `<svg viewBox="0 0 ${W} 54" style="width:100%;max-width:${W}px;display:block">${g}</svg>`;
+  }).join("");
+  return card("Frost Orb pendant Abyssal Rain", muted("Consigne : ne pas prendre d'orbe de givre pendant la pluie (check de heal ; en Mythique, chaque orbe prise déclenche Frost Burst sur tout le raid). Bandes bleues = pluie ; point rouge = orbe prise pendant la pluie, vert = en dehors. Survole un point pour voir qui l'a prise.") + frise +
+      (bad.length ? table([...pcol, { l: "Heure", num: 1 }, { l: "Pluie", num: 1 }, { l: "Pris par" }, { l: "Frost Burst", num: 1 }, { l: "Morts dans les 6 s" }],
+        bad.map(x => [...pv(x), { h: mmss(x.time_s), v: x.time_s }, x.rain, { h: `<span class="bad">${esc(x.soakers.join(", "))}</span>`, v: x.soakers.join(", ") }, x.burst_hit || "—", { h: x.deaths_after.length ? `<span class="bad">${esc(x.deaths_after.join(", "))}</span>` : "—", v: x.deaths_after.length }]))
+        : `<p class="good">Aucune orbe prise pendant la pluie${R.length ? "" : " (pas de pluie dans la partie analysée)"}.</p>`)) +
+    (rows.length ? card("Orbes par joueur", table([{ l: "Joueur" }, { l: "Pendant la pluie", num: 1 }, { l: "Orbes prises", num: 1 }],
+      rows.map(o => [{ h: pl(o.n, cls.get(o.n)), v: o.n }, { h: o.rain ? `<span class="bad">${o.rain}</span>` : "0", v: o.rain }, o.all]))) : "") + (ny.notes || []).map(n => muted(esc(n))).join("");
 }
