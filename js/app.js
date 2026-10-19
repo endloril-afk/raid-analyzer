@@ -254,35 +254,45 @@ document.addEventListener("change", e => {
   init();
 })();
 
-/* Vashnik : carte simulée d'une Plague Froth (lignes depuis le boss vers chaque porteur, front de vague, totems détruits) */
+/* Vashnik : carte simulée d'une Plague Froth. Chaque vague part d'un porteur (position à l'explosion) en ligne droite ;
+   direction déduite des joueurs touchés (le log ne la donne pas), sinon cercle « direction inconnue ». */
 (function () {
   const SIDE = { feu: "#f97316", ombre: "#a78bfa", "?": "#9ca3af" };
   function draw(box) {
     const data = JSON.parse(box.querySelector(".vkdata").textContent), m = data[+box.querySelector(".vksel").value], t = +box.querySelector(".vkt").value;
     box.querySelector(".vktl").textContent = t.toFixed(1) + " s";
     if (!m) return;
-    const R = 45, B = m.boss, carriers = m.players.filter(p => p.carrier);
-    const dir = c => { const dx = c.x - B[0], dy = c.y - B[1], n = Math.hypot(dx, dy) || 1; return [dx / n, dy / n]; };
-    const pts = [B, ...m.players.map(p => [p.x, p.y]), ...carriers.map(c => { const d = dir(c); return [B[0] + d[0] * R, B[1] + d[1] * R]; })];
-    let x0 = Math.min(...pts.map(p => p[0])) - 5, x1 = Math.max(...pts.map(p => p[0])) + 5, y0 = Math.min(...pts.map(p => p[1])) - 5, y1 = Math.max(...pts.map(p => p[1])) + 5;
+    const R = 40, B = m.boss;
+    /* anciens rapports (vagues depuis le boss) : on reconstruit les porteurs sans direction */
+    const waves = m.waves || m.players.filter(p => p.carrier).map(p => ({ name: p.name, x: p.x, y: p.y, dir: null, hits: 0 }));
+    const end = w => w.dir ? [w.x + w.dir[0] * R, w.y + w.dir[1] * R] : [w.x, w.y];
+    const pts = [B, ...m.players.map(p => [p.x, p.y]), ...waves.map(end), ...m.hits.map(h => [h.x, h.y])];
+    let x0 = Math.min(...pts.map(p => p[0])) - 6, x1 = Math.max(...pts.map(p => p[0])) + 6, y0 = Math.min(...pts.map(p => p[1])) - 6, y1 = Math.max(...pts.map(p => p[1])) + 6;
     const W = 760, H = Math.max(320, Math.min(620, W * (y1 - y0) / Math.max(x1 - x0, 1))), k = Math.min(W / (x1 - x0), H / (y1 - y0));
     const sx = x => (x - x0) * k, sy = y => H - (y - y0) * k;
     let s = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Carte de la vague">';
-    for (const c of carriers) { const d = dir(c), e = [B[0] + d[0] * R, B[1] + d[1] * R]; s += '<line x1="' + sx(B[0]) + '" y1="' + sy(B[1]) + '" x2="' + sx(e[0]) + '" y2="' + sy(e[1]) + '" stroke="#f59e0b" stroke-opacity=".35" stroke-width="3" stroke-dasharray="6 5"/>';
-      const r = Math.min(R, m.speed * t), f = [B[0] + d[0] * r, B[1] + d[1] * r], nx = -d[1], ny = d[0], w = 2.5;
-      if (t > 0) s += '<line x1="' + sx(f[0] + nx * w) + '" y1="' + sy(f[1] + ny * w) + '" x2="' + sx(f[0] - nx * w) + '" y2="' + sy(f[1] - ny * w) + '" stroke="#ef4444" stroke-width="4" stroke-linecap="round"><title>Front de la Plague Wave vers ' + c.name + '</title></line>'; }
-    for (const h of m.hits.filter(h => h.dt <= t)) s += '<circle cx="' + sx(h.x) + '" cy="' + sy(h.y) + '" r="9" fill="none" stroke="#ef4444" stroke-width="1.5"><title>' + h.name + ' touché par la vague à ' + h.dt + ' s</title></circle>';
+    const r = m.speed * t;
+    for (const w of waves) {
+      if (w.dir) { const e = end(w), nx = -w.dir[1], ny = w.dir[0], q = Math.min(R, r), f = [w.x + w.dir[0] * q, w.y + w.dir[1] * q], hw = 3;
+        s += '<line x1="' + sx(w.x) + '" y1="' + sy(w.y) + '" x2="' + sx(e[0]) + '" y2="' + sy(e[1]) + '" stroke="#f59e0b" stroke-opacity=".35" stroke-width="3" stroke-dasharray="6 5"><title>Trajet de la vague de ' + w.name + ' (déduit de ' + w.hits + ' joueur(s) touché(s))</title></line>';
+        if (t > 0) s += '<line x1="' + sx(f[0] + nx * hw) + '" y1="' + sy(f[1] + ny * hw) + '" x2="' + sx(f[0] - nx * hw) + '" y2="' + sy(f[1] - ny * hw) + '" stroke="#ef4444" stroke-width="4" stroke-linecap="round"><title>Front de la Plague Wave de ' + w.name + '</title></line>'; }
+      else if (t > 0) s += '<circle cx="' + sx(w.x) + '" cy="' + sy(w.y) + '" r="' + Math.min(R, r) * k + '" fill="none" stroke="#ef4444" stroke-opacity=".5" stroke-dasharray="4 4"><title>Vague de ' + w.name + ' : direction inconnue (aucun joueur touché), distance parcourue</title></circle>';
+    }
+    for (const h of m.hits.filter(h => h.dt <= t)) s += '<circle cx="' + sx(h.x) + '" cy="' + sy(h.y) + '" r="9" fill="none" stroke="#ef4444" stroke-width="1.5"><title>' + h.name + ' touché par une vague à ' + h.dt + ' s</title></circle>';
     const dead = m.totems.filter(x => x.dt <= t);
-    for (const x of dead.filter(x => x.dist != null)) s += '<circle cx="' + sx(B[0]) + '" cy="' + sy(B[1]) + '" r="' + (x.dist * k) + '" fill="none" stroke="' + SIDE[x.side] + '" stroke-opacity=".55" stroke-dasharray="3 5"><title>Totem ' + x.side + ' détruit à ' + x.dt + ' s, à ~' + x.dist + ' m du boss (sur une des lignes)</title></circle>';
-    /* positions possibles du totem : là où le cercle croise une ligne de vague (le log ne dit pas laquelle) */
-    for (const x of dead.filter(x => x.dist != null)) for (const c of carriers) { const d = dir(c), p = [B[0] + d[0] * x.dist, B[1] + d[1] * x.dist], X = sx(p[0]), Y = sy(p[1]);
-      s += '<path d="M' + (X - 5) + ' ' + (Y - 5) + 'L' + (X + 5) + ' ' + (Y + 5) + 'M' + (X + 5) + ' ' + (Y - 5) + 'L' + (X - 5) + ' ' + (Y + 5) + '" stroke="' + SIDE[x.side] + '" stroke-width="2.5" stroke-opacity="' + (t - x.dt < 0.6 ? 1 : 0.45) + '"><title>Position possible du totem ' + x.side + ' détruit à ' + x.dt + ' s</title></path>'; }
+    /* positions possibles d'un totem détruit : à la distance parcourue, sur la ligne de chaque porteur (le log ne dit pas laquelle) */
+    for (const x of dead.filter(x => x.dist != null)) for (const w of waves) {
+      const op = t - x.dt < 0.6 ? 1 : 0.45;
+      if (w.dir) { const X = sx(w.x + w.dir[0] * x.dist), Y = sy(w.y + w.dir[1] * x.dist);
+        s += '<path d="M' + (X - 5) + ' ' + (Y - 5) + 'L' + (X + 5) + ' ' + (Y + 5) + 'M' + (X + 5) + ' ' + (Y - 5) + 'L' + (X - 5) + ' ' + (Y + 5) + '" stroke="' + SIDE[x.side] + '" stroke-width="2.5" stroke-opacity="' + op + '"><title>Position possible du totem ' + x.side + ' détruit à ' + x.dt + ' s (~' + x.dist + ' m de ' + w.name + ')</title></path>'; }
+      else s += '<circle cx="' + sx(w.x) + '" cy="' + sy(w.y) + '" r="' + x.dist * k + '" fill="none" stroke="' + SIDE[x.side] + '" stroke-opacity="' + op * 0.6 + '" stroke-dasharray="2 4"><title>Totem ' + x.side + ' détruit à ' + x.dt + ' s, à ~' + x.dist + ' m de ' + w.name + ' (direction inconnue)</title></circle>';
+    }
     for (const p of m.players) s += p.carrier ? '<g><circle cx="' + sx(p.x) + '" cy="' + sy(p.y) + '" r="7" fill="#f59e0b" stroke="var(--card)" stroke-width="2"/><text x="' + (sx(p.x) + 9) + '" y="' + (sy(p.y) + 4) + '" font-weight="700">' + p.name + '</text></g>'
       : '<circle cx="' + sx(p.x) + '" cy="' + sy(p.y) + '" r="4" fill="#9ca3af"><title>' + p.name + '</title></circle>';
-    s += '<path d="M' + sx(B[0]) + ' ' + (sy(B[1]) - 10) + 'l10 10-10 10-10-10z" fill="#ef4444"><title>Vashnik</title></path>';
+    s += '<path d="M' + sx(B[0]) + ' ' + (sy(B[1]) - 10) + 'l10 10-10 10-10-10z" fill="#ef4444" fill-opacity=".6"><title>Vashnik (repère)</title></path>';
     const atB = dead.filter(x => x.at_burst), byS = side => dead.filter(x => x.side === side).length;
     s += '<text x="10" y="20" font-weight="700">Totems détruits : ' + dead.length + '/' + m.totems.length + ' (feu ' + byS("feu") + ', ombre ' + byS("ombre") + ')' + (atB.length ? ' · ' + atB.length + ' à l\'explosion' : '') + '</text>';
-    s += '<text x="10" y="38" class="muted">vitesse de vague ' + m.speed + ' m/s' + (m.speed_measured ? '' : ' (estimée)') + '</text>';
+    s += '<text x="10" y="38" class="muted">vitesse de vague ' + m.speed + ' m/s' + (m.speed_measured ? '' : ' (estimée)') + (m.waves ? ' · direction : ' + waves.filter(w => w.dir).length + '/' + waves.length + ' déduite(s) des joueurs touchés' : '') + '</text>';
     box.querySelector(".vkcanvas").innerHTML = s + "</svg>";
   }
   window.initVk = root => root.querySelectorAll(".vkmap:not([data-init])").forEach(box => {
