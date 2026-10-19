@@ -96,6 +96,7 @@ document.addEventListener("change", e => {
    Liens venant de l'accueil : #auto (boss choisi par defaultBoss(), report.js), #b0 (un boss), #go=m|joueur (sa ligne dans « Tous les pulls » de la soirée ; #go=k|joueur : « Tous les kills »),
    #go=p|b0|joueur|rôle (sa ligne dans l'onglet Joueurs du boss). L'ancienne page #members ouvre l'onglet Membres du même boss. */
 (function () {
+  let switchBoss = k => show(k, true);
   const show = (k, top) => {
     document.querySelectorAll(".boss").forEach(b => b.hidden = b.dataset.boss !== k);
     /* Menu du haut : « Soirées » toujours actif dans un rapport. Menu latéral : la page affichée */
@@ -106,7 +107,7 @@ document.addEventListener("change", e => {
   };
   document.addEventListener("click", e => {
     const g = e.target.closest("[data-bossgo]");
-    if (g && !e.target.closest("a")) { show(g.dataset.bossgo, true); return; }
+    if (g && !e.target.closest("a")) { switchBoss(g.dataset.bossgo); return; }
     const v = e.target.closest("[data-view-go]");
     if (v) {
       const b = v.closest(".boss"), s = b.querySelector(".viewsel");
@@ -114,7 +115,7 @@ document.addEventListener("change", e => {
       s.dispatchEvent(new Event("change", { bubbles: true }));
     }
   });
-  document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.matches("[data-bossgo]")) show(e.target.dataset.bossgo, true); });
+  document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.matches("[data-bossgo]")) switchBoss(e.target.dataset.bossgo); });
   /* Met en évidence une ligne ou une fiche (clignote, puis défile jusqu'à elle) */
   const flash = (el, block = "center") => { if (!el) return; el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1900); setTimeout(() => el.scrollIntoView({ behavior: "smooth", block }), 60); };
   /* Ouvre un onglet d'une barre d'onglets par son libellé ; renvoie le panneau ouvert */
@@ -144,6 +145,19 @@ document.addEventListener("change", e => {
     if (g) { e.preventDefault(); stratRow(g.closest(".boss"), g.dataset.stratgo); }
   });
   const tab = (page, label) => tabIn(mainTabs(page), label);
+  /* Changement de boss depuis le menu de gauche : on reste sur le même onglet (Gameplay, Stuff…) et sur le même joueur
+     (fiche Gameplay ou healer), avec les données du boss choisi ; si le joueur n'a pas joué ce boss, la première fiche s'affiche */
+  switchBoss = k => {
+    const cur = document.querySelector(".boss:not([hidden])"), ts = cur && mainTabs(cur);
+    const label = ts ? ts.querySelector(":scope>.tnav>button.on")?.textContent.trim() : null;
+    const pane = ts && ts.querySelector(":scope>.tpane.on"), vw = pane && (pane.querySelector(".view:not([hidden])") || pane);
+    const player = label === "Gameplay" && vw ? vw.querySelector(".gpb.on")?.dataset.name : null;
+    show(k, !label);
+    const page = document.querySelector('.boss[data-boss="' + k + '"]'); if (!page || !label || !mainTabs(page)) return;
+    const p = tab(page, label); if (!player || !p) return;
+    const v = p.querySelector(".view:not([hidden])") || p, b = [...v.querySelectorAll(".gpb")].find(x => x.dataset.name === player);
+    if (b) b.click();
+  };
   /* Ouverture de la page selon l'ancre, une fois tous les scripts chargés (le sélecteur du Gameplay est plus bas) */
   setTimeout(() => {
   let h = location.hash.slice(1); try { h = decodeURIComponent(h); } catch (e) {}
