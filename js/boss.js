@@ -206,10 +206,13 @@ function vashnikView(vk, pull) {
   const ccs = card("5. Coups sur un add feu contrôlé", muted("Dégâts (sorts, DoT, cleave) sur un Burning Venom sous contrôle (Banish, Imprison…) pendant qu'un autre Burning Venom est tué.") +
     (cc.length ? table([...pcol, { l: "Heure", num: 1 }, { l: "Joueur" }, { l: "Sort" }, { l: "Add" }, { l: "Contrôle (par)" }],
       cc.map(x => [...pv(x), { h: mmss(x.time_s), v: x.time_s }, x.player, x.ability, x.add, `${x.cc} (${x.cc_by})`])) : '<p class="good">Aucun coup sur un add contrôlé.</p>'));
+  const dTable = list => table([...pcol, { l: "Heure", num: 1 }, { l: "Joueur" }, { l: "Tué par" }, { l: "80 % → mort", num: 1 }, { l: "Encore disponible" }],
+      list.map(d => [...pv(d), { h: mmss(d.time_s), v: d.time_s }, d.player, d.killer, { h: d.from80_s != null ? fr(d.from80_s) + " s" : d.hp_loaded === false ? '<span class="muted small">vie non chargée (quota)</span>' : "—", v: d.from80_s ?? -1 },
+        { h: [...d.defensives_left.map(n => chip(esc(n), "warn")), d.healthstone_left ? chip("healthstone", "warn") : "", d.potion_left ? chip("potion de soins", "warn") : ""].join(" ") || '<span class="muted small">rien</span>', v: d.defensives_left.length }]));
+  const dIn = de.filter(d => !d.after_cut), dOut = de.filter(d => d.after_cut);
   const deaths = card("6. Morts avant le wipe", muted("Hors morts après l'appel du wipe. « 80 % → mort » = temps entre le dernier moment à 80 % de vie ou plus et la mort. Défensifs encore disponibles = défensifs que le joueur utilise d'habitude et pas encore lancés dans ce pull ; healthstone et potion de soins : non utilisées dans ce pull.") +
-    (de.length ? table([...pcol, { l: "Heure", num: 1 }, { l: "Joueur" }, { l: "Tué par" }, { l: "80 % → mort", num: 1 }, { l: "Encore disponible" }],
-      de.map(d => [...pv(d), { h: mmss(d.time_s), v: d.time_s }, d.player, d.killer, { h: d.from80_s != null ? fr(d.from80_s) + " s" : d.hp_loaded === false ? '<span class="muted small">vie non chargée (quota)</span>' : "—", v: d.from80_s ?? -1 },
-        { h: [...d.defensives_left.map(n => chip(esc(n), "warn")), d.healthstone_left ? chip("healthstone", "warn") : "", d.potion_left ? chip("potion de soins", "warn") : ""].join(" ") || '<span class="muted small">rien</span>', v: d.defensives_left.length }])) : '<p class="good">Aucune mort avant le wipe.</p>'));
+    (dIn.length ? dTable(dIn) : '<p class="good">Aucune mort dans la partie analysée des pulls.</p>') +
+    (dOut.length ? `<h4>Après la coupure du pull (${dOut.length})</h4>${muted("Morts après le moment où le pull est coupé pour l'analyse (cause du wipe déjà survenue) : utiles pour le débrief, mais non comptées dans les notes ni dans les morts par pull.")}${dTable(dOut)}` : ""));
   const adds = pc && vk.add_damage.length ? card("7. Dégâts sur les adds (hors healers, soirée)", muted("Dégâts faits sur chaque type d'add, et DPS sur les adds ramené à la durée totale des pulls.") +
     (() => { const names = [...new Set(vk.add_damage.flatMap(x => Object.keys(x.by_add)))];
       return table([{ l: "Joueur" }, ...names.map(n => ({ l: esc(n), num: 1 })), { l: "Total", num: 1 }, { l: "DPS sur les adds", num: 1 }],
@@ -506,6 +509,7 @@ function bossPage(id, b, mem = "") {
   return `<div class="boss" data-boss="${id}" hidden><section class="bhero">${ban(TILE_HUE, initials(b.name), bossImg(b.name))}<div class="bhin"><div class="bhead"><h2>${esc(b.name)}</h2>${diff(b.difficulty)}<span class="muted">${esc(String(b.subtitle ?? "").replace(/\s*·?\s*fiche intégrée/, ""))}</span></div>
     <div class="viewbar"><label><b>Pulls :</b></label><select class="viewsel">${opts}</select>${goBtn}<button class="vbtn" data-view-go="${all.key}">Tous les pulls</button><span class="muted small">Par défaut, tous les pulls du boss ; choisis le kill ou un pull précis pour le détail.</span></div></div></section>
     ${b.missing.length ? `<details class="miss"><summary>Données incomplètes pour ce boss (${b.missing.length})</summary><ul class="small">${b.missing.map(m => `<li>${esc(m)}</li>`).join("")}</ul><p class="small muted">Relance l'analyse quand le quota est revenu : seules ces données seront téléchargées.</p></details>` : ""}
+    ${(b.limits || []).length ? `<details class="miss lim"><summary>Références du top limitées (${b.limits.length})</summary><ul class="small">${b.limits.map(m => `<li>${esc(m)}</li>`).join("")}</ul><p class="small muted">Pas assez de logs du top comparables sur Warcraft Logs : ce n'est pas un manque de quota, une nouvelle analyse ne changera rien.</p></details>` : ""}
     ${tabset(["Raid", "Membres", "Gameplay", "Stuff", ...(prog ? ["Progression"] : [])], [viewed(v => raidView(v.raid, b, v), "raid"), mem, viewed(v => gameplayView(v, b), "gp"), stuffView(b.stuff), ...(prog ? [progressionView(b)] : [])], true)}</div>`;
 }
 
