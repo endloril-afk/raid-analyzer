@@ -266,7 +266,7 @@ document.addEventListener("change", e => {
     const R = 40, B = m.boss;
     /* anciens rapports : porteurs sans orientation */
     const waves = (m.waves || m.players.filter(p => p.carrier).map(p => ({ name: p.name, x: p.x, y: p.y, cross: null, hits: 0 })));
-    const pts = [B, ...m.players.map(p => [p.x, p.y]), ...m.hits.map(h => [h.x, h.y]), ...(m.opened || []).map(o => [o.x, o.y]), ...waves.flatMap(w => arms(w).map(d => [w.x + d[0] * R, w.y + d[1] * R]))];
+    const pts = [B, ...m.players.map(p => [p.x, p.y]), ...m.hits.map(h => [h.x, h.y]), ...(m.opened || []).map(o => [o.x, o.y]), ...(m.totems_at || []).map(o => [o.x, o.y]), ...waves.flatMap(w => arms(w).map(d => [w.x + d[0] * R, w.y + d[1] * R]))];
     let x0 = Math.min(...pts.map(p => p[0])) - 6, x1 = Math.max(...pts.map(p => p[0])) + 6, y0 = Math.min(...pts.map(p => p[1])) - 6, y1 = Math.max(...pts.map(p => p[1])) + 6;
     const W = 760, H = Math.max(320, Math.min(620, W * (y1 - y0) / Math.max(x1 - x0, 1))), k = Math.min(W / (x1 - x0), H / (y1 - y0));
     const sx = x => (x - x0) * k, sy = y => H - (y - y0) * k;
@@ -281,12 +281,15 @@ document.addEventListener("change", e => {
     }
     for (const h of m.hits.filter(h => h.dt <= t)) s += '<circle cx="' + sx(h.x) + '" cy="' + sy(h.y) + '" r="9" fill="none" stroke="#ef4444" stroke-width="1.5"><title>' + h.name + ' touché par une vague à ' + h.dt + ' s</title></circle>';
     const dead = m.totems.filter(x => x.dt <= t);
+    /* totems présents pendant la vague, à leur position (log) : cercle de la couleur du côté, barré une fois mort */
+    for (const o of m.totems_at || []) { const gone = o.died_dt != null && o.died_dt <= t;
+      s += '<circle cx="' + sx(o.x) + '" cy="' + sy(o.y) + '" r="8" fill="' + (gone ? "none" : SIDE[o.side]) + '" fill-opacity=".35" stroke="' + SIDE[o.side] + '" stroke-width="2"><title>Totem ' + o.side + (o.opened ? ", touché par une vague" : ", jamais touché par cette vague") + (o.died_dt != null ? ", détruit à " + o.died_dt + " s" : ", toujours en vie") + '</title></circle>' + (gone ? '<path d="M' + (sx(o.x) - 6) + ' ' + (sy(o.y) - 6) + 'l12 12m0 -12l-12 12" stroke="' + SIDE[o.side] + '" stroke-width="2"/>' : ""); }
     /* totems touchés par une vague (position réelle du log) : carré à la couleur du côté, relié au porteur */
     for (const o of (m.opened || []).filter(o => o.dt <= t + 0.05)) { const c = waves.find(w => w.name === o.by);
       if (c) s += '<line x1="' + sx(c.x) + '" y1="' + sy(c.y) + '" x2="' + sx(o.x) + '" y2="' + sy(o.y) + '" stroke="' + SIDE[o.side] + '" stroke-width="2"/>';
       s += '<rect x="' + (sx(o.x) - 7) + '" y="' + (sy(o.y) - 7) + '" width="14" height="14" fill="' + SIDE[o.side] + '" stroke="var(--card)" stroke-width="2"><title>Totem ' + o.side + ' touché à ' + o.dt + ' s par la vague de ' + (o.by || "?") + (o.killed_s != null ? ', tué ' + o.killed_s + ' s après' : ', pas tué ensuite') + '</title></rect>'; }
     /* positions possibles d'un totem détruit (seulement quand le log n'a pas les coups de vague sur les totems) : à la distance parcourue, sur chaque branche de chaque croix (le log ne dit pas laquelle) */
-    for (const x of (m.opened ? [] : dead).filter(x => x.dist != null)) for (const w of waves) {
+    for (const x of (m.opened || m.totems_at ? [] : dead).filter(x => x.dist != null)) for (const w of waves) {
       const op = t - x.dt < 0.6 ? 1 : 0.45, A = arms(w);
       for (const d of A) { const X = sx(w.x + d[0] * x.dist), Y = sy(w.y + d[1] * x.dist);
         s += '<path d="M' + (X - 5) + ' ' + (Y - 5) + 'L' + (X + 5) + ' ' + (Y + 5) + 'M' + (X + 5) + ' ' + (Y - 5) + 'L' + (X - 5) + ' ' + (Y + 5) + '" stroke="' + SIDE[x.side] + '" stroke-width="2.5" stroke-opacity="' + op + '"><title>Position possible du totem ' + x.side + ' détruit à ' + x.dt + ' s (~' + x.dist + ' m de ' + w.name + ')</title></path>'; }
