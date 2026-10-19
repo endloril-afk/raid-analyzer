@@ -152,7 +152,7 @@ function prep(rows) {
 }
 
 /* Onglet Raid d'une vue (view.raid) */
-function raidView(r) {
+function raidView(r, b = null, v = null) {
   const g = r.global, x = r.extras, w = g.wall;
   const kpis = `<div class="kpis">${kpi("Pulls analysés", g.pulls_analyzed, g.resets_excluded && g.resets_excluded.length ? `${g.resets_excluded.length} reset(s) exclu(s)` : g.pulls_total !== g.pulls_analyzed ? `sur ${g.pulls_total}` : undefined)}${kpi("Résultat", g.kills ? "Kill ✓" : "Wipe", g.kills ? `${g.kills} kill(s)` : `meilleur pull : ${fr(g.best_pct)} %`)}
     ${kpi("Le mur", w.median_wipe_pct != null ? fr(w.median_wipe_pct) + " %" : "—", w.median_wipe_pct != null ? `wipe médian à ${w.median_wipe_duration_s} s (${w.wipes} wipes)` : `pas assez de wipes (${w.wipes ?? 0}, il en faut 4)`)}${kpi("Données gardées", fr(g.kept_minutes) + " min", `sur ${fr(g.total_minutes)} min de combat`)}</div>`;
@@ -162,10 +162,58 @@ function raidView(r) {
     muted("Méthode : pour chaque mécanique, on compare les dégâts subis par chaque joueur à la moyenne du raid. Un joueur est signalé quand il prend nettement plus que les autres, sur plusieurs pulls."),
     mechCards(r)];
   if (r.special && r.special.intermission && INTERMISSION_BOSSES.includes(r.encounter)) { labels.push("Intermission"); panes.push(intermission(r.special)); }
+  if (b && b.deep && b.deep.vashnik) { labels.push("Analyse Vashnik"); panes.push(vashnikView(b.deep.vashnik, v && v.key !== "all" && /^p\d+$/.test(v.key) ? +v.key.slice(1) : null)); }
   labels.push("Joueurs", "Morts", "Chronologie");
   panes.push(playersRecap(r.players), deathsCard(x.deaths, g), chrono(x.timelines));
   if (x.prep_available) { labels.push("Préparation"); panes.push(prep(x.prep)); }
   return kpis + tabset(labels, panes);
+}
+
+/* ---------- Analyse détaillée de Vashnik (boss.deep.vashnik) : totems, Plague Froth, dispels, CC, morts, dégâts sur les adds ---------- */
+/* Carte simulée d'une Plague Froth : animée par js/app.js (initVk) */
+function vkMap(waves) {
+  const W = waves.filter(w => w.map);
+  if (!W.length) return "";
+  return `<h4>Carte de la vague (simulation)</h4>${muted("Positions au moment où les Plague Froth explosent : boss (losange), raid (points), porteurs (cercles dorés). Chaque Plague Wave part du boss en ligne droite vers un porteur ; sa vitesse est estimée sur les joueurs touchés. Un totem détruit apparaît comme un cercle en pointillé à la distance que la vague avait parcourue, avec une croix sur chaque ligne où il pouvait se trouver : le log ne donne pas sa position exacte, seulement l'heure de sa destruction. Les totems détruits à l'explosion même (moins de 0,4 s) étaient à côté d'un porteur.")}
+    <div class="vkmap"><div class="mapbar"><select class="vksel">${W.map((w, i) => `<option value="${i}">Pull ${w.pull} — vague ${w.wave} (${mmss(w.burst_s)}) · ${w.totems_destroyed} totem(s)</option>`).join("")}</select><button class="vkplay" type="button">▶ Lecture</button><input class="vkt" type="range" min="0" max="8" step="0.1" value="8"><span class="vktl">8 s</span></div>
+    <div class="legend"><span><i style="background:#f59e0b"></i>porteur</span><span><i style="background:#9ca3af"></i>raid</span><span><i style="background:#f97316"></i>totem feu</span><span><i style="background:#a78bfa"></i>totem ombre</span></div>
+    <div class="vkcanvas map"></div><script type="application/json" class="vkdata">${JSON.stringify(W.map(w => ({ ...w.map, carriers: w.carriers }))).replace(/</g, "\\u003c")}</script></div>`;
+}
+function vashnikView(vk, pull) {
+  const P = x => pull == null || x.pull === pull;
+  const pc = pull == null;
+  const pcol = pc ? [{ l: "Pull", num: 1 }] : [], pv = x => pc ? [x.pull] : [];
+  const t = vk.totems.filter(P), fr_ = vk.froth.filter(P), dw = vk.dispel_waves.filter(P), cc = vk.cc_hits.filter(P), de = vk.deaths.filter(P);
+  const side = o => `<span class="vkf">feu ${o.feu}</span> · <span class="vko">ombre ${o.ombre}</span>`;
+  const totems = card("1. Totems (Malignant Totem)", muted("Chaque vague de totems apparaît d'un côté feu et d'un côté ombre. Un totem doit être détruit (par une Plague Wave) avant l'Imbibe suivant, sinon il explose (Malignance). Le log ne donne pas la position exacte des totems : seulement leur côté.") +
+    (t.length ? table([...pcol, { l: "Vague", num: 1 }, { l: "Apparition", num: 1 }, { l: "Détruits avant l'Imbibe" }, { l: "Restants à l'Imbibe" }, { l: "Imbibe", num: 1 }, { l: "Destructions (temps)" }],
+      t.map(x => [...pv(x), x.wave, { h: mmss(x.spawn_s), v: x.spawn_s }, { h: `${x.destroyed.feu + x.destroyed.ombre}/${x.total} · ${side(x.destroyed)}`, v: x.destroyed.feu + x.destroyed.ombre },
+        { h: x.pull_ended ? '<span class="muted small">pull fini avant</span>' : (x.exploded ? chip(`${x.exploded} explosent`, "bad") + " " + side(x.remaining) : chip("aucun", "good")), v: x.exploded },
+        { h: x.imbibe_s != null ? mmss(x.imbibe_s) : "—", v: x.imbibe_s ?? 9999 }, x.deaths_s.map(mmss).join(" · ") || "—"])) : muted("Aucun totem sur cette vue.")));
+  const froth = card("2. Plague Froth : qui va casser les totems ?", muted("Porteurs de chaque Plague Froth et distance parcourue pendant le debuff (6 s) : un porteur qui ne bouge pas (moins de 3 m) attend que les totems viennent à lui. Totems détruits = totems morts dans les 8 s après la vague, tous porteurs confondus (le log ne dit pas quel porteur a cassé quel totem).") +
+    (fr_.length ? table([...pcol, { l: "Vague", num: 1 }, { l: "Explosion", num: 1 }, { l: "Porteurs (déplacement)" }, { l: "Totems détruits" }],
+      fr_.map(x => [...pv(x), x.wave, { h: mmss(x.burst_s), v: x.burst_s }, { h: x.carriers.map(c => `<span class="${c.moved_m != null && c.moved_m < 3 ? "bad" : ""}">${esc(c.player)} ${c.moved_m != null ? fr(c.moved_m) + " m" : "?"}</span>`).join(" · "), v: x.carriers.length },
+        { h: x.totems_destroyed ? `${x.totems_destroyed} · ${side(x.by_side)}` : chip("aucun", "warn"), v: x.totems_destroyed }])) : muted("Aucune Plague Froth sur cette vue.")) +
+    vkMap(fr_) +
+    (pc && vk.froth_players.length ? `<h4>Par joueur (soirée)</h4>${table([{ l: "Joueur" }, { l: "Plague Froth", num: 1 }, { l: "Immobile (< 3 m)", num: 1 }, { l: "Déplacement moyen", num: 1 }, { l: "Vagues avec totems détruits", num: 1 }],
+      vk.froth_players.map(x => [x.player, x.waves, { h: x.still ? chip(x.still, "bad") : "0", v: x.still }, { h: x.avg_moved_m != null ? fr(x.avg_moved_m) + " m" : "—", v: x.avg_moved_m ?? -1 }, `${x.waves_with_kills}/${x.waves}`]))}` : ""));
+  const disp = card("3-4. Vagues de dispel (Exploding Infection)", muted("Dispels à moins de 3 s l'un de l'autre = une vague (vous dispel 2 par 2). Heures de chaque dispel, healers sans dispel sur la vague, et CD de soin lancés pendant la vague et dans les 15 s qui suivent.") +
+    (dw.length ? table([...pcol, { l: "Vague", num: 1 }, { l: "Début", num: 1 }, { l: "Dispels (healer → cible, heure)" }, { l: "Sans dispel" }, { l: "CD de soin après" }],
+      dw.map(w => [...pv(w), w.wave, { h: mmss(w.start_s), v: w.start_s }, { h: w.dispels.map(d => `<b>${esc(d.healer)}</b> → ${esc(d.target)} <code>${mmss(d.time_s)}</code>`).join("<br>"), v: w.dispels.length },
+        { h: w.no_dispel.length ? w.no_dispel.map(n => chip(esc(n), "warn")).join(" ") : chip("tous", "good"), v: w.no_dispel.length },
+        { h: w.cds_after.length ? w.cds_after.map(c => `${esc(c.healer)} : ${sp(c.spell, c.icon, 18, true, c.spell_id)} <code>${mmss(c.time_s)}</code>`).join("<br>") : '<span class="bad small">aucun</span>', v: w.cds_after.length }])) : muted("Aucun dispel d'Exploding Infection sur cette vue.")));
+  const ccs = card("5. Coups sur un add feu contrôlé", muted("Dégâts (sorts, DoT, cleave) sur un Burning Venom sous contrôle (Banish, Imprison…) pendant qu'un autre Burning Venom est tué.") +
+    (cc.length ? table([...pcol, { l: "Heure", num: 1 }, { l: "Joueur" }, { l: "Sort" }, { l: "Add" }, { l: "Contrôle (par)" }],
+      cc.map(x => [...pv(x), { h: mmss(x.time_s), v: x.time_s }, x.player, x.ability, x.add, `${x.cc} (${x.cc_by})`])) : '<p class="good">Aucun coup sur un add contrôlé.</p>'));
+  const deaths = card("6. Morts avant le wipe", muted("Hors morts après l'appel du wipe. « 80 % → mort » = temps entre le dernier moment à 80 % de vie ou plus et la mort. Défensifs encore disponibles = défensifs que le joueur utilise d'habitude et pas encore lancés dans ce pull ; healthstone et potion de soins : non utilisées dans ce pull.") +
+    (de.length ? table([...pcol, { l: "Heure", num: 1 }, { l: "Joueur" }, { l: "Tué par" }, { l: "80 % → mort", num: 1 }, { l: "Encore disponible" }],
+      de.map(d => [...pv(d), { h: mmss(d.time_s), v: d.time_s }, d.player, d.killer, { h: d.from80_s != null ? fr(d.from80_s) + " s" : "—", v: d.from80_s ?? -1 },
+        { h: [...d.defensives_left.map(n => chip(esc(n), "warn")), d.healthstone_left ? chip("healthstone", "warn") : "", d.potion_left ? chip("potion de soins", "warn") : ""].join(" ") || '<span class="muted small">rien</span>', v: d.defensives_left.length }])) : '<p class="good">Aucune mort avant le wipe.</p>'));
+  const adds = pc && vk.add_damage.length ? card("7. Dégâts sur les adds (hors healers, soirée)", muted("Dégâts faits sur chaque type d'add, et DPS sur les adds ramené à la durée totale des pulls.") +
+    (() => { const names = [...new Set(vk.add_damage.flatMap(x => Object.keys(x.by_add)))];
+      return table([{ l: "Joueur" }, ...names.map(n => ({ l: esc(n), num: 1 })), { l: "Total", num: 1 }, { l: "DPS sur les adds", num: 1 }],
+        vk.add_damage.map(x => [x.player, ...names.map(n => ({ h: short(x.by_add[n] ?? 0), v: x.by_add[n] ?? 0 })), { h: short(x.total), v: x.total }, { h: short(x.dps), v: x.dps ?? 0 }])); })()) : "";
+  return totems + froth + disp + ccs + deaths + adds + muted(vk.notes.map(esc).join(" "));
 }
 
 /* ---------- Comparaison au top : commun Healers et Gameplay ---------- */
@@ -457,14 +505,15 @@ function bossPage(id, b, mem = "") {
   return `<div class="boss" data-boss="${id}" hidden><section class="bhero">${ban(TILE_HUE, initials(b.name), bossImg(b.name))}<div class="bhin"><div class="bhead"><h2>${esc(b.name)}</h2>${diff(b.difficulty)}<span class="muted">${esc(String(b.subtitle ?? "").replace(/\s*·?\s*fiche intégrée/, ""))}</span></div>
     <div class="viewbar"><label><b>Pulls :</b></label><select class="viewsel">${opts}</select>${goBtn}<button class="vbtn" data-view-go="${all.key}">Tous les pulls</button><span class="muted small">Par défaut, tous les pulls du boss ; choisis le kill ou un pull précis pour le détail.</span></div></div></section>
     ${b.missing.length ? `<details class="miss"><summary>Données incomplètes pour ce boss (${b.missing.length})</summary><ul class="small">${b.missing.map(m => `<li>${esc(m)}</li>`).join("")}</ul><p class="small muted">Relance l'analyse quand le quota est revenu : seules ces données seront téléchargées.</p></details>` : ""}
-    ${tabset(["Raid", "Membres", "Gameplay", "Stuff", ...(prog ? ["Progression"] : [])], [viewed(v => raidView(v.raid), "raid"), mem, viewed(v => gameplayView(v, b), "gp"), stuffView(b.stuff), ...(prog ? [progressionView(b)] : [])], true)}</div>`;
+    ${tabset(["Raid", "Membres", "Gameplay", "Stuff", ...(prog ? ["Progression"] : [])], [viewed(v => raidView(v.raid, b, v), "raid"), mem, viewed(v => gameplayView(v, b), "gp"), stuffView(b.stuff), ...(prog ? [progressionView(b)] : [])], true)}</div>`;
 }
 
 /* Rendu d'une vue d'un pull à la demande : el = <div class="view" data-lazy="raid|gp">, dans la page du boss */
 function renderView(el) {
   const b = X.bosses.find(x => x.key === el.closest(".boss").dataset.boss), v = b && b.views.find(x => x.key === el.dataset.view);
   if (!v) return;
-  el.innerHTML = el.dataset.lazy === "raid" ? raidView(v.raid) : gameplayView(v, b);
+  el.innerHTML = el.dataset.lazy === "raid" ? raidView(v.raid, b, v) : gameplayView(v, b);
   el.removeAttribute("data-lazy");
   if (window.initMaps) initMaps(el);
+  if (window.initVk) initVk(el);
 }
