@@ -581,3 +581,4 @@ table.mini{border-collapse:collapse}table.mini td{padding:4px 6px;border-bottom:
 .snav .snsep{border:0;border-top:1px solid var(--line);margin:4px 6px}
 .snav .d.all{background:var(--acc)}
 .hscroll{overflow-x:auto}
+.miss.lim summary{color:var(--muted)}
