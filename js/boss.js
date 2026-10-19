@@ -164,6 +164,7 @@ function raidView(r, b = null, v = null) {
     mechCards(r)];
   if (r.special && r.special.intermission && INTERMISSION_BOSSES.includes(r.encounter)) { labels.push("Intermission"); panes.push(intermission(r.special)); }
   if (b && b.deep && b.deep.vashnik) { labels.push("Analyse Vashnik"); panes.push(vashnikView(b.deep.vashnik, v && v.key !== "all" && /^p\d+$/.test(v.key) ? +v.key.slice(1) : null)); }
+  if (b && b.deep && b.deep.sszorak) { labels.push("Analyse Sszorak"); panes.push(sszorakView(b.deep.sszorak, v && v.key !== "all" && /^p\d+$/.test(v.key) ? +v.key.slice(1) : null)); }
   labels.push("Joueurs", "Morts", "Chronologie");
   panes.push(playersRecap(r.players), deathsCard(x.deaths, g), chrono(x.timelines));
   if (x.prep_available) { labels.push("Préparation"); panes.push(prep(x.prep)); }
@@ -235,6 +236,10 @@ function vashnikView(vk, pull) {
       list.map(d => [...pv(d), { h: mmss(d.time_s), v: d.time_s }, d.player, d.killer, { h: d.from80_s != null ? fr(d.from80_s) + " s" : d.hp_loaded === false ? '<span class="muted small">vie non chargée (quota)</span>' : "—", v: d.from80_s ?? -1 },
         { h: [d.dispel_blast ? chip(`tué par l'explosion du dispel ${esc(d.dispel_blast)} : porteur pas assez loin ?`, "warn") : "", d.tank && d.fangs_stacks != null ? chip(d.fangs_stacks === 0 ? "mort sur le 1er Dripping Fangs : swap pas en cause" : d.fangs_stacks === 1 ? "1 stack de Dripping Fangs : swap pas encore raté" : `${d.fangs_stacks} stacks de Dripping Fangs : swap raté`, d.fangs_stacks >= 2 ? "bad" : "good") : "", ...d.defensives_left.map(n => chip(esc(n), "warn")), d.healthstone_left ? chip("healthstone", "warn") : "", d.potion_left ? chip("potion de soins", "warn") : ""].join(" ") || '<span class="muted small">rien</span>', v: d.defensives_left.length }]));
   const dIn = de.filter(d => !d.after_cut), dOut = de.filter(d => d.after_cut);
+  const MB = (vk.bursts || []).filter(P);
+  const burst = MB.length ? card("Malignant Burst : quel add a atteint la Cavity", muted("Un venin qui atteint la piscine centrale déclenche Malignant Burst sur tout le raid. L'add responsable est la source du coup dans le log (n° = numéro de l'add dans le pull, comme sur Warcraft Logs).") +
+    table([...pcol, { l: "Heure", num: 1 }, { l: "Add" }, { l: "Joueurs touchés", num: 1 }, { l: "Tués", num: 1 }],
+      MB.map(x => [...pv(x), { h: mmss(x.time_s) + (x.after_cut ? ' <small class="muted">après la coupure</small>' : ""), v: x.time_s }, `<b>${esc(x.add)}</b>${x.instance != null ? ` n° ${x.instance}` : ""}`, x.hit, { h: x.killed ? `<span class="bad">${x.killed}</span>` : "0", v: x.killed }]))) : "";
   const deaths = card("6. Morts avant le wipe", muted("Hors morts après l'appel du wipe. « 80 % → mort » = temps entre le dernier moment à 80 % de vie ou plus et la mort. Défensifs encore disponibles = défensifs que le joueur utilise d'habitude et pas encore lancés dans ce pull ; healthstone et potion de soins : non utilisées dans ce pull (pas pour les tanks : un tank tué en un coup relève du swap et de ses défensifs). Tanks : stacks de Dripping Fangs déjà présents à la mort (consigne : swap à chaque morsure ; 0 = mort sur la 1re morsure, 2 ou plus = swap raté), et défensifs personnels encore disponibles.") +
     (dIn.length ? dTable(dIn) : '<p class="good">Aucune mort dans la partie analysée des pulls.</p>') +
     (dOut.length ? `<h4>Après la coupure du pull (${dOut.length})</h4>${muted("Morts après le moment où le pull est coupé pour l'analyse (cause du wipe déjà survenue) : utiles pour le débrief, mais non comptées dans les notes ni dans les morts par pull.")}${dTable(dOut)}` : ""));
@@ -244,7 +249,7 @@ function vashnikView(vk, pull) {
     (() => { const names = [...new Set(AD.flatMap(x => Object.keys(x.by_add)))];
       return table([{ l: "Joueur" }, ...names.map(n => ({ l: esc(n), num: 1 })), { l: "Total", num: 1 }, { l: "DPS sur les adds", num: 1 }],
         AD.map(x => [x.player, ...names.map(n => ({ h: short(x.by_add[n] ?? 0), v: x.by_add[n] ?? 0 })), { h: short(x.total), v: x.total }, { h: short(x.dps), v: x.dps ?? 0 }])); })()) : "";
-  return totems + froth + hitsAll + disp + infc + ccs + fkc + deaths + adds + muted(vk.notes.map(esc).join(" "));
+  return burst + totems + froth + hitsAll + disp + infc + ccs + fkc + deaths + adds + muted(vk.notes.map(esc).join(" "));
 }
 
 /* ---------- Comparaison au top : commun Healers et Gameplay ---------- */
@@ -560,4 +565,83 @@ function renderView(el) {
   el.removeAttribute("data-lazy");
   if (window.initMaps) initMaps(el);
   if (window.initVk) initVk(el);
+}
+
+/* ---------- Analyse détaillée de Sszorak (boss.deep.sszorak) : frise des erreurs, Serpent's Fury, Virulence, Crosswinds, Mutilate, kystes ---------- */
+/* Frise d'un pull : une ligne par mécanique, intermissions grisées, enrage en rouge, coupure du pull en pointillés */
+function szTimeline(p, refPops) {
+  const W = 900, L = 118, R = 12, rows = ["Combo du boss", "Serpent's Fury", "Virulence", "Crosswinds", "Mutilate", "Kystes", "Morts"], RH = 30, T = 18, H = T + rows.length * RH + 22;
+  const dur = Math.max(30, p.dur_s), x = t => L + Math.max(0, Math.min(dur, t)) / dur * (W - L - R), ry = i => T + i * RH + RH / 2;
+  let g = "";
+  for (const it of p.intermissions) g += `<rect x="${x(it.start_s)}" y="${T - 4}" width="${Math.max(2, x(it.end_s) - x(it.start_s))}" height="${rows.length * RH + 4}" fill="var(--line)" fill-opacity=".45"><title>Intermission (Dig In) ${mmss(it.start_s)} → ${mmss(it.end_s)}</title></rect>`;
+  rows.forEach((r, i) => { g += `<text x="4" y="${ry(i) + 4}" class="szl">${r}</text><line x1="${L}" x2="${W - R}" y1="${ry(i)}" y2="${ry(i)}" stroke="var(--line)" stroke-dasharray="2 4"/>`; });
+  for (let t = 0; t <= dur; t += dur > 360 ? 60 : 30) g += `<text x="${x(t)}" y="${H - 6}" text-anchor="middle" class="szl">${mmss(t)}</text>`;
+  const C = { R: ["#ef4444", "Ravage (cône du tank, loin du raid)"], M: ["#60a5fa", "Mutilate (soak de groupe)"], T: ["#a78bfa", "Tempest (tornades)"] };
+  for (const c of p.combos) g += `<g><rect x="${x(c.t_s) - 5}" y="${ry(0) - 7}" width="10" height="14" rx="2" fill="${C[c.k][0]}"/><text x="${x(c.t_s)}" y="${ry(0) + 4}" text-anchor="middle" font-size="9" fill="#fff">${c.k}</text><title>${C[c.k][1]} ${mmss(c.t_s)}</title></g>`;
+  for (const f of p.fury) { const e = f.pop_s ?? p.dur_s, col = f.ok ? "#22c55e" : "#f59e0b";
+    g += `<rect x="${x(f.start_s)}" y="${ry(1) - 6}" width="${Math.max(2, x(e) - x(f.start_s))}" height="12" rx="3" fill="${col}" fill-opacity=".35" stroke="${col}"><title>Serpent's Fury ${f.n} : marque ${mmss(f.start_s)} → pop ${f.pop_s != null ? mmss(f.pop_s) : "jamais"} · ${f.soakers} joueurs packés</title></rect>`;
+    if (f.pop_s != null) g += `<text x="${x(f.pop_s)}" y="${ry(1) - 9}" text-anchor="middle" class="szl">${f.soakers}</text>`; }
+  for (const [i, t] of (refPops || []).entries()) if (t != null) g += `<line x1="${x(t)}" x2="${x(t)}" y1="${ry(1) + 7}" y2="${ry(1) + 13}" stroke="var(--fg)" stroke-width="2"><title>Pop ${i + 1} du top (médiane) : ${mmss(t)}</title></line>`;
+  for (const h of p.vir_hits) g += `<circle cx="${x(h.t_s)}" cy="${ry(2)}" r="${h.died ? 7 : 5}" fill="#ef4444"${h.died ? ' stroke="var(--fg)" stroke-width="2"' : ""}><title>${esc(h.victim)} pris dans la ligne de ${esc(h.from || "?")} ${mmss(h.t_s)}${h.died ? " (mort)" : ""}</title></circle>`;
+  for (const w of p.winds) g += `<rect x="${x(w.t_s)}" y="${ry(3) - 5}" width="${Math.max(2, x(w.knock_s) - x(w.t_s))}" height="10" rx="3" fill="${w.bad ? "#ef4444" : "#38bdf8"}" fill-opacity=".5"><title>Raging Crosswinds ${mmss(w.t_s)} → projection ${mmss(w.knock_s)}${w.bad ? " : chute ou mort" : ""}</title></rect>`;
+  for (const m of p.mutilate) g += `<g><circle cx="${x(m.t_s)}" cy="${ry(4)}" r="8" fill="${m.low ? "#ef4444" : "#60a5fa"}" fill-opacity=".8"/><text x="${x(m.t_s)}" y="${ry(4) + 3}" text-anchor="middle" font-size="9" fill="#fff">${m.count}</text><title>Mutilate ${mmss(m.t_s)} : ${m.count} soakers${m.low ? " (moins de 5)" : ""}</title></g>`;
+  for (const c of p.cysts) g += `<circle cx="${x(c.t_s)}" cy="${ry(5)}" r="5" fill="${c.ok ? "#22c55e" : "#ef4444"}"><title>Kyste éclaté ${mmss(c.t_s)} : ${c.hit} joueurs projetés${c.ok ? " (pendant l'intermission)" : " (hors intermission)"}</title></circle>`;
+  for (const d of p.deaths) g += `<text x="${x(d.t_s)}" y="${ry(6) + 5}" text-anchor="middle" fill="#ef4444" font-size="15">✕<title>${esc(d.player)} mort ${mmss(d.t_s)} (${esc(d.killer)})</title></text>`;
+  if (p.cut_s != null) g += `<line x1="${x(p.cut_s)}" x2="${x(p.cut_s)}" y1="${T - 6}" y2="${T + rows.length * RH}" stroke="var(--fg)" stroke-dasharray="4 3"><title>Appel du wipe ${mmss(p.cut_s)}</title></line>`;
+  if (p.enrage_s != null) g += `<line x1="${x(p.enrage_s)}" x2="${x(p.enrage_s)}" y1="${T - 6}" y2="${T + rows.length * RH}" stroke="#ef4444" stroke-width="3"><title>Enrage (Unbound Ferocity) ${mmss(p.enrage_s)}</title></line>`;
+  return `<svg viewBox="0 0 ${W} ${H}" class="szt" style="width:100%;max-width:${W}px" role="img" aria-label="Frise du pull ${p.pull}">${g}</svg>`;
+}
+/* Carte d'un éclatement de Virulence : chaque porteur et sa croix (axes de la salle, longueur approximative), victimes en rouge */
+function szMap(w) {
+  const m = w.map; if (!m) return "";
+  const ARM = 12, P = m.pts, xs = P.map(p => p.x), ys = P.map(p => p.y);
+  const x0 = Math.min(...xs) - ARM, x1 = Math.max(...xs) + ARM, y0 = Math.min(...ys) - ARM, y1 = Math.max(...ys) + ARM;
+  const W = 560, H = Math.max(260, Math.min(520, W * (y1 - y0) / Math.max(1, x1 - x0))), k = Math.min(W / (x1 - x0), H / (y1 - y0));
+  const sx = x => (x - x0) * k, sy = y => H - (y - y0) * k;
+  const vict = new Set(m.hits.map(h => h.victim)), from = new Set(m.hits.map(h => h.from).filter(Boolean));
+  let g = "";
+  for (const p of P) { const c = from.has(p.n) ? "#f97316" : "#94a3b8", o = from.has(p.n) ? 0.8 : 0.25;
+    g += `<line x1="${sx(p.x - ARM)}" x2="${sx(p.x + ARM)}" y1="${sy(p.y)}" y2="${sy(p.y)}" stroke="${c}" stroke-opacity="${o}" stroke-width="3"/><line x1="${sx(p.x)}" x2="${sx(p.x)}" y1="${sy(p.y - ARM)}" y2="${sy(p.y + ARM)}" stroke="${c}" stroke-opacity="${o}" stroke-width="3"/>`; }
+  for (const h of m.hits) { const a = P.find(p => p.n === h.from), b = P.find(p => p.n === h.victim); if (a && b) g += `<line x1="${sx(a.x)}" y1="${sy(a.y)}" x2="${sx(b.x)}" y2="${sy(b.y)}" stroke="#ef4444" stroke-width="2" stroke-dasharray="4 3"><title>${esc(h.from)} → ${esc(h.victim)}</title></line>`; }
+  for (const p of P) g += `<g><circle cx="${sx(p.x)}" cy="${sy(p.y)}" r="${vict.has(p.n) ? 7 : 5}" fill="${vict.has(p.n) ? "#ef4444" : clsColor(p.cls)}" stroke="var(--card)" stroke-width="1.5"/><text x="${sx(p.x) + 8}" y="${sy(p.y) - 6}" class="szl">${esc(p.n)}</text><title>${esc(p.n)} : éclate à +${fr(p.t)} s</title></g>`;
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;background:var(--bg2,transparent)" role="img" aria-label="Carte de la Virulence">${g}</svg>`;
+}
+function sszorakView(sz, pull) {
+  const P = x => pull == null || x.pull === pull, pc = pull == null;
+  const pcol = pc ? [{ l: "Pull", num: 1 }] : [], pv = x => pc ? [x.pull] : [];
+  const pulls = sz.pulls.filter(P), refMed = n => { const v = (sz.refs || []).map(r => (r.pops.find(q => q.n === n) || {}).pop_s).filter(x => x != null).sort((a, b) => a - b); return v.length ? v[Math.floor((v.length - 1) / 2)] : null; };
+  const refPops = [1, 2, 3, 4, 5, 6, 7, 8].map(refMed);
+  const tl = card("Frise des erreurs", muted("Une ligne par mécanique. Combo du boss : R = Ravage, M = Mutilate, T = Tempest. Serpent's Fury : barre de la marque jusqu'au pop (vert si le pop est bon, orange sinon), chiffre = joueurs packés (14 requis), petits traits sous la barre = pops du top au même numéro. Virulence : point rouge = un joueur pris dans une ligne (gros point = mort). Crosswinds : rouge = chute ou mort. Mutilate : chiffre = soakers (rouge sous 5). Kystes : vert pendant l'intermission, rouge hors intermission. Zones grises = intermissions, trait rouge = enrage, pointillés = appel du wipe. Survole un élément pour le détail.") +
+    pulls.map((p, i) => `<details class="tlw"${i === 0 ? " open" : ""}><summary>Pull ${p.pull} · ${mmss(p.dur_s)}${p.kill ? " · kill" : ""}${p.enrage_s != null ? ` · <span class="bad">enrage à ${mmss(p.enrage_s)}</span>` : ""} · ${p.vir_hits.length} ligne(s) de Virulence prise(s) · ${p.deaths.length} mort(s)</summary>${szTimeline(p, refPops)}</details>`).join(""));
+  const F = sz.fury.filter(P);
+  const fury = card("1. Serpent's Fury", muted("Marque sur un joueur : 14 joueurs doivent se packer dans le cercle pour déclencher To the Slaughter, sinon le boss gagne de la rage et s'enrage à 100. « Après le combo » = délai entre le dernier coup du combo (Apex Predator) et le pop. « Avant l'intermission » = avance du pop sur l'intermission ; 2 s plus tôt que le top suffisent à rendre le Fury d'après l'intermission insurvivable. Top = médiane des kills Mythique de référence, au même numéro de pop.") +
+    (F.length ? table([...pcol, { l: "Fury", num: 1 }, { l: "Porteur" }, { l: "Marque → pop" }, { l: "Packés", num: 1 }, { l: "Après le combo", num: 1 }, { l: "Avant l'intermission", num: 1 }, { l: "Verdict" }],
+      F.map(x => [...pv(x), x.n, x.carrier, { h: `${mmss(x.mark_s)} → ${x.pop_s != null ? mmss(x.pop_s) : "jamais"}${x.held_s != null ? ` <small class="muted">(${fr(x.held_s)} s)</small>` : ""}`, v: x.mark_s },
+        { h: `<span class="${x.enough ? "good" : "bad"}">${x.soakers}</span>`, v: x.soakers },
+        { h: x.after_combo_s != null ? `${fr(x.after_combo_s)} s${x.ref_after_combo_s != null ? ` <small class="muted">top ${fr(x.ref_after_combo_s)} s</small>` : ""}` : "—", v: x.after_combo_s ?? -1 },
+        { h: x.before_int_s != null ? `${fr(x.before_int_s)} s${x.ref_before_int_s != null ? ` <small class="muted">top ${fr(x.ref_before_int_s)} s</small>` : ""}` : "—", v: x.before_int_s ?? -1 },
+        { h: x.verdict === "ok" ? '<span class="good">ok</span>' : chip(esc(x.verdict), /enrage|seulement|insurvivable|très dur/.test(x.verdict) ? "bad" : "warn"), v: x.verdict === "ok" ? 0 : 1 }])) : muted("Aucune marque de Serpent's Fury sur cette vue (difficulté sans Fury, ou pull trop court).")));
+  const V = sz.virulence.filter(P);
+  const vp = (sz.vir_players || []).filter(x => x.hit || x.caused);
+  const vir = card("2. Virulence (croix à l'expiration)", muted("Tous les joueurs touchés par To the Slaughter prennent Virulence (5 s). À l'expiration, chacun éclate en croix, alignée sur les axes de la salle : un joueur sur la ligne horizontale ou verticale d'un autre prend un gros coup et reprend Virulence (lignes plus longues la 2e fois). Spread vers les bords tout de suite, en évitant les mêmes lignes.") +
+    (V.length ? table([...pcol, { l: "Vague", num: 1 }, { l: "Éclatement", num: 1 }, { l: "Porteurs", num: 1 }, { l: "Lignes prises (victime ← porteur, distance)" }],
+      V.map(w => [...pv(w), w.wave, { h: mmss(w.burst_s) + (w.after_cut ? ' <small class="muted">après la coupure</small>' : ""), v: w.burst_s }, w.carriers,
+        { h: w.hits.length ? w.hits.map(h => `<span class="${h.died ? "bad" : "warn"}">${esc(h.victim)}</span> ← ${esc(h.from || "?")}${h.dist_m != null ? ` <small class="muted">${fr(h.dist_m)} m</small>` : ""}${h.died ? " (mort)" : ""}`).join("<br>") : '<span class="good">aucune</span>', v: w.hits.length }])) : muted("Aucune Virulence sur cette vue.")) +
+    (vp.length ? `<h4>Par joueur</h4>` + table([{ l: "Joueur" }, { l: "Lignes prises", num: 1 }, { l: "Joueurs touchés par sa croix", num: 1 }, { l: "Morts", num: 1 }], vp.map(x => [{ h: pl(x.player, x.class), v: x.player }, x.hit, x.caused, x.deaths])) : "") +
+    (() => { const M = V.filter(w => w.map); return M.length ? `<h4>Carte des éclatements</h4>${muted("Position de chaque joueur au moment où il éclate (les éclatements s'enchaînent sur environ 1 s, un joueur après l'autre). Croix grise = la croix de chaque porteur (12 m, longueur approximative) ; orange = un porteur qui a touché quelqu'un ; point rouge = victime ; pointillés = qui a touché qui.")}` +
+      M.map((w, i) => `<details${i === 0 ? " open" : ""}><summary>Pull ${w.pull} — vague ${w.wave} (${mmss(w.burst_s)}) · ${w.hits.length} ligne(s) prise(s)</summary>${szMap(w)}</details>`).join("") : ""; })());
+  const X = sz.crosswinds.filter(P);
+  const cw = card("3. Raging Crosswinds", muted("Joueurs marqués par paires (posés au même instant, directions opposées) : se rentrer dedans en l'air, ou grip / rescue. Chute ou mort dans les 8 s après la projection = paire ratée. Paladins, Prêtres et Chamans : partenaire assigné à l'avance.") +
+    (X.length ? table([...pcol, { l: "Set", num: 1 }, { l: "Projection", num: 1 }, { l: "Paires" }, { l: "Chute" }, { l: "Mort" }],
+      X.map(x => [...pv(x), x.set, { h: mmss(x.knock_s), v: x.knock_s }, x.pairs.map(p => esc(p.join(" + "))).join("<br>"),
+        { h: x.fell.length ? `<span class="bad">${esc(x.fell.join(", "))}</span>` : '<span class="good">aucune</span>', v: x.fell.length }, { h: x.died.length ? `<span class="bad">${esc(x.died.join(", "))}</span>` : '<span class="good">aucune</span>', v: x.died.length }])) : muted("Aucun Raging Crosswinds sur cette vue.")));
+  const MU = sz.mutilate.filter(P);
+  const mut = card("4. Mutilate (soak de groupe)", muted("Cône du tank tourné vers le groupe : deux groupes égaux en alternance, moins de 5 joueurs dans le soak = mortel. « Déjà au soak précédent » = joueurs qui ont soaké deux Mutilate de suite (alternance ratée).") +
+    (MU.length ? table([...pcol, { l: "Mutilate", num: 1 }, { l: "Heure", num: 1 }, { l: "Soakers", num: 1 }, { l: "Déjà au soak précédent" }, { l: "Morts" }],
+      MU.map(x => [...pv(x), x.n, { h: mmss(x.t_s), v: x.t_s }, { h: `<span class="${x.low ? "bad" : "good"}" title="${esc(x.soakers.join(", "))}">${x.count}</span>`, v: x.count }, x.again.length ? esc(x.again.join(", ")) : "—", x.died.length ? `<span class="bad">${esc(x.died.join(", "))}</span>` : "—"])) : muted("Aucun Mutilate sur cette vue.")));
+  const CY = sz.cysts.filter(P);
+  const cy = card("5. Viscous Cyst", muted("Kystes posés par les joueurs marqués (Venomous Surge) : ils doivent exploser pendant les vents de l'intermission (un kyste par poussée) ; un kyste qui éclate ailleurs projette tout le raid.") +
+    (CY.length ? table([...pcol, { l: "Heure", num: 1 }, { l: "Joueurs projetés", num: 1 }, { l: "Moment" }, { l: "Posé par" }],
+      CY.map(x => [...pv(x), { h: mmss(x.t_s), v: x.t_s }, x.hit, { h: x.during_int ? '<span class="good">intermission</span>' : '<span class="bad">hors intermission</span>', v: x.during_int ? 0 : 1 }, x.placed_by ? `${esc(x.placed_by)} <small class="muted">${mmss(x.placed_s)}</small>` : "—"])) : muted("Aucun kyste éclaté sur cette vue.")));
+  return tl + fury + vir + cw + mut + cy + (sz.notes || []).map(n => muted(esc(n))).join("");
 }
