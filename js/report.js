@@ -100,10 +100,10 @@ function stuffRecap() {
     const o = per.get(p.name) || per.set(p.name, { name: p.name, cls: p.class, role: p.role, n: 0, slots: new Map() }).get(p.name); o.n++;
     for (const e of (p.enchants || []).filter(x => x.present && x.required && !x.has)) (o.slots.get(e.slot) || o.slots.set(e.slot, []).get(e.slot)).push(b.name);
   }
-  if (!per.size) return trinketRecap() + potionRecap();
+  if (!per.size) return trinketRecap() + potionRecap() + survivalConsRecap();
   const rows = [...per.values()].filter(o => o.slots.size).sort((a, b) => b.slots.size - a.slots.size || a.name.localeCompare(b.name, "fr"));
   return `<div class="sechead"><h2>Stuff de la soirée</h2><span class="muted small">Enchantements manquants, sur combien des ${bs.length} boss</span></div><section class="card">${rows.length ? table([{ l: "Joueur" }, { l: "Enchantements manquants" }],
-    rows.map(o => [{ h: pl(o.name, o.cls, o.role), v: o.name }, { h: [...o.slots].map(([slot, l]) => `<span class="chip ${l.length === o.n ? "bad" : "warn"}" title="${esc(l.join(", "))}">${esc(slot)} : ${l.length === o.n ? "tous les boss" : `${l.length} boss sur ${o.n}`}</span>`).join(" "), v: o.slots.size }]), "sortable") : '<p class="good">Tout le monde est enchanté sur tous les boss.</p>'}</section>` + trinketRecap() + potionRecap();
+    rows.map(o => [{ h: pl(o.name, o.cls, o.role), v: o.name }, { h: [...o.slots].map(([slot, l]) => `<span class="chip ${l.length === o.n ? "bad" : "warn"}" title="${esc(l.join(", "))}">${esc(slot)} : ${l.length === o.n ? "tous les boss" : `${l.length} boss sur ${o.n}`}</span>`).join(" "), v: o.slots.size }]), "sortable") : '<p class="good">Tout le monde est enchanté sur tous les boss.</p>'}</section>` + trinketRecap() + potionRecap() + survivalConsRecap();
 }
 
 /* Potions de combat jamais prises sur la soirée : conseil « Potion · jamais prise » sur chaque boss où le joueur est comparé au top */
@@ -120,17 +120,27 @@ function potionRecap() {
   for (const b of tried().filter(b => b.summary.kills || b.summary.pulls >= 3)) { const v = b.views[0] || {};
     for (const o of [...((v.gameplay && v.gameplay.players) || []), ...((v.healers && v.healers.healers) || []).map(h => ({ ...h, role: "healer" }))]) { if (!o.reference) continue;
       const m = per.get(o.name) || per.set(o.name, { name: o.name, cls: o.class, role: o.role, n: 0, never: [], less: [] }).get(o.name); m.n++;
-      const pa = (o.advice || []).filter(a => a.topic === "Potion");
+      const pa = [...(o.potion_advice || []), ...(o.advice || []).filter(a => a.topic === "Potion")];
       if (pa.some(a => /jamais prise/.test(a.text))) m.never.push(b.name); else if (pa.length) m.less.push(b.name); } }
   if (!per.size) return "";
   /* gravité : jamais prise de la soirée, puis jamais prise sur certains boss, puis seulement moins que le top */
   const sev = m => m.never.length === m.n ? 3 : m.never.length ? 2 : 1;
   const rows = [...per.values()].filter(m => m.never.length || m.less.length).sort((a, b) => sev(b) - sev(a) || b.never.length - a.never.length || b.less.length - a.less.length || a.name.localeCompare(b.name, "fr"));
-  const what = m => [m.never.length === m.n ? chip(`jamais prise sur la soirée (${m.n} boss)`, "bad") : m.never.length ? `<span title="${esc(m.never.join(", "))}">${chip(`jamais prise sur ${m.never.length} boss sur ${m.n}`, "warn")}</span>` : "",
+  const what = m => [m.never.length === m.n ? chip(`jamais prise sur la soirée (${m.n} boss pris en compte)`, "bad") : m.never.length ? `<span title="${esc(m.never.join(", "))}">${chip(`jamais prise sur ${m.never.length} boss sur ${m.n}`, "warn")}</span>` : "",
     m.less.length ? `<span title="${esc(m.less.join(", "))}">${chip(`moins que le top sur ${m.less.length} boss`, "warn")}</span>` : ""].join(" ");
-  return `<div class="sechead"><h2>Potions de la soirée</h2><span class="muted small">Potions de combat (dégâts ou soins boostés, ex. Light's Potential) comparées au top de la spé, boss par boss, sur les boss tués ou d'au moins 3 pulls · potions de mana et de soin non comptées · sans pénalité sur la note · survole un badge pour les boss</span></div><section class="card">${rows.length
+  return `<div class="sechead"><h2>Potions de la soirée</h2><span class="muted small">Potions de combat (dégâts ou soins boostés, ex. Light's Potential) comparées au top de la spé, boss par boss, sur les boss tués ou d'au moins 3 pulls · potions de soins et de mana : section suivante · sans pénalité sur la note · survole un badge pour les boss</span></div><section class="card">${rows.length
     ? table([{ l: "Joueur" }, { l: "Potions de combat" }], rows.map(m => [{ h: pl(m.name, m.cls, m.role), v: m.name }, { h: what(m), v: m.never.length * 10 + m.less.length }]), "sortable")
     : '<p class="good">Tout le monde prend ses potions de combat comme le top.</p>'}</section>`;
+}
+
+/* Potions de soins, pierres de soins et potions de mana sur la soirée : tout le monde (mana : healers), pour gérer sa survie */
+function survivalConsRecap() {
+  const C = (X.consumables_soiree || []).filter(m => m.pulls);
+  if (!C.length) return "";
+  const rows = C.sort((a, b) => b.deaths_no_pot - a.deaths_no_pot || a.heal_pots - b.heal_pots || a.player.localeCompare(b.player, "fr"));
+  return `<div class="sechead"><h2>Potions de soins et de mana</h2><span class="muted small">Sur tous les pulls de la soirée · morts sans potion de soins ni pierre de soins utilisée dans le pull (avant la coupure, hors morts excusées) · potions de mana : healers</span></div><section class="card">${table([{ l: "Joueur" }, { l: "Pulls", num: 1 }, { l: "Potions de soins", num: 1 }, { l: "Pierres de soins", num: 1 }, { l: "Potions de mana", num: 1 }, { l: "Morts sans potion ni pierre", num: 1 }],
+    rows.map(m => [{ h: pl(m.player, m.class, m.role), v: m.player }, m.pulls, { h: m.heal_pots ? m.heal_pots : chip("0", "warn"), v: m.heal_pots }, m.stones, { h: m.role === "healer" ? (m.mana_pots ? m.mana_pots : chip("0", "warn")) : '<span class="muted small">—</span>', v: m.role === "healer" ? m.mana_pots : -1 },
+      { h: m.deaths_no_pot ? chip(`${m.deaths_no_pot} sur ${m.deaths}`, "bad") : m.deaths ? `0 sur ${m.deaths}` : '<span class="muted small">aucune mort</span>', v: m.deaths_no_pot }]), "sortable")}</section>`;
 }
 
 /* Statut de l'analyse : une pastille (vert Clôturé, orange En cours, rouge En échec) ; le détail est dans l'infobulle */
