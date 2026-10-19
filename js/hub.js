@@ -100,8 +100,8 @@ const METHODE = `<div class="panel mth"><section class="mflow">
   <article class="mcard"><h3>🎯 Gameplay et stuff</h3><p>Healers, DPS et tanks sont comparés aux meilleurs logs mondiaux de leur spé, sur le même boss et la même difficulté.</p>
     <p class="small"><b>Note d'un fight</b> = moyenne pondérée de catégories notées sur 10, selon le rôle. DPS : strat, dégâts, survie, gameplay. Healer : strat, soins, survie, gameplay (poids 1), dégâts (poids 0,25). Tank : strat, mitigation et survie, gameplay (poids 1), dégâts et soins (poids 0,5). Les morts comptent dans la survie, pas dans la strat.</p>
     <p class="muted small">Buffs d'avant pull et bijoux exclus ; enchantements vérifiés par rapport au raid et au top.</p></article>
-  <article class="mcard"><h3>🏆 Classements</h3><p>Pour chaque boss : top 5 du fight et classement complet, sur la note du fight. Pas de classement entre joueurs sur la soirée.</p>
-    <p class="muted small">À note égale : survie, puis morts par pull. Pas de podium tant que des notes sont partielles.</p></article>
+  <article class="mcard"><h3>🏆 Classements</h3><p>Aucun podium ni top des joueurs, pour éviter les comparaisons entre membres : chacun retrouve sa note et son détail dans Membres et Gameplay.</p>
+    <p class="muted small">Notes partielles (données du top manquantes) marquées « ≈ ».</p></article>
   <article class="mcard"><h3>🔄 Mise à jour</h3><p>Pendant et après la soirée, le rapport se complète tout seul.</p>
     <ul class="small"><li>Données manquantes : nouvel essai après la remise à zéro du quota.</li><li>Pulls en cours : vérification toutes les 10 min.</li><li>Clôturé quand tout est chargé et qu'aucun pull n'a été ajouté depuis 1 h.</li></ul></article>
   </div></div>`;
