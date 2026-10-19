@@ -5,12 +5,12 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": null,
   "server": null,
-  "next_update": 1792406545111,
+  "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792403336126,
+  "generated": 1792403501191,
   "pulls": 21,
-  "note": 8.3,
+  "note": 8,
   "bosses": [
    {
     "name": "Nek'zali the Soulcoiler",
@@ -34,7 +34,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 8.2,
+      "note": 8.4,
       "pulls": 1
      },
      {
@@ -130,7 +130,7 @@ window.RAPPORTS_INDEX = [
       "class": "Evoker",
       "role": "healer",
       "sub": null,
-      "note": 6.6,
+      "note": 6.7,
       "pulls": 1
      },
      {
@@ -146,7 +146,7 @@ window.RAPPORTS_INDEX = [
       "class": "Paladin",
       "role": "healer",
       "sub": null,
-      "note": 7.1,
+      "note": 6.8,
       "pulls": 1
      },
      {
@@ -154,7 +154,7 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "healer",
       "sub": null,
-      "note": 8.2,
+      "note": 8.8,
       "pulls": 1
      },
      {
@@ -229,7 +229,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 8.2,
+      "note": 8.3,
       "pulls": 12
      },
      {
@@ -237,7 +237,7 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "healer",
       "sub": null,
-      "note": 8,
+      "note": 8.2,
       "pulls": 12
      },
      {
@@ -293,7 +293,7 @@ window.RAPPORTS_INDEX = [
       "class": "Evoker",
       "role": "healer",
       "sub": null,
-      "note": 7.3,
+      "note": 7.2,
       "pulls": 12
      },
      {
@@ -448,7 +448,7 @@ window.RAPPORTS_INDEX = [
       "class": "Evoker",
       "role": "healer",
       "sub": null,
-      "note": 6.8,
+      "note": 6.7,
       "pulls": 2
      },
      {
@@ -464,7 +464,7 @@ window.RAPPORTS_INDEX = [
       "class": "Paladin",
       "role": "healer",
       "sub": null,
-      "note": 6.5,
+      "note": 6.7,
       "pulls": 2
      },
      {
@@ -472,7 +472,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 9.2,
+      "note": 9,
       "pulls": 2
      },
      {
@@ -611,7 +611,7 @@ window.RAPPORTS_INDEX = [
       "class": "Evoker",
       "role": "healer",
       "sub": null,
-      "note": 7.4,
+      "note": 6.9,
       "pulls": 4
      },
      {
@@ -627,7 +627,7 @@ window.RAPPORTS_INDEX = [
       "class": "Paladin",
       "role": "healer",
       "sub": null,
-      "note": 8.4,
+      "note": 8.6,
       "pulls": 4
      },
      {
@@ -635,7 +635,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 9.4,
+      "note": 9.3,
       "pulls": 4
      },
      {
@@ -880,7 +880,7 @@ window.RAPPORTS_INDEX = [
     "class": "Evoker",
     "role": "healer",
     "sub": null,
-    "note": 7.2,
+    "note": 7.1,
     "pulls": 19,
     "deaths": 2
    },
@@ -907,7 +907,7 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "healer",
     "sub": null,
-    "note": 8.4,
+    "note": 8.5,
     "pulls": 19,
     "deaths": 0
    },
@@ -939,8 +939,8 @@ window.RAPPORTS_INDEX = [
     "deaths": 6
    }
   ],
-  "complete": false,
-  "auto": true,
+  "complete": true,
+  "auto": false,
   "extension_version": "0.40.8",
   "file": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.html",
   "json": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.json"
