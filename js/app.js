@@ -93,7 +93,7 @@ document.addEventListener("change", e => {
 })();
 
 /* Navigation entre la vue d'ensemble et les boss (menu latéral, mémorisée dans l'ancre #).
-   Liens venant de l'accueil : #auto (boss choisi par defaultBoss(), report.js), #b0 (un boss), #go=m|joueur (sa ligne dans l'onglet Membres du boss choisi par defaultBoss()),
+   Liens venant de l'accueil : #auto (boss choisi par defaultBoss(), report.js), #b0 (un boss), #go=m|joueur (sa ligne dans « Tous les pulls » de la soirée ; #go=k|joueur : « Tous les kills »),
    #go=p|b0|joueur|rôle (sa ligne dans l'onglet Joueurs du boss). L'ancienne page #members ouvre l'onglet Membres du même boss. */
 (function () {
   const show = (k, top) => {
@@ -150,8 +150,8 @@ document.addEventListener("change", e => {
   if (h.startsWith("go=")) {
     const [kind, a, b, c, d] = h.slice(3).split("|");
     if (kind === "p") goPlayer(a, b, c, d);
-    else { const k = defaultBoss(), page = document.querySelector('.boss[data-boss="' + k + '"]'); if (!page) { show("ov", false); return; } show(k, false); const pane = tab(page, "Membres"); flash([...(pane || page).querySelectorAll("td[data-v]")].find(x => x.dataset.v === a)?.parentNode); }
-  } else if (h === "members") { const k = defaultBoss(); show(k, false); const page = document.querySelector('.boss[data-boss="' + k + '"]'); if (page) tab(page, "Membres"); }
+    else { const k = kind === "k" ? "kills" : "all", page = document.querySelector('.boss[data-boss="' + k + '"]'); show(k, false); flash([...page.querySelectorAll("td[data-v]")].find(x => x.dataset.v === a)?.parentNode); }
+  } else if (h === "members") show("all", false);
   else if (h === "auto") show(defaultBoss(), false);
   else show(document.querySelector('.boss[data-boss="' + h + '"]') ? h : defaultBoss(), false); /* sans ancre : boss choisi comme pour #auto */
   }, 0);
