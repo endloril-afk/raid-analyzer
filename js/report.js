@@ -132,7 +132,7 @@ function banners() {
   return `<div class="astat" title="${esc(info)}"><span class="muted">Statut de l'analyse :</span><span class="apill ${st}"><i></i>${label}</span>${st !== "good" && a && a.active && a.next ? `<span class="muted small">prochaine mise à jour vers ${hm(a.next)}</span>` : ""}</div>`;
 }
 function footer() {
-  return `<footer class="foot"><span>${ico("cal")}Rapport généré le ${timeFr(X.generated)}</span><span class="muted">Raid Analyzer, par Endloril &amp; Dalrkïra</span><span>${ico("sync")}${X.auto_update && X.auto_update.active ? "Mise à jour automatique en cours" : "Rapport clôturé"}${X.extension_version ? ` · v${esc(X.extension_version)}` : ""}</span></footer>`;
+  return `<footer class="foot"><span>${ico("cal")}Rapport généré le ${timeFr(X.generated)}</span><span class="muted">Raid Analyzer, par Endloril &amp; Dalrkïra</span><span>${ico("sync")}${X.auto_update && X.auto_update.active ? "Mise à jour automatique en cours" : "Rapport clôturé"}${X.extension_version ? ` · v${esc(X.extension_version)}` : ""}</span>${(X.merged_from_previous || []).length ? `<span class="muted small" title="${esc(X.merged_from_previous.join(", "))}">Fiches reprises de l'analyse précédente (absentes de celle-ci) : ${X.merged_from_previous.length}</span>` : ""}</footer>`;
 }
 
 document.title = `${raidName()} — ${dateFr(X.report.raid_date)}`;
