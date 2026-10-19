@@ -109,9 +109,9 @@ function playersRecap(players) {
 }
 function deathsCard(deaths, g) {
   return card("Revue des morts", muted(`${g.deaths_kept} morts gardées (avant la coupe du pull, hors morts après l'appel du wipe) sur ${g.deaths_total}, dont <b>${deaths.filter(d => d.avoidable).length}</b> sans défensif récent${deaths.some(d => d.excused) ? ` et <b>${deaths.filter(d => d.excused).length}</b> excusée(s) : aucun soin reçu des healers dans les 8 s avant la mort, alors que le joueur s'était protégé (défensif ou potion / healthstone dans les 20 s, ou plus rien de disponible), sur une mécanique qui n'est pas à éviter (non comptées dans la survie)` : ""}.`) +
-    table([{ l: "Pull", num: 1 }, { l: "Temps", num: 1 }, { l: "Joueur" }, { l: "Rôle" }, { l: "Tué par" }, { l: "Défensifs récents" }, { l: "Healthstone" }, { l: "Défensifs non utilisés" }, { l: "Évitable" }, { l: "" }],
+    table([{ l: "Pull", num: 1 }, { l: "Temps", num: 1 }, { l: "Joueur" }, { l: "Rôle" }, { l: "Tué par" }, { l: "Défensifs récents" }, { l: "Potion de soins / pierre" }, { l: "Défensifs non utilisés" }, { l: "Évitable" }, { l: "" }],
       deaths.map(d => [d.pull, { h: mmss(d.time_s), v: d.time_s }, d.player, ROLE_FR[d.role] || d.role, { h: sp(d.killer, d.killer_icon, 18, true, d.killer_id), v: d.killer },
-        d.recent_def.length ? d.recent_def.join(", ") : "—", d.healthstone ? "oui" : d.stone_available === false ? '<span class="muted small">non (pas de Démoniste : pas de pierre)</span>' : "non", d.unused_def.length ? d.unused_def.join(", ") : "—",
+        d.recent_def.length ? d.recent_def.join(", ") : "—", (d.heal_potion_used != null ? `potion : ${d.heal_potion_used ? "oui" : '<b class="bad">non</b>'} · pierre : ${d.stone_available === false ? '<span class="muted small">pas de Démoniste</span>' : d.healthstone_used ? "oui" : '<b class="bad">non</b>'}` : d.healthstone ? "oui" : "non"), d.unused_def.length ? d.unused_def.join(", ") : "—",
         { h: (d.avoidable ? chip("évitable", "bad") : chip("non", "good")) + (d.excused ? ` <span title="${esc(d.excused)}">${chip("excusée : aucun soin reçu", "warn")}</span>` : ""), v: d.avoidable ? 1 : 0 }, { h: link(d.link), v: "" }])));
 }
 
@@ -259,10 +259,10 @@ const timesH = times => !times || !times.length ? '<span class="muted small">jam
   : `<span class="cdt">${times.map(p => `${p.pull != null ? `<i>P${p.pull}</i> ` : ""}${p.ts.map(t => `<code>${mmss(t)}</code>`).join(" ")}`).join('<span class="sep">|</span>')}</span>`;
 const tabs2 = (labels, panes) => tabset(labels, panes).replace('<div class="tabset ', '<div class="tabset gpt ');
 function spellsT(rows, withCd) {
-  return table([{ l: "Sort" }, { l: "Toi / min", num: 1 }, { l: "Top / min", num: 1 }, { l: "Toi vs top" },
+  return table([{ l: "Sort" }, { l: "Toi / min", num: 1 }, { l: "Top / min", num: 1 }, { l: "Toi vs top", title: "Pour les CD : part des utilisations possibles sur la durée de chaque combat, comparée au top (un kill plus court du top ne fausse pas la comparaison). Pour les autres sorts : utilisations par minute." },
     ...(withCd ? [{ l: "Toutes les (s)", num: 1 }, { l: "Top : toutes les (s)", num: 1 }, { l: "1re utilisation (s)", num: 1 }, { l: "Top 1re (s)", num: 1 }] : []),
     { l: "Utilisé par le top" }, ...(withCd ? [{ l: "Utilisé à" }] : [])],
-    rows.map(r => [{ h: sp(r.name, r.icon, 22, true, r.id), v: r.name }, { h: num(r.ours_cpm, 2), v: r.ours_cpm ?? "" }, { h: num(r.top_cpm, 2), v: r.top_cpm ?? "" }, { h: ratioC(r.ratio), v: r.ratio ?? -1 },
+    rows.map(r => [{ h: sp(r.name, r.icon, 22, true, r.id), v: r.name }, { h: num(r.ours_cpm, 2), v: r.ours_cpm ?? "" }, { h: num(r.top_cpm, 2), v: r.top_cpm ?? "" }, { h: ratioC(r.ratio) + (r.eff != null ? `<br><small class="muted" title="Utilisations rapportées au maximum possible sur chaque combat (CD estimé), pour ne pas pénaliser des combats plus longs que les kills du top">${r.eff} % des utilisations possibles (top ${r.top_eff} %)</small>` : ""), v: r.ratio ?? -1 },
       ...(withCd ? [r.ours_interval ?? "—", r.top_interval ?? "—", r.ours_first ?? "—", r.top_first ?? "—"] : []), r.top_users ?? "",
       ...(withCd ? [{ h: timesH(r.times), v: r.times?.[0]?.ts?.[0] ?? 9999 }] : [])]));
 }
@@ -408,6 +408,9 @@ function cdTimeline(tl) {
     (list.length ? `<details class="evlist"><summary>Détail (${list.length})</summary>${table([{ l: "Temps", num: 1 }, { l: "Problème" }, { l: "Détail" }], list.map(r => [{ h: mmss(r[0]), v: r[0] }, r[1], r[2]]))}</details>` : '<p class="good small">Aucun problème de CD sur ce pull.</p>');
 }
 /* Compo healers : chiffres clés, répartition du soin, notes, chronologie des CD de raid */
+/* Morts excusées (aucun soin reçu des healers dans les 8 s) : elles ne comptent pas pour le joueur, on les montre aux healers */
+const unhealedCard = H => (H.unhealed || []).length ? card("Morts sans soin des healers", muted("Joueurs morts sans avoir reçu aucun soin des healers dans les 8 s précédentes, alors qu'ils s'étaient protégés : la mort ne leur est pas reprochée. À regarder côté healers (placement, ligne de vue, assignations).") +
+  table([{ l: "Pull", num: 1 }, { l: "Temps", num: 1 }, { l: "Joueur" }, { l: "Tué par" }, { l: "" }], H.unhealed.map(d => [d.pull, { h: mmss(d.time_s), v: d.time_s }, esc(d.player), esc(d.killer), { h: d.link ? link(d.link) : "", v: "" }]))) : "";
 function compoPane(H, b) {
   const c = H.compo, tl = c.timelines || [], sum = k => tl.reduce((a, t) => a + (t.counts?.[k] ?? 0), 0), spikes = sum("spikes"), unc = sum("uncovered"), wasted = sum("wasted"), ov = c.overlaps_total ?? 0;
   const L = [...H.healers].sort((x, y) => (y.hps ?? 0) - (x.hps ?? 0)), tot = L.reduce((a, h) => a + (h.hps ?? 0), 0);
@@ -453,7 +456,7 @@ function gameplayView(v, b) {
       (p.advice.find(x => x.level === "bad") || p.advice.find(x => x.level === "warn"))?.topic ?? "—"]))}</details>` : "";
   const m = b.healerMeta || {};
   const intro = v.healers ? muted(`${v.healers.pulls} pull(s) · ${fr(v.healers.minutes)} min de combat par healer · références : top ${m.top_count ?? "?"} mondial de chaque spé, kills à ${m.healer_count ?? "?"} healers${m.same_compo ? `, et kills avec la même compo de healers (${esc(m.healer_compo ?? "?")})` : ""}${m.context_label ? ` · si un healer descend dans le ${esc(m.context_label)}, comparé aux tops qui y descendent aussi` : ""}${fbList(v.healers)}`) : "";
-  const hPanels = H.length ? gpp("c", null, first === "c", null, intro + compoPane(v.healers, b)) + H.map((h, i) => healerPanel(h, "h" + i, rf("h", i), false)).join("") + gpp("r", null, false, null, intro + raidCdPane(v.healers)) : "";
+  const hPanels = H.length ? gpp("c", null, first === "c", null, intro + unhealedCard(v.healers) + compoPane(v.healers, b)) + H.map((h, i) => healerPanel(h, "h" + i, rf("h", i), false)).join("") + gpp("r", null, false, null, intro + raidCdPane(v.healers)) : "";
   const pPanels = P.map((p, i) => playerPanel(p, String(i), rf("g", i), String(i) === first)).join("");
   return `<div class="gpwrap"><section class="card"><h3>Gameplay — choisis un joueur</h3>
     ${muted(`Chaque joueur est comparé aux meilleurs logs mondiaux de sa spé sur ce boss, à la même difficulté${okG ? ` (${G.top_count} logs pour les DPS et tanks)` : ""}. « Compo » reprend l'analyse de la compo healers, « CD de raid » la chronologie des cooldowns de raid. Le DPS brut est indicatif (les tops sont des kills plus courts, avec Bloodlust) : l'usage des sorts et leur placement dans le temps sont plus fiables.`)}
