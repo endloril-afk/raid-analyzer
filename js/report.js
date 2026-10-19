@@ -112,7 +112,7 @@ function trinketRecap() {
   const T = X.trinket_suggestions || [];
   if (!T.length) return "";
   return `<div class="sechead"><h2>Bijoux à viser</h2><span class="muted small">Bijou à activation utilisé par la majorité des meilleurs de la spé, absent de l'équipement du joueur (fiche de début de pull) · à considérer s'il tombe, sans pénalité sur la note</span></div><section class="card">${table([{ l: "Joueur" }, { l: "Bijou" }, { l: "Utilisé par" }, { l: "Boss" }],
-    T.map(t => [{ h: pl(t.player, t.class, t.role), v: t.player }, { h: t.icon ? sp(t.trinket, t.icon, 18, true) : esc(t.trinket), v: t.trinket }, t.users ? `${t.users} des meilleurs` : "—", { h: esc(t.bosses.join(", ")), v: t.bosses.length }]), "sortable")}</section>`;
+    T.map(t => [{ h: pl(t.player, t.class, t.role), v: t.player }, { h: t.icon ? sp(t.trinket, t.icon, 18, true) : esc(t.trinket), v: t.trinket }, { h: t.by_boss && t.by_boss.length ? `sur chacun des ${t.by_boss.length} boss :<br><small>${t.by_boss.map(b => `${esc(b.users || "?")} des meilleurs sur ${esc(b.boss)}`).join("<br>")}</small>` : t.users ? `${t.users} des meilleurs` : "—", v: t.bosses.length }, { h: esc(t.bosses.join(", ")), v: t.bosses.length }]), "sortable")}</section>`;
 }
 function potionRecap() {
   const per = new Map();
