@@ -279,7 +279,7 @@ document.addEventListener("change", e => {
         if (t > 0) s += '<line x1="' + sx(f[0] + nx * hw) + '" y1="' + sy(f[1] + ny * hw) + '" x2="' + sx(f[0] - nx * hw) + '" y2="' + sy(f[1] - ny * hw) + '" stroke="#ef4444" stroke-width="4" stroke-linecap="round"/>'; }
       if (!A.length && t > 0) s += '<circle cx="' + sx(w.x) + '" cy="' + sy(w.y) + '" r="' + r * k + '" fill="none" stroke="#ef4444" stroke-opacity=".5" stroke-dasharray="4 4"><title>Vague de ' + w.name + ' : orientation de la croix inconnue (aucun joueur touché), distance parcourue</title></circle>';
     }
-    for (const h of m.hits.filter(h => h.dt <= t)) s += '<circle cx="' + sx(h.x) + '" cy="' + sy(h.y) + '" r="9" fill="none" stroke="#ef4444" stroke-width="1.5"><title>' + h.name + ' touché par une vague à ' + h.dt + ' s</title></circle>';
+    for (const h of m.hits.filter(h => h.dt <= t)) s += '<circle cx="' + sx(h.x) + '" cy="' + sy(h.y) + '" r="9" fill="none" stroke="#ef4444" stroke-width="1.5"><title>' + h.name + ' touché par une vague à ' + h.dt + ' s' + (h.amount ? ' : ' + Math.round(h.amount / 1000) + 'k' : '') + (h.died ? ' (mort)' : '') + '</title></circle>' + '<text x="' + (sx(h.x) + 10) + '" y="' + (sy(h.y) - 8) + '" class="small" fill="#ef4444">' + h.name + (h.amount ? ' ' + Math.round(h.amount / 1000) + 'k' : '') + '</text>';
     const dead = m.totems.filter(x => x.dt <= t);
     /* totems présents pendant la vague, à leur position (log) : cercle de la couleur du côté, barré une fois mort */
     for (const o of m.totems_at || []) { const gone = o.died_dt != null && o.died_dt <= t;
