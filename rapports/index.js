@@ -5,10 +5,10 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": null,
   "server": null,
-  "next_update": 1792406544458,
+  "next_update": 1792406308137,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792404515802,
+  "generated": 1792405408138,
   "pulls": 21,
   "note": 8,
   "bosses": [
@@ -146,7 +146,7 @@ window.RAPPORTS_INDEX = [
       "class": "Paladin",
       "role": "healer",
       "sub": null,
-      "note": 6.8,
+      "note": 7.1,
       "pulls": 1
      },
      {
@@ -941,7 +941,7 @@ window.RAPPORTS_INDEX = [
   ],
   "complete": false,
   "auto": true,
-  "extension_version": "0.40.9",
+  "extension_version": "0.40.10",
   "file": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.html",
   "json": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.json"
  }
