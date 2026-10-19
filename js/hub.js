@@ -48,7 +48,7 @@ function entryCard(x, toggle = false) {
   const cls = q => String(q.class || "").replace(/\s/g, "");
   const bestc = BEST_ROLES.map(([l, ok]) => { const q = pl.find(ok); if (q && pl.filter(ok).some(x => x.partial)) return `<div class="pod best"><div class="plbl">${ico("trophy")}${l}</div><div class="pn muted" title="${esc(partialTitle())}">Non élu</div><small>notes partielles (données manquantes) : élu à la prochaine mise à jour</small></div>`; return q ? `<div class="pod best"><div class="plbl">${ico("trophy")}${l}</div>${clsic(cls(q), 44)}
     <div class="pn" style="--cc:${CC(q.class)}">${esc(q.name)}</div><div class="pr">${rolic(roleKey(q.role, q.sub))} <b>${fr(q.note)}/10</b>${pmark(q.partial)}</div><small>${q.pulls ?? "?"} pulls</small></div>` : ""; }).join("");
-  const best = bestc ? `<section class="inner"><div class="sechead"><h2>${ico("trophy")}Les meilleurs de la soirée</h2><span class="muted small">Par rôle : note moyenne de tous leurs pulls de la soirée</span></div><div class="podium bestg">${bestc}</div></section>` : "";
+  const best = ""; /* « Les meilleurs de la soirée » retiré à la demande de la guilde (pas de classement entre joueurs sur l'accueil) */
   return `<article class="entry${toggle ? " closed" : ""}">${hero}<div class="ebody"><div>${best}<section class="inner"><div class="sechead"><h2>${SKULL()}Progression des boss</h2><div class="leg"><span><i class="d kill"></i>Vaincu</span><span><i class="d best"></i>Meilleure tentative</span></div></div>
     <div class="bgrid">${bs.map(b => tile(b, x.file)).join("")}</div></section></div></div></article>`;
 }
@@ -100,8 +100,8 @@ const METHODE = `<div class="panel mth"><section class="mflow">
   <article class="mcard"><h3>🎯 Gameplay et stuff</h3><p>Healers, DPS et tanks sont comparés aux meilleurs logs mondiaux de leur spé, sur le même boss et la même difficulté.</p>
     <p class="small"><b>Note d'un fight</b> = moyenne pondérée de catégories notées sur 10, selon le rôle. DPS : strat, dégâts, survie, gameplay. Healer : strat, soins, survie, gameplay (poids 1), dégâts (poids 0,25). Tank : strat, mitigation et survie, gameplay (poids 1), dégâts et soins (poids 0,5). Les morts comptent dans la survie, pas dans la strat.</p>
     <p class="muted small">Buffs d'avant pull et bijoux exclus ; enchantements vérifiés par rapport au raid et au top.</p></article>
-  <article class="mcard"><h3>🏆 Classements</h3><p>Pour chaque boss et pour toute la soirée : meilleur tank, meilleur healer, meilleur DPS mêlée et meilleur DPS distance.</p>
-    <p class="muted small">Soirée : note moyenne de tous les pulls de chaque joueur, puis morts par pull.</p></article>
+  <article class="mcard"><h3>🏆 Classements</h3><p>Pour chaque boss : top 5 du fight et classement complet, sur la note du fight. Pas de classement entre joueurs sur la soirée.</p>
+    <p class="muted small">À note égale : survie, puis morts par pull. Pas de podium tant que des notes sont partielles.</p></article>
   <article class="mcard"><h3>🔄 Mise à jour</h3><p>Pendant et après la soirée, le rapport se complète tout seul.</p>
     <ul class="small"><li>Données manquantes : nouvel essai après la remise à zéro du quota.</li><li>Pulls en cours : vérification toutes les 10 min.</li><li>Clôturé quand tout est chargé et qu'aucun pull n'a été ajouté depuis 1 h.</li></ul></article>
   </div></div>`;
