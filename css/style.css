@@ -578,3 +578,6 @@ table.mini{border-collapse:collapse}table.mini td{padding:4px 6px;border-bottom:
 .astat{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 16px;font-size:14px;cursor:help}.apill{display:inline-flex;align-items:center;gap:7px;padding:3px 12px 3px 9px;border-radius:999px;font-weight:600;font-size:13px;border:1px solid currentColor;background:color-mix(in srgb,currentColor 12%,transparent)}.apill i{width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor}.apill.good{color:var(--good)}.apill.warn{color:var(--warn)}.apill.bad{color:var(--bad)}
 .partial{color:var(--warn);font-weight:700;margin-left:3px;cursor:help}
 .vkf{color:#f97316;font-weight:600}.vko{color:#a78bfa;font-weight:600}
+.snav .snsep{border:0;border-top:1px solid var(--line);margin:4px 6px}
+.snav .d.all{background:var(--acc)}
+.hscroll{overflow-x:auto}
