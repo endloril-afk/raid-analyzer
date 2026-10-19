@@ -115,7 +115,9 @@ function potionRecap() {
       const pa = (o.advice || []).filter(a => a.topic === "Potion");
       if (pa.some(a => /jamais prise/.test(a.text))) m.never.push(b.name); else if (pa.length) m.less.push(b.name); } }
   if (!per.size) return "";
-  const rows = [...per.values()].filter(m => m.never.length || m.less.length).sort((a, b) => b.never.length - a.never.length || a.name.localeCompare(b.name, "fr"));
+  /* gravité : jamais prise de la soirée, puis jamais prise sur certains boss, puis seulement moins que le top */
+  const sev = m => m.never.length === m.n ? 3 : m.never.length ? 2 : 1;
+  const rows = [...per.values()].filter(m => m.never.length || m.less.length).sort((a, b) => sev(b) - sev(a) || b.never.length - a.never.length || b.less.length - a.less.length || a.name.localeCompare(b.name, "fr"));
   const what = m => [m.never.length === m.n ? chip(`jamais prise sur la soirée (${m.n} boss)`, "bad") : m.never.length ? `<span title="${esc(m.never.join(", "))}">${chip(`jamais prise sur ${m.never.length} boss sur ${m.n}`, "warn")}</span>` : "",
     m.less.length ? `<span title="${esc(m.less.join(", "))}">${chip(`moins que le top sur ${m.less.length} boss`, "warn")}</span>` : ""].join(" ");
   return `<div class="sechead"><h2>Potions de la soirée</h2><span class="muted small">Potions de combat (dégâts ou soins boostés, ex. Light's Potential) comparées au top de la spé, boss par boss · potions de mana et de soin non comptées · sans pénalité sur la note · survole un badge pour les boss</span></div><section class="card">${rows.length
