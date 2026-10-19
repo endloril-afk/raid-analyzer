@@ -336,6 +336,8 @@ function manaC(m) {
     ${muted(`Mana moyenne par tranche de ${m.bin_s} s depuis le début du pull. Le top, ce sont des kills : ses courbes vont jusqu'à la fin du combat, les tiennes s'arrêtent au wipe.`)}</div>`;
 }
 /* Fiche d'un healer : Fiche / Chronologie des CD / Soin et activité */
+/* Healers comparés à des kills avec un autre nombre de healers (exceptions à la référence annoncée) */
+const fbList = H => { const ex = ((H && H.healers) || []).filter(h => /kills à \d+ healers/.test(h.context_note || "")).map(h => `${h.name} (${/kills à \d+ healers/.exec(h.context_note)[0]})`); return ex.length ? ` (sauf ${ex.join(", ")} : aucun kill du top au même nombre)` : ""; };
 /* Référence fragile à côté de la note : peu de logs du top, ou kills avec un autre nombre de healers */
 function refWarn(h) {
   const n = h.reference?.players?.length ?? null, fb = /kills à (\d+) healers/.exec(h.context_note || "");
@@ -423,7 +425,7 @@ function compoPane(H, b) {
     muted(`Seuls les problèmes sont affichés. Un pic = au moins 1,5× les dégâts habituels du pull et parmi les 20 % les plus forts. Chevauchement = deux CD de soin majeurs de healers différents à moins de ${c.overlap_s} s. Survole un élément pour le détail.`) +
     tl.map((t, i) => `<details class="tlw"${i === 0 ? " open" : ""}><summary>Pull ${t.pull} · ${mmss(t.duration_s)} · ${t.counts.overlaps} chevauchement(s) · ${t.counts.wasted} CD sans dégâts · ${t.counts.uncovered}/${t.counts.spikes} pic(s) sans CD</summary>${cdTimeline(t)}</details>`).join("")) : "";
   const m = b.healerMeta || {};
-  return head + notes + chrono + muted(`Référence : moyenne des ${H.top_count ?? m.top_count} meilleurs logs mondiaux (HPS) de chaque spé sur ${esc(b.name)}, uniquement des kills joués avec ${m.healer_count ?? "le même nombre de"} healers comme vous. Les tops sont des kills et nos pulls peuvent être des wipes : tout est ramené à la minute de combat.`) +
+  return head + notes + chrono + muted(`Référence : moyenne des ${H.top_count ?? m.top_count} meilleurs logs mondiaux (HPS) de chaque spé sur ${esc(b.name)}, uniquement des kills joués avec ${m.healer_count ?? "le même nombre de"} healers comme vous${fbList(H)}. Les tops sont des kills et nos pulls peuvent être des wipes : tout est ramené à la minute de combat.`) +
     (H.errors && H.errors.length ? muted("Limites : " + esc(H.errors.join(" · "))) : "");
 }
 function raidCdPane(H) {
@@ -450,7 +452,7 @@ function gameplayView(v, b) {
       { h: p.idle != null ? `${fr(p.idle)} %${p.idle_top != null ? ` (top ${fr(p.idle_top)})` : ""}` : "—", v: p.idle ?? -1 }, { h: p.chrono?.align?.ours != null ? `${p.chrono.align.ours} %${p.chrono.align.top != null ? ` (top ${p.chrono.align.top})` : ""}` : "—", v: p.chrono?.align?.ours ?? -1 },
       (p.advice.find(x => x.level === "bad") || p.advice.find(x => x.level === "warn"))?.topic ?? "—"]))}</details>` : "";
   const m = b.healerMeta || {};
-  const intro = v.healers ? muted(`${v.healers.pulls} pull(s) · ${fr(v.healers.minutes)} min de combat par healer · références : top ${m.top_count ?? "?"} mondial de chaque spé, kills à ${m.healer_count ?? "?"} healers${m.same_compo ? `, et kills avec la même compo de healers (${esc(m.healer_compo ?? "?")})` : ""}${m.context_label ? ` · si un healer descend dans le ${esc(m.context_label)}, comparé aux tops qui y descendent aussi` : ""}`) : "";
+  const intro = v.healers ? muted(`${v.healers.pulls} pull(s) · ${fr(v.healers.minutes)} min de combat par healer · références : top ${m.top_count ?? "?"} mondial de chaque spé, kills à ${m.healer_count ?? "?"} healers${m.same_compo ? `, et kills avec la même compo de healers (${esc(m.healer_compo ?? "?")})` : ""}${m.context_label ? ` · si un healer descend dans le ${esc(m.context_label)}, comparé aux tops qui y descendent aussi` : ""}${fbList(v.healers)}`) : "";
   const hPanels = H.length ? gpp("c", null, first === "c", null, intro + compoPane(v.healers, b)) + H.map((h, i) => healerPanel(h, "h" + i, rf("h", i), false)).join("") + gpp("r", null, false, null, intro + raidCdPane(v.healers)) : "";
   const pPanels = P.map((p, i) => playerPanel(p, String(i), rf("g", i), String(i) === first)).join("");
   return `<div class="gpwrap"><section class="card"><h3>Gameplay — choisis un joueur</h3>
