@@ -109,7 +109,8 @@ function stuffRecap() {
 /* Potions de combat jamais prises sur la soirée : conseil « Potion · jamais prise » sur chaque boss où le joueur est comparé au top */
 function potionRecap() {
   const per = new Map();
-  for (const b of tried()) { const v = b.views[0] || {};
+  /* boss pris en compte : kill ou au moins 3 pulls (sur 1-2 pulls de découverte, ne pas prendre de potion est courant) */
+  for (const b of tried().filter(b => b.summary.kills || b.summary.pulls >= 3)) { const v = b.views[0] || {};
     for (const o of [...((v.gameplay && v.gameplay.players) || []), ...((v.healers && v.healers.healers) || [])]) { if (!o.reference) continue;
       const m = per.get(o.name) || per.set(o.name, { name: o.name, cls: o.class, role: o.role, n: 0, never: [], less: [] }).get(o.name); m.n++;
       const pa = (o.advice || []).filter(a => a.topic === "Potion");
@@ -120,7 +121,7 @@ function potionRecap() {
   const rows = [...per.values()].filter(m => m.never.length || m.less.length).sort((a, b) => sev(b) - sev(a) || b.never.length - a.never.length || b.less.length - a.less.length || a.name.localeCompare(b.name, "fr"));
   const what = m => [m.never.length === m.n ? chip(`jamais prise sur la soirée (${m.n} boss)`, "bad") : m.never.length ? `<span title="${esc(m.never.join(", "))}">${chip(`jamais prise sur ${m.never.length} boss sur ${m.n}`, "warn")}</span>` : "",
     m.less.length ? `<span title="${esc(m.less.join(", "))}">${chip(`moins que le top sur ${m.less.length} boss`, "warn")}</span>` : ""].join(" ");
-  return `<div class="sechead"><h2>Potions de la soirée</h2><span class="muted small">Potions de combat (dégâts ou soins boostés, ex. Light's Potential) comparées au top de la spé, boss par boss · potions de mana et de soin non comptées · sans pénalité sur la note · survole un badge pour les boss</span></div><section class="card">${rows.length
+  return `<div class="sechead"><h2>Potions de la soirée</h2><span class="muted small">Potions de combat (dégâts ou soins boostés, ex. Light's Potential) comparées au top de la spé, boss par boss, sur les boss tués ou d'au moins 3 pulls · potions de mana et de soin non comptées · sans pénalité sur la note · survole un badge pour les boss</span></div><section class="card">${rows.length
     ? table([{ l: "Joueur" }, { l: "Potions de combat" }], rows.map(m => [{ h: pl(m.name, m.cls, m.role), v: m.name }, { h: what(m), v: m.never.length * 10 + m.less.length }]), "sortable")
     : '<p class="good">Tout le monde prend ses potions de combat comme le top.</p>'}</section>`;
 }
