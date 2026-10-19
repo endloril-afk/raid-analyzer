@@ -582,3 +582,4 @@ table.mini{border-collapse:collapse}table.mini td{padding:4px 6px;border-bottom:
 .snav .d.all{background:var(--acc)}
 .hscroll{overflow-x:auto}
 .miss.lim summary{color:var(--muted)}
+.tl .ev.ok rect{stroke:#8a8fa3;stroke-opacity:.6}
