@@ -4,6 +4,7 @@
 /* ---------- Raid : composants ---------- */
 function rings(roles) {
   return `<div class="rings">${roles.map(r => {
+    if (r.partial) return `<div class="ring" title="${esc(partialTitle())}"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" class="bg"/><text x="40" y="45" text-anchor="middle">—</text></svg><b>${esc(r.label)}</b><small>${r.partial} note(s) partielle(s) sur ${r.players}</small></div>`;
     const c = 2 * Math.PI * 34, col = r.avg >= 8 ? "var(--good)" : r.avg >= 6 ? "var(--warn)" : "var(--bad)";
     return `<div class="ring" title="${esc(r.label)} : note moyenne ${fr(r.avg)}/10 sur ${r.players} joueur(s)"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="34" class="bg"/><circle cx="40" cy="40" r="34" style="stroke:${col}" stroke-dasharray="${(c * r.pct / 100).toFixed(1)} ${c.toFixed(1)}" transform="rotate(-90 40 40)"/><text x="40" y="45" text-anchor="middle">${r.pct}%</text></svg><b>${esc(r.label)}</b><small>${fr(r.avg)}/10 · ${r.players} joueur(s)${r.partial ? ` · <span title="${esc(partialTitle())}">${r.partial} note(s) partielle(s)</span>` : ""}</small></div>`;
   }).join("")}</div>`;
@@ -197,17 +198,17 @@ function vashnikView(vk, pull) {
     vkMap(fr_) +
     (pc && vk.froth_players.length ? `<h4>Par joueur (soirée)</h4>${table([{ l: "Joueur" }, { l: "Plague Froth", num: 1 }, { l: "Immobile (< 3 m)", num: 1 }, { l: "Déplacement moyen", num: 1 }, { l: "Vagues avec totems détruits", num: 1 }],
       vk.froth_players.map(x => [x.player, x.waves, { h: x.still ? chip(x.still, "bad") : "0", v: x.still }, { h: x.avg_moved_m != null ? fr(x.avg_moved_m) + " m" : "—", v: x.avg_moved_m ?? -1 }, `${x.waves_with_kills}/${x.waves}`]))}` : ""));
-  const disp = card("3-4. Vagues de dispel (Exploding Infection)", muted("Dispels à moins de 3 s l'un de l'autre = une vague (vous dispel 2 par 2). Heures de chaque dispel, healers sans dispel sur la vague, et CD de soin lancés pendant la vague et dans les 15 s qui suivent.") +
-    (dw.length ? table([...pcol, { l: "Vague", num: 1 }, { l: "Début", num: 1 }, { l: "Dispels (healer → cible, heure)" }, { l: "Sans dispel" }, { l: "CD de soin après" }],
+  const disp = card("3-4. Vagues de dispel (Exploding Infection)", muted("Dispels à moins de 3 s l'un de l'autre = une vague. Qui a dispel qui et quand, et CD de soin lancés pendant la vague et dans les 15 s qui suivent. Un seul healer par vague est normal (dispel un par un) : seuls les healers sans aucun dispel sur tout le pull sont signalés.") +
+    (dw.length ? table([...pcol, { l: "Vague", num: 1 }, { l: "Début", num: 1 }, { l: "Dispel par (healer → cible, heure)" }, { l: "CD de soin après" }],
       dw.map(w => [...pv(w), w.wave, { h: mmss(w.start_s), v: w.start_s }, { h: w.dispels.map(d => `<b>${esc(d.healer)}</b> → ${esc(d.target)} <code>${mmss(d.time_s)}</code>`).join("<br>"), v: w.dispels.length },
-        { h: w.no_dispel.length ? w.no_dispel.map(n => chip(esc(n), "warn")).join(" ") : chip("tous", "good"), v: w.no_dispel.length },
-        { h: w.cds_after.length ? w.cds_after.map(c => `${esc(c.healer)} : ${sp(c.spell, c.icon, 18, true, c.spell_id)} <code>${mmss(c.time_s)}</code>`).join("<br>") : '<span class="bad small">aucun</span>', v: w.cds_after.length }])) : muted("Aucun dispel d'Exploding Infection sur cette vue.")));
+        { h: w.cds_after.length ? w.cds_after.map(c => `${esc(c.healer)} : ${sp(c.spell, c.icon, 18, true, c.spell_id)} <code>${mmss(c.time_s)}</code>`).join("<br>") : '<span class="bad small">aucun</span>', v: w.cds_after.length }])) : muted("Aucun dispel d'Exploding Infection sur cette vue.")) +
+    ((vk.dispel_pull_missing || []).filter(P).filter(x => x.healers.length).map(x => `<p class="small">${pc ? `Pull ${x.pull} : ` : ""}healer(s) sans aucun dispel sur le pull : ${x.healers.map(n => chip(esc(n), "warn")).join(" ")}</p>`).join("")));
   const ccs = card("5. Coups sur un add feu contrôlé", muted("Dégâts (sorts, DoT, cleave) sur un Burning Venom sous contrôle (Banish, Imprison…) pendant qu'un autre Burning Venom est tué.") +
     (cc.length ? table([...pcol, { l: "Heure", num: 1 }, { l: "Joueur" }, { l: "Sort" }, { l: "Add" }, { l: "Contrôle (par)" }],
       cc.map(x => [...pv(x), { h: mmss(x.time_s), v: x.time_s }, x.player, x.ability, x.add, `${x.cc} (${x.cc_by})`])) : '<p class="good">Aucun coup sur un add contrôlé.</p>'));
   const deaths = card("6. Morts avant le wipe", muted("Hors morts après l'appel du wipe. « 80 % → mort » = temps entre le dernier moment à 80 % de vie ou plus et la mort. Défensifs encore disponibles = défensifs que le joueur utilise d'habitude et pas encore lancés dans ce pull ; healthstone et potion de soins : non utilisées dans ce pull.") +
     (de.length ? table([...pcol, { l: "Heure", num: 1 }, { l: "Joueur" }, { l: "Tué par" }, { l: "80 % → mort", num: 1 }, { l: "Encore disponible" }],
-      de.map(d => [...pv(d), { h: mmss(d.time_s), v: d.time_s }, d.player, d.killer, { h: d.from80_s != null ? fr(d.from80_s) + " s" : "—", v: d.from80_s ?? -1 },
+      de.map(d => [...pv(d), { h: mmss(d.time_s), v: d.time_s }, d.player, d.killer, { h: d.from80_s != null ? fr(d.from80_s) + " s" : d.hp_loaded === false ? '<span class="muted small">vie non chargée (quota)</span>' : "—", v: d.from80_s ?? -1 },
         { h: [...d.defensives_left.map(n => chip(esc(n), "warn")), d.healthstone_left ? chip("healthstone", "warn") : "", d.potion_left ? chip("potion de soins", "warn") : ""].join(" ") || '<span class="muted small">rien</span>', v: d.defensives_left.length }])) : '<p class="good">Aucune mort avant le wipe.</p>'));
   const adds = pc && vk.add_damage.length ? card("7. Dégâts sur les adds (hors healers, soirée)", muted("Dégâts faits sur chaque type d'add, et DPS sur les adds ramené à la durée totale des pulls.") +
     (() => { const names = [...new Set(vk.add_damage.flatMap(x => Object.keys(x.by_add)))];
