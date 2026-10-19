@@ -7,7 +7,7 @@
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792407241169,
+  "generated": 1792408998922,
   "pulls": 21,
   "note": 8,
   "bosses": [
@@ -940,7 +940,7 @@
   ],
   "complete": true,
   "auto": false,
-  "extension_version": "0.40.10",
+  "extension_version": "0.40.11",
   "file": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.html",
   "json": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.json"
  }
