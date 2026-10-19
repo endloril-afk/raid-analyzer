@@ -8,7 +8,7 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792414152099,
+  "generated": 1792416470505,
   "pulls": 21,
   "note": 8.1,
   "bosses": [
@@ -376,7 +376,7 @@ window.RAPPORTS_INDEX = [
       "class": "Shaman",
       "role": "dps",
       "sub": "ranged",
-      "note": 5.3,
+      "note": 5.4,
       "pulls": 2
      },
      {
@@ -384,7 +384,7 @@ window.RAPPORTS_INDEX = [
       "class": "DeathKnight",
       "role": "dps",
       "sub": "melee",
-      "note": 5.9,
+      "note": 6.1,
       "pulls": 2
      },
      {
@@ -448,7 +448,7 @@ window.RAPPORTS_INDEX = [
       "class": "Evoker",
       "role": "healer",
       "sub": null,
-      "note": 7.4,
+      "note": 7.9,
       "pulls": 2
      },
      {
@@ -456,7 +456,7 @@ window.RAPPORTS_INDEX = [
       "class": "Monk",
       "role": "tank",
       "sub": null,
-      "note": 7.5,
+      "note": 7.6,
       "pulls": 2
      },
      {
@@ -472,7 +472,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 9.3,
+      "note": 9.6,
       "pulls": 2
      },
      {
@@ -488,7 +488,7 @@ window.RAPPORTS_INDEX = [
       "class": "Rogue",
       "role": "dps",
       "sub": "melee",
-      "note": 7.1,
+      "note": 7.4,
       "pulls": 2
      },
      {
@@ -790,7 +790,7 @@ window.RAPPORTS_INDEX = [
     "class": "Shaman",
     "role": "dps",
     "sub": "ranged",
-    "note": 7.8,
+    "note": 7.9,
     "pulls": 19,
     "deaths": 1
    },
@@ -916,7 +916,7 @@ window.RAPPORTS_INDEX = [
     "class": "Monk",
     "role": "tank",
     "sub": null,
-    "note": 7.8,
+    "note": 7.9,
     "pulls": 19,
     "deaths": 1
    },
@@ -941,7 +941,7 @@ window.RAPPORTS_INDEX = [
   ],
   "complete": true,
   "auto": false,
-  "extension_version": "0.40.19",
+  "extension_version": "0.40.20",
   "file": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.html",
   "json": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.json"
  }
