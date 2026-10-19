@@ -102,7 +102,7 @@ function intermission(sp_) {
 }
 function playersRecap(players) {
   return card("Récapitulatif par joueur", muted("Strat sur 10 : 10 = aucune erreur régulière sur les mécaniques, 1 = gros souci. Les morts sont listées mais comptent dans la Survie (note du fight), pas dans la strat. Clique sur une colonne pour trier.") +
-    table([{ l: "Joueur" }, { l: "Rôle" }, { l: "Classe" }, { l: "Pulls", num: 1 }, { l: "Morts / pull", num: 1 }, { l: "Points à améliorer" }, { l: "Strat", num: 1 }, { l: "Note du fight", num: 1 }],
+    table([{ l: "Joueur" }, { l: "Rôle" }, { l: "Classe" }, { l: "Pulls", num: 1 }, { l: "Morts / pull", num: 1, title: "Morts avant la coupure du pull uniquement (les morts après la coupure ne comptent pas)" }, { l: "Points à améliorer" }, { l: "Strat", num: 1 }, { l: "Note du fight", num: 1 }],
       players.map(p => [{ h: pl(p.player, p.class, p.role, p.sub), v: p.player }, p.role_label, clsName(p.class), p.pulls, { h: fr(p.deaths_per_pull, 2), v: p.deaths_per_pull },
         { h: p.issues.map(i => `<span class="issue" title="${esc(i.kind)}">${i.icon ? sp(i.mechanic, i.icon, 16, false, i.spell_id) : ""}<b>${esc(i.mechanic)}</b> ${esc(i.text)} <i>${esc(i.detail)}</i></span>`).join("") || '<span class="muted">—</span>', v: p.issues.length },
         { h: chip(fr(p.score) + "/10", noteCls(p.score)), v: p.score }, { h: p.fight_score != null ? chip(fr(p.fight_score) + "/10", noteCls(p.fight_score)) + pmark(p.fight_partial) : "–", v: p.fight_score ?? -1 }])));
