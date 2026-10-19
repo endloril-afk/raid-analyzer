@@ -111,7 +111,7 @@ function deathsCard(deaths, g) {
   return card("Revue des morts", muted(`${g.deaths_kept} morts gardées (avant la coupe du pull, hors morts après l'appel du wipe) sur ${g.deaths_total}, dont <b>${deaths.filter(d => d.avoidable).length}</b> sans défensif récent${deaths.some(d => d.excused) ? ` et <b>${deaths.filter(d => d.excused).length}</b> excusée(s) : aucun soin reçu des healers dans les 8 s avant la mort, alors que le joueur s'était protégé (défensif ou potion / healthstone dans les 20 s, ou plus rien de disponible), sur une mécanique qui n'est pas à éviter (non comptées dans la survie)` : ""}.`) +
     table([{ l: "Pull", num: 1 }, { l: "Temps", num: 1 }, { l: "Joueur" }, { l: "Rôle" }, { l: "Tué par" }, { l: "Défensifs récents" }, { l: "Healthstone" }, { l: "Défensifs non utilisés" }, { l: "Évitable" }, { l: "" }],
       deaths.map(d => [d.pull, { h: mmss(d.time_s), v: d.time_s }, d.player, ROLE_FR[d.role] || d.role, { h: sp(d.killer, d.killer_icon, 18, true, d.killer_id), v: d.killer },
-        d.recent_def.length ? d.recent_def.join(", ") : "—", d.healthstone ? "oui" : "non", d.unused_def.length ? d.unused_def.join(", ") : "—",
+        d.recent_def.length ? d.recent_def.join(", ") : "—", d.healthstone ? "oui" : d.stone_available === false ? '<span class="muted small">non (pas de Démoniste : pas de pierre)</span>' : "non", d.unused_def.length ? d.unused_def.join(", ") : "—",
         { h: (d.avoidable ? chip("évitable", "bad") : chip("non", "good")) + (d.excused ? ` <span title="${esc(d.excused)}">${chip("excusée : aucun soin reçu", "warn")}</span>` : ""), v: d.avoidable ? 1 : 0 }, { h: link(d.link), v: "" }])));
 }
 
