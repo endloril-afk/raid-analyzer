@@ -326,9 +326,15 @@ function manaC(m) {
     ${muted(`Mana moyenne par tranche de ${m.bin_s} s depuis le début du pull. Le top, ce sont des kills : ses courbes vont jusqu'à la fin du combat, les tiennes s'arrêtent au wipe.`)}</div>`;
 }
 /* Fiche d'un healer : Fiche / Chronologie des CD / Soin et activité */
+/* Référence fragile à côté de la note : peu de logs du top, ou kills avec un autre nombre de healers */
+function refWarn(h) {
+  const n = h.reference?.players?.length ?? null, fb = /kills à (\d+) healers/.exec(h.context_note || "");
+  const t = [n != null && n < 5 ? `référence : ${n} log${n > 1 ? "s" : ""} du top seulement` : "", fb ? `comparé à des kills à ${fb[1]} healers` : ""].filter(Boolean);
+  return t.length ? `<small>${t.map(x => chip(esc(x), "warn")).join(" ")}</small>` : "";
+}
 function healerPanel(h, key, ref, shown) {
   const head = `<div class="gph">${clsic(h.class, 46)}<div><div class="gpn">${esc(h.name)}</div><div class="muted small">${esc(`${h.spec} ${clsName(h.class)}`)} · Healer · ilvl ${h.ilvl ?? "?"} · ${h.pulls} pull(s), ${fr(h.minutes)} min${h.talents ? " · " + talentsA(h.talents) : ""}</div></div>
-    <div class="gps">${scoreB(h.score)}<small class="muted">note du fight · <a href="#" data-stratgo="${esc(h.name)}">détail strat</a></small></div></div>${catsStrip(h.categories, null, h.partial)}`;
+    <div class="gps">${scoreB(h.score)}<small class="muted">note du fight · <a href="#" data-stratgo="${esc(h.name)}">détail strat</a></small>${refWarn(h)}</div></div>${catsStrip(h.categories, null, h.partial)}`;
   if (!h.reference) return gpp(key, null, shown, h.class, `<section class="card">${head}${muted(esc(h.advice[0]?.text ?? ""))}</section>`);
   const R = h.reference, vt = h.vs_top ?? {};
   const kpis = `<div class="kpis">${kpi("Soin / dégâts du raid", h.cover != null ? fr(h.cover) + " %" : "—", R.cover != null ? `top ${fr(R.cover)} % ${dchip(vt.cover, "%")}` : "référence indisponible")}
