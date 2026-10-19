@@ -6,7 +6,7 @@ const X = window.RAID_EXPORT;
 const tried = () => X.roster.filter(r => r.tried).map(r => X.bosses.find(b => b.key === r.key)).filter(Boolean);
 const nav = () => topNav(ROOT + "index.html");
 function side() {
-  return `<aside class="snav">${tried().map(b => `<button data-bossgo="${b.key}"><i class="d ${b.summary.kills ? "kill" : "best"}"></i>${esc(b.name)}</button>`).join("")}</aside>`;
+  return `<aside class="snav"><button data-bossgo="all"><i class="d all"></i>Tous les pulls</button><button data-bossgo="kills"><i class="d kill"></i>Tous les kills</button><hr class="snsep">${tried().map(b => `<button data-bossgo="${b.key}"><i class="d ${b.summary.kills ? "kill" : "best"}"></i>${esc(b.name)}</button>`).join("")}</aside>`;
 }
 /* Boss ouvert par #auto (clic sur l'encadré du raid à l'accueil) : le seul boss non vaincu s'il n'y en a qu'un, sinon le boss tenté le plus tard.
    L'export ne date pas les pulls : « le plus tard » = plus grand numéro de combat Warcraft Logs (fight=N) des liens des morts, à défaut l'ordre de X.bosses (première tentative). */
@@ -50,6 +50,23 @@ function overview() {
    3) enchantements manquants sur la soirée (stuff). Une note se clique : elle ouvre la fiche du joueur dans l'onglet Gameplay du boss. */
 const ngo = (v, name, role, key, view, title, partial = null) => v == null ? { h: "–", v: "" } : { h: `<button class="ngo" data-goplayer="${esc(name)}" data-gorole="${esc(role)}" data-goboss="${esc(key)}"${view ? ` data-goview="${esc(view)}"` : ""} title="${esc(title)}">${chip(fr(v), noteCls(v))}</button>${pmark(partial)}`, v };
 const catsTitle = p => p && p.categories && p.categories.length ? p.categories.map(c => `${c.label} ${fr(c.score)}/10${(c.weight ?? 1) !== 1 ? ` (poids ${String(c.weight).replace(".", ",")})` : ""}`).join(" · ") + " · clique pour le détail" : "Clique pour le détail";
+/* Membres d'un boss : note de chaque joueur sur tous les pulls du boss, sur chaque pull (kill en tête de colonne) */
+function bossMembers(b) {
+  const pulls = b.views.slice(1);
+  const of = (v, n) => (v.gameplay?.players || []).find(x => x.name === n) || (v.healers?.healers || []).find(x => x.name === n) || null;
+  const list = [...b.summary.players].sort((a, c) => c.score - a.score);
+  const cols = [{ l: "Joueur" }, { l: "Rôle" }, { l: "Tous les pulls", num: 1 }, ...pulls.map(v => { const [h, t = ""] = String(v.label).split(" — "); return { l: `<span title="${esc(v.label)}">${v.kill ? `<b>${esc(h)}</b>` : esc(h)}<br><small class="muted">${esc(t.replace(/\s*\(.*\)$/, "").replace(/^kill$/, "kill"))}</small></span>`, num: 1 }; }), { l: "Pulls", num: 1 }];
+  const rows = list.map(p => [{ h: pl(p.player, p.class, p.role, p.sub), v: p.player }, ROLE_FR[p.role] || p.role,
+    ngo(p.score, p.player, p.role, b.key, null, catsTitle(p), p.partial),
+    ...pulls.map(v => { const o = of(v, p.player); return ngo(o?.score ?? null, p.player, p.role, b.key, v.key, catsTitle(o), o?.partial); }),
+    { h: p.pulls, v: p.pulls }]);
+  return `<div class="sechead"><h2>Membres — ${esc(b.name)}</h2><span class="muted small">${list.length} joueurs · note du fight sur tous les pulls du boss puis sur chaque pull (moyenne des catégories du rôle, survole une note) · clique une note pour voir son détail · la soirée entière : « Tous les pulls » et « Tous les kills » dans le menu de gauche</span></div>
+    <section class="card">${pulls.length ? `<div class="hscroll">${table(cols, rows, "sortable grid")}</div>` : table(cols, rows, "sortable grid")}</section>`;
+}
+/* Pages de la soirée entière (menu de gauche) : tous les pulls ou tous les kills, tous boss confondus */
+function nightPage(id, title, sub, body) {
+  return `<div class="boss" data-boss="${id}" hidden><section class="bhero">${ban(TILE_HUE, "", raidImg(raidName()))}<div class="bhin"><div class="bhead"><h2>${esc(title)}</h2></div><div class="viewbar"><span class="muted small">${esc(sub)}</span></div></div></section><section class="inner">${body}</section></div>`;
+}
 function members(cur) {
   const bs = tried(), P = {};
   bs.forEach((b, i) => b.summary.players.forEach(p => {
@@ -61,8 +78,8 @@ function members(cur) {
   const rows = list.map(m => [{ h: pl(m.name, m.cls, m.role, m.sub), v: m.name }, ROLE_FR[m.role] || m.role,
     ...bs.map((b, i) => ngo(m.vals[i], m.name, m.role, b.key, null, catsTitle(m.rows[i]), m.rows[i]?.partial)),
     { h: `<b>${fr(m.sum / m.pulls)}</b>`, v: m.sum / m.pulls }, { h: m.pulls, v: m.pulls }]);
-  return `<div class="sechead"><h2>Membres — tous les pulls</h2><span class="muted small">${list.length} joueurs · note du fight sur chaque boss (moyenne des catégories du rôle, survole une note) · note de la soirée = moyenne de tous leurs pulls · clique une note pour voir son détail</span></div>
-    <section class="card">${table(cols, rows, "sortable grid")}</section>` + membersKills(cur) + stuffRecap();
+  return `<div class="sechead"><h2>Membres — tous les pulls de la soirée</h2><span class="muted small">${list.length} joueurs · note du fight sur chaque boss (moyenne des catégories du rôle, survole une note) · note de la soirée = moyenne de tous leurs pulls · clique une note pour voir son détail</span></div>
+    <section class="card">${table(cols, rows, "sortable grid")}</section>` + stuffRecap();
 }
 function membersKills(cur) {
   const kb = tried().filter(b => b.summary.kill && b.summary.kill.players && b.summary.kill.players.length);
@@ -83,10 +100,24 @@ function stuffRecap() {
     const o = per.get(p.name) || per.set(p.name, { name: p.name, cls: p.class, role: p.role, n: 0, slots: new Map() }).get(p.name); o.n++;
     for (const e of (p.enchants || []).filter(x => x.present && x.required && !x.has)) (o.slots.get(e.slot) || o.slots.set(e.slot, []).get(e.slot)).push(b.name);
   }
-  if (!per.size) return "";
+  if (!per.size) return potionRecap();
   const rows = [...per.values()].filter(o => o.slots.size).sort((a, b) => b.slots.size - a.slots.size || a.name.localeCompare(b.name, "fr"));
   return `<div class="sechead"><h2>Stuff de la soirée</h2><span class="muted small">Enchantements manquants, sur combien des ${bs.length} boss</span></div><section class="card">${rows.length ? table([{ l: "Joueur" }, { l: "Enchantements manquants" }],
-    rows.map(o => [{ h: pl(o.name, o.cls, o.role), v: o.name }, { h: [...o.slots].map(([slot, l]) => `<span class="chip ${l.length === o.n ? "bad" : "warn"}" title="${esc(l.join(", "))}">${esc(slot)} : ${l.length === o.n ? "tous les boss" : `${l.length} boss sur ${o.n}`}</span>`).join(" "), v: o.slots.size }]), "sortable") : '<p class="good">Tout le monde est enchanté sur tous les boss.</p>'}</section>`;
+    rows.map(o => [{ h: pl(o.name, o.cls, o.role), v: o.name }, { h: [...o.slots].map(([slot, l]) => `<span class="chip ${l.length === o.n ? "bad" : "warn"}" title="${esc(l.join(", "))}">${esc(slot)} : ${l.length === o.n ? "tous les boss" : `${l.length} boss sur ${o.n}`}</span>`).join(" "), v: o.slots.size }]), "sortable") : '<p class="good">Tout le monde est enchanté sur tous les boss.</p>'}</section>`; + potionRecap();
+}
+
+/* Potions de combat jamais prises sur la soirée : conseil « Potion · jamais prise » sur chaque boss où le joueur est comparé au top */
+function potionRecap() {
+  const per = new Map();
+  for (const b of tried()) { const v = b.views[0] || {};
+    for (const o of [...((v.gameplay && v.gameplay.players) || []), ...((v.healers && v.healers.healers) || [])]) { if (!o.reference) continue;
+      const m = per.get(o.name) || per.set(o.name, { name: o.name, cls: o.class, role: o.role, n: 0, never: 0 }).get(o.name); m.n++;
+      if ((o.advice || []).some(a => a.topic === "Potion" && /jamais prise/.test(a.text))) m.never++; } }
+  if (!per.size) return "";
+  const rows = [...per.values()].filter(m => m.never === m.n).sort((a, b) => a.name.localeCompare(b.name, "fr"));
+  return `<div class="sechead"><h2>Potions de la soirée</h2><span class="muted small">Potion de combat jamais prise sur aucun des boss analysés, alors que la majorité du top en prend (sans pénalité sur la note)</span></div><section class="card">${rows.length
+    ? table([{ l: "Joueur" }, { l: "Potions" }], rows.map(m => [{ h: pl(m.name, m.cls, m.role), v: m.name }, { h: chip(`jamais prise sur la soirée (${m.n} boss)`, "warn"), v: m.n }]), "sortable")
+    : '<p class="good">Tout le monde a pris une potion de combat sur au moins un boss.</p>'}</section>`;
 }
 
 /* Statut de l'analyse : une pastille (vert Clôturé, orange En cours, rouge En échec) ; le détail est dans l'infobulle */
@@ -105,4 +136,4 @@ function footer() {
 }
 
 document.title = `${raidName()} — ${dateFr(X.report.raid_date)}`;
-document.getElementById("app").innerHTML = header() + nav() + banners() + `<div class="rlay">${side()}<div class="rmain">${overview() + X.bosses.map(b => bossPage(b.key, b, members(b.key))).join("")}</div></div>` + footer();
+document.getElementById("app").innerHTML = header() + nav() + banners() + `<div class="rlay">${side()}<div class="rmain">${overview() + nightPage("all", "Tous les pulls de la soirée", "Note de chaque joueur sur chaque boss et moyenne de tous ses pulls de la soirée.", members(null)) + nightPage("kills", "Tous les kills de la soirée", "Note de chaque joueur sur les pulls tués uniquement.", membersKills(null)) + X.bosses.map(b => bossPage(b.key, b, bossMembers(b))).join("")}</div></div>` + footer();
