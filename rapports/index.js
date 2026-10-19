@@ -5,12 +5,12 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": "Exaltés au Cimetière",
   "server": "Garona",
-  "next_update": 1792438492894,
+  "next_update": 1792439099008,
   "zone": "The Venomous Abyss",
   "raid_date": 1792435634241,
-  "generated": 1792437892895,
+  "generated": 1792438499009,
   "pulls": 2,
-  "note": 7.5,
+  "note": 7.4,
   "bosses": [
    {
     "name": "Nek'zali the Soulcoiler",
@@ -126,7 +126,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.4,
+      "note": 8.2,
       "pulls": 2
      },
      {
@@ -158,7 +158,7 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "dps",
       "sub": "ranged",
-      "note": 7.9,
+      "note": 7.7,
       "pulls": 2
      },
      {
@@ -362,7 +362,7 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.4,
+    "note": 8.2,
     "pulls": 2,
     "deaths": 1
    },
@@ -398,7 +398,7 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "dps",
     "sub": "ranged",
-    "note": 7.9,
+    "note": 7.7,
     "pulls": 2,
     "deaths": 1
    },
