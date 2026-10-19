@@ -111,13 +111,16 @@ function potionRecap() {
   const per = new Map();
   for (const b of tried()) { const v = b.views[0] || {};
     for (const o of [...((v.gameplay && v.gameplay.players) || []), ...((v.healers && v.healers.healers) || [])]) { if (!o.reference) continue;
-      const m = per.get(o.name) || per.set(o.name, { name: o.name, cls: o.class, role: o.role, n: 0, never: 0 }).get(o.name); m.n++;
-      if ((o.advice || []).some(a => a.topic === "Potion" && /jamais prise/.test(a.text))) m.never++; } }
+      const m = per.get(o.name) || per.set(o.name, { name: o.name, cls: o.class, role: o.role, n: 0, never: [], less: [] }).get(o.name); m.n++;
+      const pa = (o.advice || []).filter(a => a.topic === "Potion");
+      if (pa.some(a => /jamais prise/.test(a.text))) m.never.push(b.name); else if (pa.length) m.less.push(b.name); } }
   if (!per.size) return "";
-  const rows = [...per.values()].filter(m => m.never === m.n).sort((a, b) => a.name.localeCompare(b.name, "fr"));
-  return `<div class="sechead"><h2>Potions de la soirée</h2><span class="muted small">Potion de combat jamais prise sur aucun des boss analysés, alors que la majorité du top en prend (sans pénalité sur la note)</span></div><section class="card">${rows.length
-    ? table([{ l: "Joueur" }, { l: "Potions" }], rows.map(m => [{ h: pl(m.name, m.cls, m.role), v: m.name }, { h: chip(`jamais prise sur la soirée (${m.n} boss)`, "warn"), v: m.n }]), "sortable")
-    : '<p class="good">Tout le monde a pris une potion de combat sur au moins un boss.</p>'}</section>`;
+  const rows = [...per.values()].filter(m => m.never.length || m.less.length).sort((a, b) => b.never.length - a.never.length || a.name.localeCompare(b.name, "fr"));
+  const what = m => [m.never.length === m.n ? chip(`jamais prise sur la soirée (${m.n} boss)`, "bad") : m.never.length ? `<span title="${esc(m.never.join(", "))}">${chip(`jamais prise sur ${m.never.length} boss sur ${m.n}`, "warn")}</span>` : "",
+    m.less.length ? `<span title="${esc(m.less.join(", "))}">${chip(`moins que le top sur ${m.less.length} boss`, "warn")}</span>` : ""].join(" ");
+  return `<div class="sechead"><h2>Potions de la soirée</h2><span class="muted small">Potions de combat (dégâts ou soins boostés, ex. Light's Potential) comparées au top de la spé, boss par boss · potions de mana et de soin non comptées · sans pénalité sur la note · survole un badge pour les boss</span></div><section class="card">${rows.length
+    ? table([{ l: "Joueur" }, { l: "Potions de combat" }], rows.map(m => [{ h: pl(m.name, m.cls, m.role), v: m.name }, { h: what(m), v: m.never.length * 10 + m.less.length }]), "sortable")
+    : '<p class="good">Tout le monde prend ses potions de combat comme le top.</p>'}</section>`;
 }
 
 /* Statut de l'analyse : une pastille (vert Clôturé, orange En cours, rouge En échec) ; le détail est dans l'infobulle */
