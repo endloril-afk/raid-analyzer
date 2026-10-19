@@ -5,10 +5,10 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": "Exaltés au Cimetière",
   "server": "Garona",
-  "next_update": 1792443711502,
+  "next_update": 1792443940070,
   "zone": "The Venomous Abyss",
   "raid_date": 1792435634241,
-  "generated": 1792443111503,
+  "generated": 1792443340072,
   "pulls": 4,
   "note": 8.1,
   "bosses": [
