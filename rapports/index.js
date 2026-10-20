@@ -640,7 +640,7 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792499344661,
+  "generated": 1792500146928,
   "pulls": 21,
   "note": 8.2,
   "bosses": [
@@ -706,7 +706,7 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "dps",
       "sub": "ranged",
-      "note": 9.2,
+      "note": 9.5,
       "pulls": 1
      },
      {
@@ -810,7 +810,7 @@ window.RAPPORTS_INDEX = [
       "class": "DemonHunter",
       "role": "tank",
       "sub": null,
-      "note": 7.9,
+      "note": 8,
       "pulls": 1
      }
     ]
@@ -853,7 +853,7 @@ window.RAPPORTS_INDEX = [
       "class": "Rogue",
       "role": "dps",
       "sub": "melee",
-      "note": 7.5,
+      "note": 8,
       "pulls": 12
      },
      {
@@ -1440,7 +1440,7 @@ window.RAPPORTS_INDEX = [
     "class": "Rogue",
     "role": "dps",
     "sub": "melee",
-    "note": 7.4,
+    "note": 7.7,
     "pulls": 19,
     "deaths": 5
    },
@@ -1449,7 +1449,7 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.3,
+    "note": 8.4,
     "pulls": 19,
     "deaths": 2
    },
@@ -1573,7 +1573,7 @@ window.RAPPORTS_INDEX = [
   ],
   "complete": true,
   "auto": false,
-  "extension_version": "0.40.45",
+  "extension_version": "0.40.46",
   "file": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.html",
   "json": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.json"
  }
