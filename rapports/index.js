@@ -5,12 +5,12 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": "Exaltés au Cimetière",
   "server": "Garona",
-  "next_update": 1792456072891,
+  "next_update": 1792490532007,
   "zone": "The Venomous Abyss",
   "raid_date": 1792435634241,
-  "generated": 1792452394099,
+  "generated": 1792487076577,
   "pulls": 13,
-  "note": 7.6,
+  "note": 8.5,
   "bosses": [
    {
     "name": "Nek'zali the Soulcoiler",
@@ -46,39 +46,43 @@ window.RAPPORTS_INDEX = [
       "class": "Rogue",
       "role": "dps",
       "sub": "melee",
-      "note": 5.6,
-      "pulls": 3
+      "note": 6.8,
+      "pulls": 3,
+      "partial": true
      },
      {
       "name": "Toufoux",
       "class": "Hunter",
       "role": "dps",
       "sub": "ranged",
-      "note": 7,
-      "pulls": 3
+      "note": 7.4,
+      "pulls": 3,
+      "partial": true
      },
      {
       "name": "Dyâlise",
       "class": "Paladin",
       "role": "dps",
       "sub": "melee",
-      "note": 8.1,
-      "pulls": 3
+      "note": 8.6,
+      "pulls": 3,
+      "partial": true
      },
      {
       "name": "Aelminster",
       "class": "Mage",
       "role": "dps",
       "sub": "ranged",
-      "note": 7.5,
-      "pulls": 3
+      "note": 8.7,
+      "pulls": 3,
+      "partial": true
      },
      {
       "name": "Endloril",
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 8.2,
+      "note": 8,
       "pulls": 3
      },
      {
@@ -86,47 +90,52 @@ window.RAPPORTS_INDEX = [
       "class": "DemonHunter",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.6,
-      "pulls": 3
+      "note": 9.1,
+      "pulls": 3,
+      "partial": true
      },
      {
       "name": "Harmoniaque",
       "class": "Priest",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.5,
-      "pulls": 3
+      "note": 9.1,
+      "pulls": 3,
+      "partial": true
      },
      {
       "name": "Yörr",
       "class": "Hunter",
       "role": "dps",
       "sub": "ranged",
-      "note": 7.4,
-      "pulls": 3
+      "note": 9.3,
+      "pulls": 3,
+      "partial": true
      },
      {
       "name": "Luluisback",
       "class": "Hunter",
       "role": "dps",
       "sub": "melee",
-      "note": 8.1,
-      "pulls": 3
+      "note": 9.3,
+      "pulls": 3,
+      "partial": true
      },
      {
       "name": "Lauenat",
       "class": "Druid",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.3,
-      "pulls": 3
+      "note": 9.3,
+      "pulls": 3,
+      "partial": true
      },
      {
       "name": "Sylvaenya",
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 6.2,
+      "note": 6.3,
       "pulls": 3
      },
      {
@@ -134,8 +143,9 @@ window.RAPPORTS_INDEX = [
       "class": "Warrior",
       "role": "dps",
       "sub": "melee",
-      "note": 8.5,
-      "pulls": 3
+      "note": 9.8,
+      "pulls": 3,
+      "partial": true
      },
      {
       "name": "Shrakle",
@@ -150,16 +160,18 @@ window.RAPPORTS_INDEX = [
       "class": "Monk",
       "role": "tank",
       "sub": null,
-      "note": 6.7,
-      "pulls": 3
+      "note": 9.6,
+      "pulls": 3,
+      "partial": true
      },
      {
       "name": "Absoludrÿ",
       "class": "Mage",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.1,
-      "pulls": 3
+      "note": 9.8,
+      "pulls": 3,
+      "partial": true
      },
      {
       "name": "Môy",
@@ -174,8 +186,9 @@ window.RAPPORTS_INDEX = [
       "class": "DeathKnight",
       "role": "dps",
       "sub": "melee",
-      "note": 6.1,
-      "pulls": 3
+      "note": 9.8,
+      "pulls": 3,
+      "partial": true
      },
      {
       "name": "Tyry",
@@ -190,16 +203,18 @@ window.RAPPORTS_INDEX = [
       "class": "DeathKnight",
       "role": "tank",
       "sub": null,
-      "note": 8.6,
-      "pulls": 3
+      "note": 10,
+      "pulls": 3,
+      "partial": true
      },
      {
       "name": "Dèàthstroke",
       "class": "Hunter",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.9,
-      "pulls": 1
+      "note": 10,
+      "pulls": 1,
+      "partial": true
      }
     ]
    },
@@ -263,164 +278,184 @@ window.RAPPORTS_INDEX = [
     "pulls": 10,
     "players": [
      {
-      "name": "Endloril",
-      "class": "Druid",
-      "role": "healer",
-      "sub": null,
-      "note": 8.6,
-      "pulls": 10
-     },
-     {
       "name": "Môy",
       "class": "Paladin",
       "role": "healer",
       "sub": null,
-      "note": 7.6,
-      "pulls": 10
+      "note": 7.7,
+      "pulls": 10,
+      "partial": true
      },
      {
-      "name": "Shrakle",
-      "class": "Evoker",
+      "name": "Endloril",
+      "class": "Druid",
       "role": "healer",
       "sub": null,
       "note": 8,
-      "pulls": 10
-     },
-     {
-      "name": "Snøz",
-      "class": "Monk",
-      "role": "tank",
-      "sub": null,
-      "note": 5.9,
-      "pulls": 10
-     },
-     {
-      "name": "Luluisback",
-      "class": "Hunter",
-      "role": "dps",
-      "sub": "melee",
-      "note": 5.8,
-      "pulls": 10
+      "pulls": 10,
+      "partial": true
      },
      {
       "name": "Höjö",
       "class": "Warrior",
       "role": "dps",
       "sub": "melee",
-      "note": 6.7,
-      "pulls": 10
+      "note": 7.9,
+      "pulls": 10,
+      "partial": true
      },
      {
       "name": "Yörr",
       "class": "Hunter",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.1,
-      "pulls": 10
+      "note": 8.4,
+      "pulls": 10,
+      "partial": true
      },
      {
-      "name": "Jeangrip",
-      "class": "DeathKnight",
-      "role": "dps",
-      "sub": "melee",
-      "note": 6.1,
-      "pulls": 10
+      "name": "Snøz",
+      "class": "Monk",
+      "role": "tank",
+      "sub": null,
+      "note": 7.5,
+      "pulls": 10,
+      "partial": true
      },
      {
-      "name": "Lücîøle",
-      "class": "Rogue",
-      "role": "dps",
-      "sub": "melee",
-      "note": 7.6,
-      "pulls": 10
-     },
-     {
-      "name": "Darlkira",
-      "class": "DemonHunter",
-      "role": "dps",
-      "sub": "ranged",
-      "note": 8.6,
-      "pulls": 10
+      "name": "Shrakle",
+      "class": "Evoker",
+      "role": "healer",
+      "sub": null,
+      "note": 8.8,
+      "pulls": 10,
+      "partial": true
      },
      {
       "name": "Aelminster",
       "class": "Mage",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.2,
-      "pulls": 10
+      "note": 8.8,
+      "pulls": 10,
+      "partial": true
      },
      {
       "name": "Sylvaenya",
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 8.6,
-      "pulls": 10
+      "note": 8.8,
+      "pulls": 10,
+      "partial": true
      },
      {
-      "name": "Toufoux",
-      "class": "Hunter",
+      "name": "Darlkira",
+      "class": "DemonHunter",
       "role": "dps",
       "sub": "ranged",
-      "note": 6.9,
-      "pulls": 10
+      "note": 9,
+      "pulls": 10,
+      "partial": true
+     },
+     {
+      "name": "Lücîøle",
+      "class": "Rogue",
+      "role": "dps",
+      "sub": "melee",
+      "note": 9.3,
+      "pulls": 10,
+      "partial": true
+     },
+     {
+      "name": "Luluisback",
+      "class": "Hunter",
+      "role": "dps",
+      "sub": "melee",
+      "note": 8.9,
+      "pulls": 10,
+      "partial": true
+     },
+     {
+      "name": "Jeangrip",
+      "class": "DeathKnight",
+      "role": "dps",
+      "sub": "melee",
+      "note": 9.5,
+      "pulls": 10,
+      "partial": true
      },
      {
       "name": "Pattotomate",
       "class": "DeathKnight",
       "role": "tank",
       "sub": null,
-      "note": 6.3,
-      "pulls": 10
+      "note": 8.9,
+      "pulls": 10,
+      "partial": true
+     },
+     {
+      "name": "Toufoux",
+      "class": "Hunter",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.4,
+      "pulls": 10,
+      "partial": true
      },
      {
       "name": "Lauenat",
       "class": "Druid",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.7,
-      "pulls": 10
+      "note": 9.7,
+      "pulls": 10,
+      "partial": true
      },
      {
       "name": "Harmopalouf",
       "class": "Paladin",
       "role": "tank",
       "sub": null,
-      "note": 7.5,
-      "pulls": 10
+      "note": 9.8,
+      "pulls": 10,
+      "partial": true
      },
      {
       "name": "Absoludrÿ",
       "class": "Mage",
       "role": "dps",
       "sub": "ranged",
-      "note": 7.6,
-      "pulls": 10
+      "note": 9.9,
+      "pulls": 10,
+      "partial": true
      },
      {
       "name": "Dèàthstroke",
       "class": "Hunter",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.4,
-      "pulls": 10
+      "note": 9.9,
+      "pulls": 10,
+      "partial": true
      },
      {
       "name": "Tyry",
       "class": "Priest",
       "role": "dps",
       "sub": "ranged",
-      "note": 7,
-      "pulls": 10
+      "note": 10,
+      "pulls": 10,
+      "partial": true
      },
      {
       "name": "Dyâlise",
       "class": "Paladin",
       "role": "dps",
       "sub": "melee",
-      "note": 7.7,
-      "pulls": 10
+      "note": 10,
+      "pulls": 10,
+      "partial": true
      }
     ]
    },
@@ -441,194 +476,216 @@ window.RAPPORTS_INDEX = [
     "class": "Rogue",
     "role": "dps",
     "sub": "melee",
-    "note": 7.1,
+    "note": 8.7,
     "pulls": 13,
-    "deaths": 2
+    "deaths": 2,
+    "partial": true
    },
    {
     "name": "Toufoux",
     "class": "Hunter",
     "role": "dps",
     "sub": "ranged",
-    "note": 6.9,
+    "note": 8.9,
     "pulls": 13,
-    "deaths": 4
+    "deaths": 4,
+    "partial": true
    },
    {
     "name": "Dyâlise",
     "class": "Paladin",
     "role": "dps",
     "sub": "melee",
-    "note": 7.8,
+    "note": 9.7,
     "pulls": 13,
-    "deaths": 1
+    "deaths": 1,
+    "partial": true
    },
    {
     "name": "Aelminster",
     "class": "Mage",
     "role": "dps",
     "sub": "ranged",
-    "note": 8,
+    "note": 8.8,
     "pulls": 13,
-    "deaths": 1
+    "deaths": 1,
+    "partial": true
    },
    {
     "name": "Endloril",
     "class": "Druid",
     "role": "healer",
     "sub": null,
-    "note": 8.5,
+    "note": 8,
     "pulls": 13,
-    "deaths": 2
+    "deaths": 2,
+    "partial": true
    },
    {
     "name": "Darlkira",
     "class": "DemonHunter",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.6,
+    "note": 9,
     "pulls": 13,
-    "deaths": 1
+    "deaths": 1,
+    "partial": true
    },
    {
     "name": "Harmoniaque",
     "class": "Priest",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.5,
+    "note": 9.1,
     "pulls": 3,
-    "deaths": 1
+    "deaths": 1,
+    "partial": true
    },
    {
     "name": "Yörr",
     "class": "Hunter",
     "role": "dps",
     "sub": "ranged",
-    "note": 7.9,
+    "note": 8.6,
     "pulls": 13,
-    "deaths": 2
+    "deaths": 2,
+    "partial": true
    },
    {
     "name": "Luluisback",
     "class": "Hunter",
     "role": "dps",
     "sub": "melee",
-    "note": 6.3,
+    "note": 9,
     "pulls": 13,
-    "deaths": 5
+    "deaths": 5,
+    "partial": true
    },
    {
     "name": "Lauenat",
     "class": "Druid",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.6,
+    "note": 9.6,
     "pulls": 13,
-    "deaths": 4
+    "deaths": 4,
+    "partial": true
    },
    {
     "name": "Sylvaenya",
     "class": "Druid",
     "role": "healer",
     "sub": null,
-    "note": 8,
+    "note": 8.2,
     "pulls": 13,
-    "deaths": 2
+    "deaths": 2,
+    "partial": true
    },
    {
     "name": "Höjö",
     "class": "Warrior",
     "role": "dps",
     "sub": "melee",
-    "note": 7.1,
+    "note": 8.3,
     "pulls": 13,
-    "deaths": 3
+    "deaths": 3,
+    "partial": true
    },
    {
     "name": "Shrakle",
     "class": "Evoker",
     "role": "healer",
     "sub": null,
-    "note": 8,
+    "note": 8.6,
     "pulls": 13,
-    "deaths": 1
+    "deaths": 1,
+    "partial": true
    },
    {
     "name": "Snøz",
     "class": "Monk",
     "role": "tank",
     "sub": null,
-    "note": 6.1,
+    "note": 8,
     "pulls": 13,
-    "deaths": 5
+    "deaths": 5,
+    "partial": true
    },
    {
     "name": "Absoludrÿ",
     "class": "Mage",
     "role": "dps",
     "sub": "ranged",
-    "note": 7.7,
+    "note": 9.9,
     "pulls": 13,
-    "deaths": 2
+    "deaths": 2,
+    "partial": true
    },
    {
     "name": "Môy",
     "class": "Paladin",
     "role": "healer",
     "sub": null,
-    "note": 7.8,
+    "note": 7.9,
     "pulls": 13,
-    "deaths": 2
+    "deaths": 2,
+    "partial": true
    },
    {
     "name": "Jeangrip",
     "class": "DeathKnight",
     "role": "dps",
     "sub": "melee",
-    "note": 6.1,
+    "note": 9.6,
     "pulls": 13,
-    "deaths": 1
+    "deaths": 1,
+    "partial": true
    },
    {
     "name": "Tyry",
     "class": "Priest",
     "role": "healer",
     "sub": null,
-    "note": 7.4,
+    "note": 9.7,
     "pulls": 13,
-    "deaths": 0
+    "deaths": 0,
+    "partial": true
    },
    {
     "name": "Pattotomate",
     "class": "DeathKnight",
     "role": "tank",
     "sub": null,
-    "note": 6.8,
+    "note": 9.2,
     "pulls": 13,
-    "deaths": 3
+    "deaths": 3,
+    "partial": true
    },
    {
     "name": "Dèàthstroke",
     "class": "Hunter",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.4,
+    "note": 9.9,
     "pulls": 11,
-    "deaths": 1
+    "deaths": 1,
+    "partial": true
    },
    {
     "name": "Harmopalouf",
     "class": "Paladin",
     "role": "tank",
     "sub": null,
-    "note": 7.5,
+    "note": 9.8,
     "pulls": 10,
-    "deaths": 1
+    "deaths": 1,
+    "partial": true
    }
   ],
   "complete": false,
+  "partial": true,
   "auto": true,
-  "extension_version": "0.40.35",
+  "extension_version": "0.40.41",
   "file": "rapports/Raid_2026-10-19_The_Venomous_Abyss_Z1vNp7AGR4XYdqPF.html",
   "json": "rapports/Raid_2026-10-19_The_Venomous_Abyss_Z1vNp7AGR4XYdqPF.json"
  },
