@@ -23,7 +23,7 @@ function tile(b, file) {
   const body = b.kills ? '<p class="bf">Boss vaincu cette soirée.</p>' : `<div class="big">${fr(b.best_pct)} %</div><p class="bf">PV restants au plus bas</p>`;
   return `<a class="btile" href="${esc(file)}#${esc(b.key)}">${ban(TILE_HUE, initials(b.name), bossImg(b.name))}<div class="bt"><h3>${esc(b.name)}</h3>${b.kills ? st("kill") : '<span class="st best"><i>◎</i>Meilleure tentative</span>'}<hr>${body}</div></a>`;
 }
-const BEST_ROLES = [["Meilleur tank", q => q.role === "tank"], ["Meilleur healer", q => q.role === "healer"], ["Meilleur DPS mêlée", q => q.role === "dps" && q.sub === "melee"], ["Meilleur DPS distance", q => q.role === "dps" && q.sub !== "melee"]];
+const BEST_ROLES = [["Meilleur tank", q => q.role === "tank" && !q.hybrid], ["Meilleur healer", q => q.role === "healer" && !q.hybrid], ["Meilleur DPS mêlée", q => q.role === "dps" && q.sub === "melee" && !q.hybrid], ["Meilleur DPS distance", q => q.role === "dps" && q.sub !== "melee" && !q.hybrid]];
 /* Entrées de l'index groupées par jour, entrées du jour sélectionné (ordre chronologique), sélecteur de soirée (si plus d'un jour) */
 const byDay = list => [...list.reduce((m, e) => m.set(dayKey(e.raid_date), [...(m.get(dayKey(e.raid_date)) || []), e]), new Map()).values()];
 const dayEntries = days => [...(days[sel] || days[0])].sort((a, b) => (a.raid_date || 0) - (b.raid_date || 0));
