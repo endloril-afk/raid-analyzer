@@ -5,12 +5,12 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": "Exaltés au Cimetière",
   "server": "Garona",
-  "next_update": 1792490532007,
+  "next_update": 1792494222474,
   "zone": "The Venomous Abyss",
   "raid_date": 1792435634241,
-  "generated": 1792487100663,
+  "generated": 1792490730156,
   "pulls": 13,
-  "note": 8.5,
+  "note": 8.4,
   "bosses": [
    {
     "name": "Nek'zali the Soulcoiler",
@@ -82,7 +82,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 8.4,
+      "note": 8.2,
       "pulls": 3
      },
      {
@@ -282,18 +282,16 @@ window.RAPPORTS_INDEX = [
       "class": "Paladin",
       "role": "healer",
       "sub": null,
-      "note": 7.7,
-      "pulls": 10,
-      "partial": true
+      "note": 7.1,
+      "pulls": 10
      },
      {
       "name": "Endloril",
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 8,
-      "pulls": 10,
-      "partial": true
+      "note": 8.1,
+      "pulls": 10
      },
      {
       "name": "Höjö",
@@ -327,9 +325,8 @@ window.RAPPORTS_INDEX = [
       "class": "Evoker",
       "role": "healer",
       "sub": null,
-      "note": 8.8,
-      "pulls": 10,
-      "partial": true
+      "note": 7.8,
+      "pulls": 10
      },
      {
       "name": "Aelminster",
@@ -345,9 +342,8 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 8.8,
-      "pulls": 10,
-      "partial": true
+      "note": 8.2,
+      "pulls": 10
      },
      {
       "name": "Darlkira",
@@ -444,18 +440,16 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "dps",
       "sub": "ranged",
-      "note": 10,
-      "pulls": 10,
-      "partial": true
+      "note": 6.1,
+      "pulls": 10
      },
      {
       "name": "Dyâlise",
       "class": "Paladin",
       "role": "dps",
       "sub": "melee",
-      "note": 10,
-      "pulls": 10,
-      "partial": true
+      "note": 5.8,
+      "pulls": 10
      }
     ]
    },
@@ -496,7 +490,7 @@ window.RAPPORTS_INDEX = [
     "class": "Paladin",
     "role": "dps",
     "sub": "melee",
-    "note": 9.7,
+    "note": 6.4,
     "pulls": 13,
     "deaths": 1,
     "partial": true
@@ -518,8 +512,7 @@ window.RAPPORTS_INDEX = [
     "sub": null,
     "note": 8.1,
     "pulls": 13,
-    "deaths": 2,
-    "partial": true
+    "deaths": 2
    },
    {
     "name": "Darlkira",
@@ -576,10 +569,9 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "healer",
     "sub": null,
-    "note": 8.2,
+    "note": 7.7,
     "pulls": 13,
-    "deaths": 2,
-    "partial": true
+    "deaths": 2
    },
    {
     "name": "Höjö",
@@ -596,10 +588,9 @@ window.RAPPORTS_INDEX = [
     "class": "Evoker",
     "role": "healer",
     "sub": null,
-    "note": 8.6,
+    "note": 7.9,
     "pulls": 13,
-    "deaths": 1,
-    "partial": true
+    "deaths": 1
    },
    {
     "name": "Snøz",
@@ -626,10 +617,9 @@ window.RAPPORTS_INDEX = [
     "class": "Paladin",
     "role": "healer",
     "sub": null,
-    "note": 7.9,
+    "note": 7.4,
     "pulls": 13,
-    "deaths": 2,
-    "partial": true
+    "deaths": 2
    },
    {
     "name": "Jeangrip",
@@ -646,10 +636,9 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "healer",
     "sub": null,
-    "note": 9.7,
+    "note": 6.7,
     "pulls": 13,
-    "deaths": 0,
-    "partial": true
+    "deaths": 0
    },
    {
     "name": "Pattotomate",
