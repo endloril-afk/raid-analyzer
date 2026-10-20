@@ -97,8 +97,9 @@ function membersKills(cur) {
 function stuffRecap() {
   const bs = tried(), per = new Map();
   for (const b of bs) for (const p of (b.stuff && b.stuff.players) || []) {
-    const o = per.get(p.name) || per.set(p.name, { name: p.name, cls: p.class, role: p.role, n: 0, slots: new Map() }).get(p.name); o.n++;
-    for (const e of (p.enchants || []).filter(x => x.present && x.required && !x.has)) (o.slots.get(e.slot) || o.slots.set(e.slot, []).get(e.slot)).push(b.name);
+    const o = per.get(p.name) || per.set(p.name, { name: p.name, cls: p.class, role: p.role, bs: new Set(), n: 0, slots: new Map() }).get(p.name);
+    if (!o.bs.has(b.name)) { o.bs.add(b.name); o.n++; } /* un boss compte une fois même si le joueur y apparaît deux fois (changement de spé) */
+    for (const e of (p.enchants || []).filter(x => x.present && x.required && !x.has)) { const l = o.slots.get(e.slot) || o.slots.set(e.slot, []).get(e.slot); if (!l.includes(b.name)) l.push(b.name); }
   }
   if (!per.size) return trinketRecap() + potionRecap() + survivalConsRecap();
   const rows = [...per.values()].filter(o => o.slots.size).sort((a, b) => b.slots.size - a.slots.size || a.name.localeCompare(b.name, "fr"));
