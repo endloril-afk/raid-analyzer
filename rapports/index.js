@@ -8,7 +8,7 @@ window.RAPPORTS_INDEX = [
   "next_update": 1792490532007,
   "zone": "The Venomous Abyss",
   "raid_date": 1792435634241,
-  "generated": 1792487076577,
+  "generated": 1792487100663,
   "pulls": 13,
   "note": 8.5,
   "bosses": [
@@ -82,7 +82,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 8,
+      "note": 8.4,
       "pulls": 3
      },
      {
@@ -135,7 +135,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 6.3,
+      "note": 6.2,
       "pulls": 3
      },
      {
@@ -516,7 +516,7 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "healer",
     "sub": null,
-    "note": 8,
+    "note": 8.1,
     "pulls": 13,
     "deaths": 2,
     "partial": true
