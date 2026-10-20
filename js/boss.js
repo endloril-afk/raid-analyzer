@@ -158,7 +158,7 @@ function raidView(r, b = null, v = null) {
   const g = r.global, x = r.extras, w = g.wall;
   const kpis = `<div class="kpis">${kpi("Pulls analysés", g.pulls_analyzed, g.resets_excluded && g.resets_excluded.length ? `${g.resets_excluded.length} reset(s) exclu(s)` : g.pulls_total !== g.pulls_analyzed ? `sur ${g.pulls_total}` : undefined)}${kpi("Résultat", g.kills ? "Kill ✓" : "Wipe", g.kills ? `${g.kills} kill(s)` : `meilleur pull : ${fr(g.best_pct)} %`)}
     ${kpi("Le mur", w.median_wipe_pct != null ? fr(w.median_wipe_pct) + " %" : "—", w.median_wipe_pct != null ? `wipe médian à ${w.median_wipe_duration_s} s (${w.wipes} wipes)` : `pas assez de wipes (${w.wipes ?? 0}, il en faut 4)`)}${kpi("Données gardées", fr(g.kept_minutes) + " min", `sur ${fr(g.total_minutes)} min de combat`)}</div>`;
-  const labels = ["À retenir", "Mécaniques"], panes = [
+  const labels = ["Erreurs", "À retenir", "Mécaniques"], panes = [ b ? errorsView(b, v) : muted("Erreurs : vue indisponible."),
     cause(g.kills < g.pulls_analyzed ? x.wipe_cause : null) + card("Note du fight par rôle", rings(g.role_scores) + muted("Moyenne de la note du fight des joueurs de chaque rôle (strat, survie, dégâts ou soins, gameplay : les morts y comptent). Vert à partir de 80 %.")) +
     `<section class="card hero"><h2>À retenir</h2><ul>${g.key_points.map(k => `<li>${esc(k)}</li>`).join("")}</ul></section>` + filterPulls(r.pulls) +
     muted("Méthode : pour chaque mécanique, on compare les dégâts subis par chaque joueur à la moyenne du raid. Un joueur est signalé quand il prend nettement plus que les autres, sur plusieurs pulls."),
@@ -567,6 +567,7 @@ function renderView(el) {
   el.removeAttribute("data-lazy");
   if (window.initMaps) initMaps(el);
   if (window.initVk) initVk(el);
+  if (window.initNy) initNy(el);
 }
 
 /* ---------- Analyse détaillée de Sszorak (boss.deep.sszorak) : frise des erreurs, Serpent's Fury, Virulence, Crosswinds, Mutilate, kystes ---------- */
@@ -648,28 +649,105 @@ function sszorakView(sz, pull) {
   return tl + fury + vir + cw + mut + cy + (sz.notes || []).map(n => muted(esc(n))).join("");
 }
 
-/* ---------- Nymrissa : orbes de givre prises pendant la pluie ---------- */
+/* ---------- Nymrissa : orbes de givre prises pendant la pluie, film du combat ---------- */
+const NY_COL = { rain: "#ef4444", rain_cut: "#f59e0b", out: "#22c55e" };
+const NY_LBL = { rain: "pendant la pluie", rain_cut: "pendant la pluie, après l'appel du wipe (non compté)", out: "hors pluie" };
+/* frise d'un pull : bandes de pluie, un trait vertical par orbe (couleur = moment), tête ronde au-dessus pour survoler */
+function nyLane(S, R, end, W = 900) {
+  const L = 8, x = t => L + Math.max(0, Math.min(end, t)) / end * (W - L - 10);
+  let g = "";
+  for (const w of R) g += `<rect x="${x(w.start_s)}" y="16" width="${Math.max(2, x(w.end_s) - x(w.start_s))}" height="34" fill="#38bdf8" fill-opacity=".28" stroke="#38bdf8" stroke-opacity=".7"><title>Pluie ${w.n} : ${mmss(w.start_s)} → ${mmss(w.end_s)}</title></rect><text x="${x(w.start_s) + 3}" y="27" font-size="10" fill="#38bdf8">pluie ${w.n}</text>`;
+  for (const o of S) g += `<g><line x1="${x(o.time_s)}" x2="${x(o.time_s)}" y1="14" y2="52" stroke="${NY_COL[o.state]}" stroke-width="2.5"/><circle cx="${x(o.time_s)}" cy="10" r="5" fill="${o.state === "rain_cut" ? "none" : NY_COL[o.state]}" stroke="${NY_COL[o.state]}" stroke-width="2"/><title>Frost Orb ${mmss(o.time_s)} : ${esc(o.soakers.join(", "))} — ${NY_LBL[o.state]} (${esc(o.rel)})</title></g>`;
+  for (let t = 0; t <= end; t += end > 360 ? 60 : 30) g += `<text x="${x(t)}" y="66" text-anchor="middle" class="szl">${mmss(t)}</text>`;
+  return `<svg viewBox="0 0 ${W} 72" style="width:100%;max-width:${W}px;display:block">${g}</svg>`;
+}
+/* zoom sur une pluie : 8 s avant à 8 s après, nom du joueur sous chaque orbe */
+function nyZoom(w, S) {
+  const a = w.start_s - 8, b = w.end_s + 8, W = 900, x = t => 10 + (t - a) / (b - a) * (W - 20);
+  const near = S.filter(o => o.time_s >= a && o.time_s <= b);
+  let g = `<rect x="${x(w.start_s)}" y="10" width="${x(w.end_s) - x(w.start_s)}" height="40" fill="#38bdf8" fill-opacity=".28" stroke="#38bdf8"/><text x="${x(w.start_s) + 4}" y="22" font-size="11" fill="#38bdf8">pluie ${w.n} (${mmss(w.start_s)} → ${mmss(w.end_s)})</text>`;
+  near.forEach((o, i) => { const X = x(o.time_s), dy = 64 + (i % 3) * 13;
+    g += `<line x1="${X}" x2="${X}" y1="8" y2="${dy - 10}" stroke="${NY_COL[o.state]}" stroke-width="2.5"/><text x="${X}" y="${dy}" text-anchor="middle" font-size="11" fill="${NY_COL[o.state]}">${esc(o.soakers.join(", "))} ${mmss(o.time_s)}</text>`; });
+  for (let t = Math.ceil(a / 5) * 5; t <= b; t += 5) g += `<text x="${x(t)}" y="${110}" text-anchor="middle" class="szl">${mmss(t)}</text>`;
+  return `<div class="small"><b>Pluie ${w.n}</b> : ${near.filter(o => o.state === "rain").length} orbe(s) prise(s) pendant la pluie</div><svg viewBox="0 0 ${W} 116" style="width:100%;max-width:${W}px;display:block">${g}</svg>`;
+}
 function nymrissaView(ny, pull) {
   const P = x => pull == null || x.pull === pull, pc = pull == null;
   const pcol = pc ? [{ l: "Pull", num: 1 }] : [], pv = x => pc ? [x.pull] : [];
-  const S = ny.soaks.filter(P), bad = S.filter(x => x.in_rain && !x.after_cut), R = ny.rains.filter(P);
-  const per = new Map(); for (const x of S) for (const n of x.soakers) { const o = per.get(n) || per.set(n, { n, all: 0, rain: 0 }).get(n); o.all++; if (x.in_rain && !x.after_cut) o.rain++; }
+  const S = ny.soaks.filter(P), R = ny.rains.filter(P), bad = S.filter(x => x.state === "rain");
+  const per = new Map(); for (const x of S) for (const n of x.soakers) { const o = per.get(n) || per.set(n, { n, all: 0, rain: 0 }).get(n); o.all++; if (x.state === "rain") o.rain++; }
   const cls = new Map((ny.players || []).map(p => [p.player, p.class]));
   const rows = [...per.values()].sort((a, b) => b.rain - a.rain || b.all - a.all);
-  /* frise : pluies (bandes bleues) et orbes (point rouge pendant la pluie, vert sinon) par pull */
-  const frise = [...new Set(S.map(x => x.pull))].map(pl => {
+  const legend = `<div class="legend"><span><i style="background:#38bdf8"></i>pluie (Abyssal Rain)</span><span><i style="background:${NY_COL.rain}"></i>orbe prise pendant la pluie</span><span><i style="background:${NY_COL.rain_cut}"></i>pendant la pluie mais après l'appel du wipe (non comptée)</span><span><i style="background:${NY_COL.out}"></i>orbe prise hors pluie</span></div>`;
+  const lanes = [...new Set([...S.map(x => x.pull), ...R.map(x => x.pull)])].sort((a, b) => a - b).map(pl => {
     const s = S.filter(x => x.pull === pl), r = R.filter(x => x.pull === pl), end = Math.max(30, ...s.map(x => x.time_s + 10), ...r.map(x => x.end_s + 10));
-    const W = 900, L = 60, x = t => L + t / end * (W - L - 10);
-    let g = `<text x="4" y="24" class="szl">Pull ${pl}</text>`;
-    for (const w of r) g += `<rect x="${x(w.start_s)}" y="8" width="${Math.max(2, x(w.end_s) - x(w.start_s))}" height="26" fill="#38bdf8" fill-opacity=".3"><title>Abyssal Rain ${mmss(w.start_s)} → ${mmss(w.end_s)}</title></rect>`;
-    for (const o of s) g += `<circle cx="${x(o.time_s)}" cy="21" r="6" fill="${o.in_rain && !o.after_cut ? "#ef4444" : "#22c55e"}"><title>Frost Orb ${mmss(o.time_s)} : ${esc(o.soakers.join(", "))}${o.in_rain ? " (pendant la pluie)" : ""}</title></circle>`;
-    for (let t = 0; t <= end; t += 60) g += `<text x="${x(t)}" y="48" text-anchor="middle" class="szl">${mmss(t)}</text>`;
-    return `<svg viewBox="0 0 ${W} 54" style="width:100%;max-width:${W}px;display:block">${g}</svg>`;
+    return `<details class="tlw"${pl === (pull ?? S[0]?.pull) ? " open" : ""}><summary>Pull ${pl} · ${r.length} pluie(s) · ${s.filter(x => x.state === "rain").length} orbe(s) pendant la pluie sur ${s.length}</summary>${nyLane(s, r, end)}${r.map(w => nyZoom(w, s)).join("")}</details>`;
   }).join("");
-  return card("Frost Orb pendant Abyssal Rain", muted("Consigne : ne pas prendre d'orbe de givre pendant la pluie (check de heal ; en Mythique, chaque orbe prise déclenche Frost Burst sur tout le raid). Bandes bleues = pluie ; point rouge = orbe prise pendant la pluie, vert = en dehors. Survole un point pour voir qui l'a prise.") + frise +
-      (bad.length ? table([...pcol, { l: "Heure", num: 1 }, { l: "Pluie", num: 1 }, { l: "Pris par" }, { l: "Frost Burst", num: 1 }, { l: "Morts dans les 6 s" }],
-        bad.map(x => [...pv(x), { h: mmss(x.time_s), v: x.time_s }, x.rain, { h: `<span class="bad">${esc(x.soakers.join(", "))}</span>`, v: x.soakers.join(", ") }, x.burst_hit || "—", { h: x.deaths_after.length ? `<span class="bad">${esc(x.deaths_after.join(", "))}</span>` : "—", v: x.deaths_after.length }]))
-        : `<p class="good">Aucune orbe prise pendant la pluie${R.length ? "" : " (pas de pluie dans la partie analysée)"}.</p>`)) +
-    (rows.length ? card("Orbes par joueur", table([{ l: "Joueur" }, { l: "Pendant la pluie", num: 1 }, { l: "Orbes prises", num: 1 }],
-      rows.map(o => [{ h: pl(o.n, cls.get(o.n)), v: o.n }, { h: o.rain ? `<span class="bad">${o.rain}</span>` : "0", v: o.rain }, o.all]))) : "") + (ny.notes || []).map(n => muted(esc(n))).join("");
+  const orbCard = card("Frost Orb pendant Abyssal Rain", muted("Consigne : ne pas prendre d'orbe de givre pendant la pluie (check de heal ; en Mythique, chaque orbe prise déclenche Frost Burst sur tout le raid). Pluie = du lancer d'Abyssal Rain par le boss jusqu'au dernier coup sur le raid. Chaque orbe est un trait vertical : sa couleur dit seule si elle est dans la pluie, même quand elle touche le bord d'une bande. Sous la frise, un zoom par pluie avec le nom de chaque joueur.") + legend + lanes +
+    (S.length ? `<h4>Toutes les orbes</h4>` + table([...pcol, { l: "Heure", num: 1 }, { l: "Prise par" }, { l: "Moment" }, { l: "Par rapport à la pluie" }, { l: "Frost Burst", num: 1 }, { l: "Morts dans les 6 s" }],
+      S.map(x => [...pv(x), { h: mmss(x.time_s), v: x.time_s }, { h: `<span style="color:${NY_COL[x.state]}">${esc(x.soakers.join(", "))}</span>`, v: x.soakers.join(", ") }, { h: chip(NY_LBL[x.state], x.state === "rain" ? "bad" : x.state === "rain_cut" ? "warn" : "good"), v: x.state === "rain" ? 2 : x.state === "rain_cut" ? 1 : 0 }, esc(x.rel), x.burst_hit || "—", { h: x.deaths_after.length ? `<span class="bad">${esc(x.deaths_after.join(", "))}</span>` : "—", v: x.deaths_after.length }])) : muted("Aucune orbe prise sur cette vue.")) +
+    (bad.length ? "" : `<p class="good">Aucune orbe prise pendant la pluie${R.length ? "" : " (pas de pluie dans la partie analysée)"}.</p>`));
+  const perCard = rows.length ? card("Orbes par joueur", table([{ l: "Joueur" }, { l: "Pendant la pluie", num: 1 }, { l: "Orbes prises", num: 1 }],
+    rows.map(o => [{ h: pl(o.n, cls.get(o.n)), v: o.n }, { h: o.rain ? `<span class="bad">${o.rain}</span>` : "0", v: o.rain }, o.all]))) : "";
+  const F = (ny.films || []).filter(P);
+  const film = F.length ? card("Film du combat", muted("Positions tirées du log, seconde par seconde : joueurs (couleur de classe, tanks en carré), adds Bubblefin (triangles), boss (losange violet), orbes (cercle cyan, contour rouge si prise pendant la pluie), flaques de glace (zones bleu clair) et jets d'eau du boss vers le tank (trait bleu). Les flaques sont déduites : une flaque là où chaque orbe a été prise, et là où des joueurs ont pris des dégâts de Lingering Frost ; elle disparaît quand un jet d'eau passe dessus. Fond bleuté = pluie en cours.") +
+    `<div class="nymap"><div class="mapbar"><select class="nysel">${F.map((x, i) => `<option value="${i}">Pull ${x.pull} · ${x.stats.puddles} flaque(s), ${x.stats.cleared} nettoyée(s) par ${x.stats.jets} jet(s)</option>`).join("")}</select><button class="nyplay" type="button">▶ Lecture</button><select class="nyspd"><option value="2">×2</option><option value="5" selected>×5</option><option value="10">×10</option></select><input class="nyt" type="range" min="0" max="${F[0].dur}" step="0.5" value="0"><span class="nytl">0:00</span></div>
+    <div class="legend"><span><i style="background:#a78bfa"></i>boss</span><span><i style="background:#facc15"></i>Shorerunner</span><span><i style="background:#ef4444"></i>Berserker</span><span><i style="background:#60a5fa"></i>Frostscale</span><span><i style="background:#22d3ee"></i>orbe</span><span><i style="background:#bae6fd"></i>flaque</span><span><i style="background:#3b82f6"></i>jet d'eau</span></div>
+    <div class="nycanvas map"></div><script type="application/json" class="nydata">${JSON.stringify(F).replace(/</g, "\\u003c")}</script></div>`) : "";
+  return orbCard + perCard + film + (ny.notes || []).map(n => muted(esc(n))).join("");
+}
+
+/* ---------- Erreurs du fight : uniquement ce qui ne va pas, try après try ---------- */
+/* liste des erreurs d'un pull : { cat, who, text, t } (t en secondes si connu) */
+function pullErrors(b, pull) {
+  const E = [], add = (cat, who, text, t = null) => E.push({ cat, who, text, t });
+  const pv = b.views.find(x => x.key === "p" + pull), r = pv && pv.raid;
+  const pl = r && (r.pulls || []).find(x => x.pull === pull);
+  if (r) {
+    for (const d of (r.extras && r.extras.deaths || []).filter(d => d.pull === pull && !d.excused))
+      add("Morts", d.player, `mort ${d.killer ? "sur " + d.killer : ""}${d.avoidable ? " sans défensif récent" : ""}${d.unused_def && d.unused_def.length ? ` (encore dispo : ${d.unused_def.slice(0, 3).join(", ")})` : ""}`, d.time_s);
+    for (const p of r.players || []) for (const i of (p.issues || []).filter(i => !i.positive && i.kind !== "morts" && (i.penalty || 0) > 0))
+      add("Mécaniques", p.player, `${i.mechanic} : ${i.text}${i.detail && !/pulls?$/.test(i.detail) ? ` (${i.detail})` : ""}`);
+  }
+  const d = b.deep || {}, P = x => x.pull === pull && !x.after_cut;
+  if (d.vashnik) { const vk = d.vashnik;
+    for (const w of (vk.froth || []).filter(x => x.pull === pull && x.goal != null && !x.enough)) add("Totems", w.carriers.map(c => c.player).join(", "), `vague ${w.wave} : ${w.totems_destroyed}/${w.goal} totems visés détruits`, w.burst_s);
+    for (const w of (vk.froth || []).filter(x => x.pull === pull && x.totems_alive)) for (const c of w.carriers.filter(c => c.moved_m != null && c.moved_m < 3)) add("Totems", c.player, `Plague Froth vague ${w.wave} : immobile (${fr(c.moved_m)} m) avec ${w.totems_alive} totems en jeu`, w.burst_s);
+    for (const t of (vk.totems || []).filter(x => x.pull === pull && x.exploded)) add("Totems", "raid", `${t.exploded} totem(s) encore en vie à l'Imbibe`, t.imbibe_s);
+    for (const x of (vk.infection_held || []).filter(x => P(x) && x.long && !x.defensive)) add("Infection feu", x.player, `gardée ${fr(x.held_s)} s sans défensif${x.dist_m != null ? `, à ${fr(x.dist_m)} m du raid` : ""}`, x.start_s);
+    for (const w of (vk.dispel_waves || []).filter(x => P(x) && x.too_close)) add("Dispels", w.dispels.map(z => z.healer).join(", "), `vague ${w.wave} : ${w.too_close} dispels en ${fr(w.span_s)} s (un par un)`, w.start_s);
+    for (const x of (vk.dispel_pull_missing || []).filter(x => x.pull === pull && x.healers.length)) add("Dispels", x.healers.join(", "), "aucun dispel sur le pull");
+    for (const x of (vk.fire_kills || []).filter(x => P(x) && x.together)) add("Adds feu", "raid", `deux adds feu tués à ${fr(x.gap_s)} s d'écart`, x.time_s);
+    for (const x of (vk.cc_hits || []).filter(x => x.pull === pull)) add("Adds feu", x.player, `${x.ability} sur ${x.add} sous ${x.cc}`, x.time_s);
+    for (const x of (vk.bursts || []).filter(x => x.pull === pull && !x.after_cut)) add("Malignant Burst", x.add, `a atteint la Cavity : ${x.killed} mort(s)`, x.time_s);
+  }
+  if (d.sszorak) { const sz = d.sszorak;
+    for (const x of (sz.fury || []).filter(x => P(x) && x.verdict !== "ok")) add("Serpent's Fury", x.carrier, `Fury ${x.n} : ${x.verdict}`, x.pop_s ?? x.mark_s);
+    for (const w of (sz.virulence || []).filter(P)) for (const h of w.hits) add("Virulence", h.victim, `pris dans la ligne de ${h.from || "?"}${h.died ? " (mort)" : ""}`, h.at_s);
+    for (const x of (sz.crosswinds || []).filter(P)) { for (const n of x.fell) add("Crosswinds", n, "chute après la projection", x.knock_s); for (const n of x.died) add("Crosswinds", n, "mort après la projection", x.knock_s); }
+    for (const x of (sz.mutilate || []).filter(P)) { if (x.low) add("Mutilate", "raid", `${x.count} soakers seulement (5 minimum)`, x.t_s); if (x.again.length) add("Mutilate", x.again.join(", "), "deux soaks de suite (alternance)", x.t_s); }
+    for (const x of (sz.cysts || []).filter(x => P(x) && !x.during_int)) add("Kystes", x.placed_by || "?", `kyste éclaté hors intermission (${x.hit} joueurs projetés)`, x.t_s);
+    for (const p of (sz.pulls || []).filter(x => x.pull === pull && x.enrage_s != null)) add("Serpent's Fury", "boss", "enrage (Unbound Ferocity)", p.enrage_s);
+  }
+  if (d.nymrissa) for (const x of (d.nymrissa.soaks || []).filter(x => x.pull === pull && x.state === "rain")) add("Orbes", x.soakers.join(", "), "Frost Orb prise pendant la pluie", x.time_s);
+  return { E: E.sort((a, b) => (a.t ?? 1e9) - (b.t ?? 1e9)), pl };
+}
+function errorsView(b, v) {
+  const pulls = (b.views.filter(x => /^p\d+$/.test(x.key)).map(x => +x.key.slice(1))).sort((a, b) => a - b);
+  const sel = v && /^p\d+$/.test(v.key) ? [+v.key.slice(1)] : pulls;
+  const rows = sel.map(n => ({ n, ...pullErrors(b, n) }));
+  const tot = rows.reduce((a, x) => a + x.E.length, 0);
+  const COL = { "Morts": "bad", "Mécaniques": "warn" };
+  const block = x => {
+    const cats = [...new Set(x.E.map(e => e.cat))];
+    const head = x.pl ? `${x.pl.result}${x.pl.boss_pct != null ? ` à ${fr(x.pl.boss_pct)} %` : ""} · ${esc(x.pl.cut_reason || "")}` : "";
+    return `<details class="tlw"${sel.length === 1 || x.n === sel[sel.length - 1] ? " open" : ""}><summary><b>Pull ${x.n}</b> · ${head} · <b class="${x.E.length ? "bad" : "good"}">${x.E.length} erreur(s)</b></summary>` +
+      (x.E.length ? cats.map(c => `<h4>${esc(c)}</h4><ul class="errl">${x.E.filter(e => e.cat === c).map(e => `<li>${e.t != null ? `<code>${mmss(e.t)}</code> ` : ""}<b>${esc(e.who)}</b> — ${esc(e.text)}</li>`).join("")}</ul>`).join("") : '<p class="good">Aucune erreur relevée sur ce pull.</p>') + `</details>`;
+  };
+  /* récap par joueur sur les tries affichés */
+  const per = new Map(); for (const x of rows) for (const e of x.E) for (const n of String(e.who).split(", ")) { if (["raid", "boss", "?"].includes(n)) continue; const o = per.get(n) || per.set(n, { n, k: 0, cats: new Map() }).get(n); o.k++; o.cats.set(e.cat, (o.cats.get(e.cat) || 0) + 1); }
+  const P = [...per.values()].sort((a, b) => b.k - a.k);
+  return card(`Erreurs du fight (${tot})`, muted("Uniquement ce qui ne va pas, pull par pull, dans l'ordre du combat : cause du wipe, morts, mécaniques ratées (joueurs signalés), et erreurs des analyses détaillées du boss. Les morts excusées et ce qui arrive après l'appel du wipe ne sont pas comptés. Le détail complet (cas corrects compris) reste dans les autres onglets.") +
+      rows.map(block).join("")) +
+    (P.length && sel.length > 1 ? card("Qui revient le plus souvent", table([{ l: "Joueur" }, { l: "Erreurs", num: 1 }, { l: "Détail" }], P.map(o => [o.n, o.k, [...o.cats].map(([c, k]) => `${esc(c)} ×${k}`).join(", ")]))) : "");
 }
