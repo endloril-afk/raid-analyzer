@@ -36,17 +36,17 @@ function filterPulls(pulls) {
 const ROLE_FR = { tank: "Tank", healer: "Heal", dps: "DPS", melee: "Mêlée", ranged: "Distance" };
 function mechCards(r) {
   const cards = r.flagged_mechanics.map(m => `<article class="card mech"><header>${sp(m.name, m.icon, 40, false, m.spell_id)}<div class="mt"><h3>${esc(m.name)}</h3><div>${chip(esc(m.category_label))}</div></div></header>
-    <p class="advice">${esc(m.advice)}</p><table class="flag"><thead><tr><th>Joueur</th><th class="num">Dégâts vs raid</th><th class="num">Régularité</th><th class="num">Dégâts / pull</th></tr></thead><tbody>` +
+    <p class="advice">${esc(m.advice)}</p>${m.assigned_soakers && m.assigned_soakers.length ? `<p class="small"><b>Équipe de soak détectée</b> (les ${m.assigned_soakers.length} joueurs qui prennent le plus la mécanique) : <b>${m.assigned_soakers.map(esc).join(", ")}</b>. Tout autre joueur qui la prend est en faute.</p>` : ""}<table class="flag"><thead><tr><th>Joueur</th><th class="num">${m.intruders ? "Fautes" : "Dégâts vs raid"}</th><th class="num">${m.intruders ? "Pulls" : "Régularité"}</th><th class="num">Dégâts / pull</th></tr></thead><tbody>` +
     m.above.map(x => `<tr><td>${esc(x.player)} <span class="muted small">${ROLE_FR[x.role] || esc(x.role)}</span></td><td class="num"><b class="bad">+${x.pct} %</b></td><td class="num">${x.pulls_above}/${x.pulls} pulls</td><td class="num">${short(x.damage_per_pull)}</td></tr>`).join("") +
     (m.low_soak || []).map(x => `<tr><td>${esc(x.player)} <span class="muted small">${ROLE_FR[x.role] || esc(x.role)} · soake trop peu</span></td><td class="num"><b class="warn">${x.pct} %</b></td><td class="num">${x.pulls} pulls</td><td class="num">${short(x.damage_per_pull)}</td></tr>`).join("") +
     (m.intruders || []).map(x => `<tr><td>${esc(x.player)} <span class="muted small">${ROLE_FR[x.role] || esc(x.role)} · ${m.any_hit ? "touché" : "soak hors équipe assignée"}</span></td><td class="num"><b class="bad">${x.hits} ${m.any_hit ? "coup(s)" : "soak(s)"}</b></td><td class="num">${x.pulls_hit}/${x.pulls} pulls</td><td class="num">${short(x.damage_per_pull)}</td></tr>`).join("") +
-    `</tbody></table>${m.assigned_soakers ? muted(`Soakers assignés : <b>${m.assigned_soakers.map(esc).join(", ")}</b> (détectés : ceux qui prennent le plus la mécanique sur ces pulls). Tout autre joueur qui la prend est en faute.`) : ""}${m.any_hit ? muted("Chaque coup reçu compte comme une faute : la mécanique ne doit toucher personne.") : ""}${muted(`Moyenne du raid : ${short(m.raid_avg_damage_per_pull)} de dégâts par joueur et par pull · mécanique présente sur ${m.pulls_with_mechanic} pulls.`)}</article>`).join("");
+    `</tbody></table>${m.any_hit ? muted("Chaque coup reçu compte comme une faute : la mécanique ne doit toucher personne.") : ""}${muted(`Moyenne du raid : ${short(m.raid_avg_damage_per_pull)} de dégâts par joueur et par pull · mécanique présente sur ${m.pulls_with_mechanic} pulls.`)}</article>`).join("");
   const all = r.mechanics.filter(m => m.all.length).map(m => {
     const nf = m.all.filter(x => x.flagged).length;
     return `<details><summary>${sp(m.name, m.icon, 16, false, m.spell_id)} <b>${esc(m.name)}</b> <span class="muted small">${esc(m.category_label)} · ${m.all.length} joueur(s) concerné(s) · ${nf ? nf + " signalé(s)" : "personne de signalé"}</span></summary>
     ${table([{ l: "Joueur" }, { l: "Rôle" }, { l: "Écart vs raid", num: 1 }, { l: "Dégâts / pull", num: 1 }, { l: "Au-dessus", num: 1 }, { l: "Coups", num: 1 }, { l: "Statut" }],
       m.all.map(x => [x.player, ROLE_FR[x.role] || x.role, { h: `${x.pct > 0 ? "+" : ""}${x.pct} %`, v: x.pct }, { h: short(x.damage_per_pull), v: x.damage_per_pull }, `${x.pulls_above}/${x.pulls}`, x.hits,
-        { h: x.flagged ? chip("au-dessus", "bad") : x.minor ? chip("léger", "warn") : chip("dans la moyenne", "good"), v: x.flagged ? 2 : x.minor ? 1 : 0 }]))}</details>`;
+        { h: x.team ? chip("équipe de soak", "good") : x.flagged ? chip(m.intruders ? (m.any_hit ? "touché" : "hors équipe") : "au-dessus", "bad") : x.minor ? chip("léger", "warn") : chip("dans la moyenne", "good"), v: x.flagged ? 2 : x.minor ? 1 : 0 }]))}</details>`;
   }).join("");
   const g = r.global;
   return dispelCard(r.special && r.special.dispel) + (cards ? `<div class="cards">${cards}</div>` : muted("Aucune mécanique ne fait ressortir un joueur de façon régulière.")) +
@@ -157,7 +157,7 @@ function prep(rows) {
 function raidView(r, b = null, v = null) {
   const g = r.global, x = r.extras, w = g.wall;
   const kpis = `<div class="kpis">${kpi("Pulls analysés", g.pulls_analyzed, g.resets_excluded && g.resets_excluded.length ? `${g.resets_excluded.length} reset(s) exclu(s)` : g.pulls_total !== g.pulls_analyzed ? `sur ${g.pulls_total}` : undefined)}${kpi("Résultat", g.kills ? "Kill ✓" : "Wipe", g.kills ? `${g.kills} kill(s)` : `meilleur pull : ${fr(g.best_pct)} %`)}
-    ${kpi("Le mur", w.median_wipe_pct != null ? fr(w.median_wipe_pct) + " %" : "—", w.median_wipe_pct != null ? `wipe médian à ${w.median_wipe_duration_s} s (${w.wipes} wipes)` : `pas assez de wipes (${w.wipes ?? 0}, il en faut 4)`)}${kpi("Données gardées", fr(g.kept_minutes) + " min", `sur ${fr(g.total_minutes)} min de combat`)}</div>`;
+    ${kpi("Le mur", w.median_wipe_pct != null ? fr(w.median_wipe_pct) + " %" : "—", w.median_wipe_pct != null ? `pull médian : ${w.median_wipe_duration_s} s (${w.wipes} wipes)` : `pas assez de wipes (${w.wipes ?? 0}, il en faut 4)`)}${kpi("Données gardées", fr(g.kept_minutes) + " min", `sur ${fr(g.total_minutes)} min de combat`)}</div>`;
   const labels = ["Erreurs", "À retenir", "Mécaniques"], panes = [ b ? errorsView(b, v) : muted("Erreurs : vue indisponible."),
     cause(g.kills < g.pulls_analyzed ? x.wipe_cause : null) + card("Note du fight par rôle", rings(g.role_scores) + muted("Moyenne de la note du fight des joueurs de chaque rôle (strat, survie, dégâts ou soins, gameplay : les morts y comptent). Vert à partir de 80 %.")) +
     `<section class="card hero"><h2>À retenir</h2><ul>${g.key_points.map(k => `<li>${esc(k)}</li>`).join("")}</ul></section>` + filterPulls(r.pulls) +
@@ -240,8 +240,8 @@ function vashnikView(vk, pull) {
   const dIn = de.filter(d => !d.after_cut), dOut = de.filter(d => d.after_cut);
   const MB = (vk.bursts || []).filter(P);
   const burst = MB.length ? card("Malignant Burst : quel add a atteint la Cavity", muted("Un venin qui atteint la piscine centrale déclenche Malignant Burst sur tout le raid. L'add responsable est la source du coup dans le log (n° = numéro de l'add dans le pull, comme sur Warcraft Logs).") +
-    table([...pcol, { l: "Heure", num: 1 }, { l: "Add" }, { l: "Joueurs touchés", num: 1 }, { l: "Tués", num: 1 }],
-      MB.map(x => [...pv(x), { h: mmss(x.time_s) + (x.after_cut ? ' <small class="muted">après la coupure</small>' : ""), v: x.time_s }, `<b>${esc(x.add)}</b>${x.instance != null ? ` n° ${x.instance}` : ""}`, x.hit, { h: x.killed ? `<span class="bad">${x.killed}</span>` : "0", v: x.killed }]))) : "";
+    table([...pcol, { l: "Arrivée", num: 1 }, { l: "Add" }, { l: "Impulsions", num: 1 }, { l: "Joueurs touchés", num: 1 }, { l: "Tués", num: 1 }],
+      MB.map(x => [...pv(x), { h: mmss(x.time_s) + (x.after_cut ? ' <small class="muted">après la coupure</small>' : ""), v: x.time_s }, { h: `<b>${esc(x.add)}</b>${x.instance != null ? ` n° ${x.instance}` : ""}`, v: x.add }, { h: `${x.pulses ?? 1}${(x.pulses ?? 1) > 1 ? ` <small class="muted">jusqu'à ${mmss(x.last_s)}</small>` : ""}`, v: x.pulses ?? 1 }, x.hit, { h: x.killed ? `<span class="bad">${x.killed}</span>` : "0", v: x.killed }]))) : "";
   const deaths = card("6. Morts avant le wipe", muted("Hors morts après l'appel du wipe. « 80 % → mort » = temps entre le dernier moment à 80 % de vie ou plus et la mort. Défensifs encore disponibles = défensifs que le joueur utilise d'habitude et pas encore lancés dans ce pull ; healthstone et potion de soins : non utilisées dans ce pull (pas pour les tanks : un tank tué en un coup relève du swap et de ses défensifs). Tanks : stacks de Dripping Fangs déjà présents à la mort (consigne : swap à chaque morsure ; 0 = mort sur la 1re morsure, 2 ou plus = swap raté), et défensifs personnels encore disponibles.") +
     (dIn.length ? dTable(dIn) : '<p class="good">Aucune mort dans la partie analysée des pulls.</p>') +
     (dOut.length ? `<h4>Après la coupure du pull (${dOut.length})</h4>${muted("Morts après le moment où le pull est coupé pour l'analyse (cause du wipe déjà survenue) : utiles pour le débrief, mais non comptées dans les notes ni dans les morts par pull.")}${dTable(dOut)}` : ""));
@@ -650,14 +650,20 @@ function sszorakView(sz, pull) {
 }
 
 /* ---------- Nymrissa : orbes de givre prises pendant la pluie, film du combat ---------- */
-const NY_COL = { rain: "#ef4444", rain_cut: "#f59e0b", out: "#22c55e" };
-const NY_LBL = { rain: "pendant la pluie", rain_cut: "pendant la pluie, après l'appel du wipe (non compté)", out: "hors pluie" };
-/* frise d'un pull : bandes de pluie, un trait vertical par orbe (couleur = moment), tête ronde au-dessus pour survoler */
+const NY_COL = { heavy: "#ef4444", heavy_cut: "#f59e0b", dot: "#2dd4bf", out: "#22c55e" };
+const NY_LBL = { heavy: "pendant la phase forte (erreur)", heavy_cut: "phase forte, après l'appel du wipe (non compté)", dot: "pendant le DoT (consigne)", out: "hors pluie" };
+/* bande de pluie : phase forte (foncée) puis DoT (claire) */
+function nyBand(w, x, y, h, label) {
+  return `<rect x="${x(w.start_s)}" y="${y}" width="${Math.max(2, x(w.end_s) - x(w.start_s))}" height="${h}" fill="#38bdf8" fill-opacity=".18" stroke="#38bdf8" stroke-opacity=".6"><title>Pluie ${w.n} : ${mmss(w.start_s)} → ${mmss(w.end_s)} (DoT après ${mmss(w.heavy_end_s ?? w.end_s)})</title></rect>` +
+    `<rect x="${x(w.start_s)}" y="${y}" width="${Math.max(2, x(w.heavy_end_s ?? w.end_s) - x(w.start_s))}" height="${h}" fill="#ef4444" fill-opacity=".28"><title>Phase forte de la pluie ${w.n} : ${mmss(w.start_s)} → ${mmss(w.heavy_end_s ?? w.end_s)} (pas d'orbe ici)</title></rect>` +
+    (label ? `<text x="${x(w.start_s) + 3}" y="${y + 11}" font-size="10" fill="#38bdf8">${label}</text>` : "");
+}
+/* frise d'un pull : un trait vertical par orbe (couleur = moment), tête ronde au-dessus pour survoler */
 function nyLane(S, R, end, W = 900) {
   const L = 8, x = t => L + Math.max(0, Math.min(end, t)) / end * (W - L - 10);
   let g = "";
-  for (const w of R) g += `<rect x="${x(w.start_s)}" y="16" width="${Math.max(2, x(w.end_s) - x(w.start_s))}" height="34" fill="#38bdf8" fill-opacity=".28" stroke="#38bdf8" stroke-opacity=".7"><title>Pluie ${w.n} : ${mmss(w.start_s)} → ${mmss(w.end_s)}</title></rect><text x="${x(w.start_s) + 3}" y="27" font-size="10" fill="#38bdf8">pluie ${w.n}</text>`;
-  for (const o of S) g += `<g><line x1="${x(o.time_s)}" x2="${x(o.time_s)}" y1="14" y2="52" stroke="${NY_COL[o.state]}" stroke-width="2.5"/><circle cx="${x(o.time_s)}" cy="10" r="5" fill="${o.state === "rain_cut" ? "none" : NY_COL[o.state]}" stroke="${NY_COL[o.state]}" stroke-width="2"/><title>Frost Orb ${mmss(o.time_s)} : ${esc(o.soakers.join(", "))} — ${NY_LBL[o.state]} (${esc(o.rel)})</title></g>`;
+  for (const w of R) g += nyBand(w, x, 16, 34, `pluie ${w.n}`);
+  for (const o of S) g += `<g><line x1="${x(o.time_s)}" x2="${x(o.time_s)}" y1="14" y2="52" stroke="${NY_COL[o.state]}" stroke-width="2.5"/><circle cx="${x(o.time_s)}" cy="10" r="5" fill="${o.state === "heavy_cut" ? "none" : NY_COL[o.state]}" stroke="${NY_COL[o.state]}" stroke-width="2"/><title>Frost Orb ${mmss(o.time_s)} : ${esc(o.soakers.join(", "))} — ${NY_LBL[o.state]} (${esc(o.rel)})</title></g>`;
   for (let t = 0; t <= end; t += end > 360 ? 60 : 30) g += `<text x="${x(t)}" y="66" text-anchor="middle" class="szl">${mmss(t)}</text>`;
   return `<svg viewBox="0 0 ${W} 72" style="width:100%;max-width:${W}px;display:block">${g}</svg>`;
 }
@@ -665,32 +671,32 @@ function nyLane(S, R, end, W = 900) {
 function nyZoom(w, S) {
   const a = w.start_s - 8, b = w.end_s + 8, W = 900, x = t => 10 + (t - a) / (b - a) * (W - 20);
   const near = S.filter(o => o.time_s >= a && o.time_s <= b);
-  let g = `<rect x="${x(w.start_s)}" y="10" width="${x(w.end_s) - x(w.start_s)}" height="40" fill="#38bdf8" fill-opacity=".28" stroke="#38bdf8"/><text x="${x(w.start_s) + 4}" y="22" font-size="11" fill="#38bdf8">pluie ${w.n} (${mmss(w.start_s)} → ${mmss(w.end_s)})</text>`;
+  let g = nyBand(w, x, 10, 40, "") + `<text x="${x(w.start_s) + 4}" y="22" font-size="11" fill="#fca5a5">phase forte ${mmss(w.start_s)} → ${mmss(w.heavy_end_s ?? w.end_s)}</text><text x="${x(w.heavy_end_s ?? w.end_s) + 4}" y="44" font-size="11" fill="#38bdf8">DoT → ${mmss(w.end_s)}</text>`;
   near.forEach((o, i) => { const X = x(o.time_s), dy = 64 + (i % 3) * 13;
     g += `<line x1="${X}" x2="${X}" y1="8" y2="${dy - 10}" stroke="${NY_COL[o.state]}" stroke-width="2.5"/><text x="${X}" y="${dy}" text-anchor="middle" font-size="11" fill="${NY_COL[o.state]}">${esc(o.soakers.join(", "))} ${mmss(o.time_s)}</text>`; });
   for (let t = Math.ceil(a / 5) * 5; t <= b; t += 5) g += `<text x="${x(t)}" y="${110}" text-anchor="middle" class="szl">${mmss(t)}</text>`;
-  return `<div class="small"><b>Pluie ${w.n}</b> : ${near.filter(o => o.state === "rain").length} orbe(s) prise(s) pendant la pluie</div><svg viewBox="0 0 ${W} 116" style="width:100%;max-width:${W}px;display:block">${g}</svg>`;
+  return `<div class="small"><b>Pluie ${w.n}</b> : ${near.filter(o => o.state === "heavy").length} orbe(s) pendant la phase forte, ${near.filter(o => o.state === "dot").length} pendant le DoT${w.how ? ` <span class="muted">· fin de la phase forte : ${esc(w.how)}</span>` : ""}</div><svg viewBox="0 0 ${W} 116" style="width:100%;max-width:${W}px;display:block">${g}</svg>`;
 }
 function nymrissaView(ny, pull) {
   const P = x => pull == null || x.pull === pull, pc = pull == null;
   const pcol = pc ? [{ l: "Pull", num: 1 }] : [], pv = x => pc ? [x.pull] : [];
-  const S = ny.soaks.filter(P), R = ny.rains.filter(P), bad = S.filter(x => x.state === "rain");
-  const per = new Map(); for (const x of S) for (const n of x.soakers) { const o = per.get(n) || per.set(n, { n, all: 0, rain: 0 }).get(n); o.all++; if (x.state === "rain") o.rain++; }
+  const S = ny.soaks.filter(P), R = ny.rains.filter(P), bad = S.filter(x => x.state === "heavy");
+  const per = new Map(); for (const x of S) for (const n of x.soakers) { const o = per.get(n) || per.set(n, { n, all: 0, rain: 0, dot: 0 }).get(n); o.all++; if (x.state === "heavy") o.rain++; if (x.state === "dot") o.dot++; }
   const cls = new Map((ny.players || []).map(p => [p.player, p.class]));
   const rows = [...per.values()].sort((a, b) => b.rain - a.rain || b.all - a.all);
-  const legend = `<div class="legend"><span><i style="background:#38bdf8"></i>pluie (Abyssal Rain)</span><span><i style="background:${NY_COL.rain}"></i>orbe prise pendant la pluie</span><span><i style="background:${NY_COL.rain_cut}"></i>pendant la pluie mais après l'appel du wipe (non comptée)</span><span><i style="background:${NY_COL.out}"></i>orbe prise hors pluie</span></div>`;
+  const legend = `<div class="legend"><span><i style="background:#ef4444;opacity:.6"></i>phase forte de la pluie (zone rouge)</span><span><i style="background:#38bdf8;opacity:.6"></i>DoT de la pluie (zone bleue)</span><span><i style="background:${NY_COL.heavy}"></i>orbe prise pendant la phase forte (erreur)</span><span><i style="background:${NY_COL.dot}"></i>orbe prise pendant le DoT (consigne)</span><span><i style="background:${NY_COL.heavy_cut}"></i>phase forte, après l'appel du wipe (non comptée)</span><span><i style="background:${NY_COL.out}"></i>hors pluie</span></div>`;
   const lanes = [...new Set([...S.map(x => x.pull), ...R.map(x => x.pull)])].sort((a, b) => a - b).map(pl => {
     const s = S.filter(x => x.pull === pl), r = R.filter(x => x.pull === pl), end = Math.max(30, ...s.map(x => x.time_s + 10), ...r.map(x => x.end_s + 10));
-    return `<details class="tlw"${pl === (pull ?? S[0]?.pull) ? " open" : ""}><summary>Pull ${pl} · ${r.length} pluie(s) · ${s.filter(x => x.state === "rain").length} orbe(s) pendant la pluie sur ${s.length}</summary>${nyLane(s, r, end)}${r.map(w => nyZoom(w, s)).join("")}</details>`;
+    return `<details class="tlw"${pl === (pull ?? S[0]?.pull) ? " open" : ""}><summary>Pull ${pl} · ${r.length} pluie(s) · ${s.filter(x => x.state === "heavy").length} orbe(s) pendant la phase forte sur ${s.length}</summary>${nyLane(s, r, end)}${r.map(w => nyZoom(w, s)).join("")}</details>`;
   }).join("");
-  const orbCard = card("Frost Orb pendant Abyssal Rain", muted("Consigne : ne pas prendre d'orbe de givre pendant la pluie (check de heal ; en Mythique, chaque orbe prise déclenche Frost Burst sur tout le raid). Pluie = du lancer d'Abyssal Rain par le boss jusqu'au dernier coup sur le raid. Chaque orbe est un trait vertical : sa couleur dit seule si elle est dans la pluie, même quand elle touche le bord d'une bande. Sous la frise, un zoom par pluie avec le nom de chaque joueur.") + legend + lanes +
+  const orbCard = card("Frost Orb et Abyssal Rain", muted("Consigne : la pluie commence par une phase forte (gros coups sur tout le raid pendant quelques secondes), puis devient un DoT modéré. Les orbes se prennent pendant le DoT (sinon elles explosent), jamais pendant la phase forte. Seule une orbe prise pendant la phase forte est une erreur. Chaque orbe est un trait vertical : sa couleur suffit, même au bord d'une zone. Sous la frise, un zoom par pluie avec le nom de chaque joueur.") + legend + lanes +
     (S.length ? `<h4>Toutes les orbes</h4>` + table([...pcol, { l: "Heure", num: 1 }, { l: "Prise par" }, { l: "Moment" }, { l: "Par rapport à la pluie" }, { l: "Frost Burst", num: 1 }, { l: "Morts dans les 6 s" }],
-      S.map(x => [...pv(x), { h: mmss(x.time_s), v: x.time_s }, { h: `<span style="color:${NY_COL[x.state]}">${esc(x.soakers.join(", "))}</span>`, v: x.soakers.join(", ") }, { h: chip(NY_LBL[x.state], x.state === "rain" ? "bad" : x.state === "rain_cut" ? "warn" : "good"), v: x.state === "rain" ? 2 : x.state === "rain_cut" ? 1 : 0 }, esc(x.rel), x.burst_hit || "—", { h: x.deaths_after.length ? `<span class="bad">${esc(x.deaths_after.join(", "))}</span>` : "—", v: x.deaths_after.length }])) : muted("Aucune orbe prise sur cette vue.")) +
-    (bad.length ? "" : `<p class="good">Aucune orbe prise pendant la pluie${R.length ? "" : " (pas de pluie dans la partie analysée)"}.</p>`));
-  const perCard = rows.length ? card("Orbes par joueur", table([{ l: "Joueur" }, { l: "Pendant la pluie", num: 1 }, { l: "Orbes prises", num: 1 }],
-    rows.map(o => [{ h: pl(o.n, cls.get(o.n)), v: o.n }, { h: o.rain ? `<span class="bad">${o.rain}</span>` : "0", v: o.rain }, o.all]))) : "";
+      S.map(x => [...pv(x), { h: mmss(x.time_s), v: x.time_s }, { h: `<span style="color:${NY_COL[x.state]}">${esc(x.soakers.join(", "))}</span>`, v: x.soakers.join(", ") }, { h: chip(NY_LBL[x.state], x.state === "heavy" ? "bad" : x.state === "heavy_cut" ? "warn" : "good"), v: x.state === "heavy" ? 2 : x.state === "heavy_cut" ? 1 : 0 }, esc(x.rel), x.burst_hit || "—", { h: x.deaths_after.length ? `<span class="bad">${esc(x.deaths_after.join(", "))}</span>` : "—", v: x.deaths_after.length }])) : muted("Aucune orbe prise sur cette vue.")) +
+    (bad.length ? "" : `<p class="good">Aucune orbe prise pendant la phase forte de la pluie${R.length ? "" : " (pas de pluie dans la partie analysée)"}.</p>`));
+  const perCard = rows.length ? card("Orbes par joueur", table([{ l: "Joueur" }, { l: "Pendant la phase forte", num: 1 }, { l: "Pendant le DoT", num: 1 }, { l: "Orbes prises", num: 1 }],
+    rows.map(o => [{ h: pl(o.n, cls.get(o.n)), v: o.n }, { h: o.rain ? `<span class="bad">${o.rain}</span>` : "0", v: o.rain }, o.dot, o.all]))) : "";
   const F = (ny.films || []).filter(P);
-  const film = F.length ? card("Film du combat", muted("Positions tirées du log, seconde par seconde : joueurs (couleur de classe, tanks en carré), adds Bubblefin (triangles), boss (losange violet), orbes (cercle cyan, contour rouge si prise pendant la pluie), flaques de glace (zones bleu clair) et jets d'eau du boss vers le tank (trait bleu). Les flaques sont déduites : une flaque là où chaque orbe a été prise, et là où des joueurs ont pris des dégâts de Lingering Frost ; elle disparaît quand un jet d'eau passe dessus. Fond bleuté = pluie en cours.") +
+  const film = F.length ? card("Film du combat", muted("Positions tirées du log, seconde par seconde : joueurs (couleur de classe, tanks en carré), adds Bubblefin (triangles), boss (losange violet), orbes (cercle cyan, contour rouge si prise pendant la phase forte de la pluie), flaques de glace (zones bleu clair) et jets d'eau du boss vers le tank (trait bleu). Les flaques sont déduites : une flaque là où chaque orbe a été prise, et là où des joueurs ont pris des dégâts de Lingering Frost ; elle disparaît quand un jet d'eau passe dessus. Fond bleuté = pluie en cours.") +
     `<div class="nymap"><div class="mapbar"><select class="nysel">${F.map((x, i) => `<option value="${i}">Pull ${x.pull} · ${x.stats.puddles} flaque(s), ${x.stats.cleared} nettoyée(s) par ${x.stats.jets} jet(s)</option>`).join("")}</select><button class="nyplay" type="button">▶ Lecture</button><select class="nyspd"><option value="2">×2</option><option value="5" selected>×5</option><option value="10">×10</option></select><input class="nyt" type="range" min="0" max="${F[0].dur}" step="0.5" value="0"><span class="nytl">0:00</span></div>
     <div class="legend"><span><i style="background:#a78bfa"></i>boss</span><span><i style="background:#facc15"></i>Shorerunner</span><span><i style="background:#ef4444"></i>Berserker</span><span><i style="background:#60a5fa"></i>Frostscale</span><span><i style="background:#22d3ee"></i>orbe</span><span><i style="background:#bae6fd"></i>flaque</span><span><i style="background:#3b82f6"></i>jet d'eau</span></div>
     <div class="nycanvas map"></div><script type="application/json" class="nydata">${JSON.stringify(F).replace(/</g, "\\u003c")}</script></div>`) : "";
@@ -719,7 +725,7 @@ function pullErrors(b, pull) {
     for (const x of (vk.dispel_pull_missing || []).filter(x => x.pull === pull && x.healers.length)) add("Dispels", x.healers.join(", "), "aucun dispel sur le pull");
     for (const x of (vk.fire_kills || []).filter(x => P(x) && x.together)) add("Adds feu", "raid", `deux adds feu tués à ${fr(x.gap_s)} s d'écart`, x.time_s);
     for (const x of (vk.cc_hits || []).filter(x => x.pull === pull)) add("Adds feu", x.player, `${x.ability} sur ${x.add} sous ${x.cc}`, x.time_s);
-    for (const x of (vk.bursts || []).filter(x => x.pull === pull && !x.after_cut)) add("Malignant Burst", x.add, `a atteint la Cavity : ${x.killed} mort(s)`, x.time_s);
+    for (const x of (vk.bursts || []).filter(x => x.pull === pull && !x.after_cut)) add("Malignant Burst", `${x.add}${x.instance != null ? ` n° ${x.instance}` : ""}`, `dans la piscine : ${x.pulses ?? 1} impulsion(s), ${x.killed} mort(s)`, x.time_s);
   }
   if (d.sszorak) { const sz = d.sszorak;
     for (const x of (sz.fury || []).filter(x => P(x) && x.verdict !== "ok")) add("Serpent's Fury", x.carrier, `Fury ${x.n} : ${x.verdict}`, x.pop_s ?? x.mark_s);
@@ -729,7 +735,7 @@ function pullErrors(b, pull) {
     for (const x of (sz.cysts || []).filter(x => P(x) && !x.during_int)) add("Kystes", x.placed_by || "?", `kyste éclaté hors intermission (${x.hit} joueurs projetés)`, x.t_s);
     for (const p of (sz.pulls || []).filter(x => x.pull === pull && x.enrage_s != null)) add("Serpent's Fury", "boss", "enrage (Unbound Ferocity)", p.enrage_s);
   }
-  if (d.nymrissa) for (const x of (d.nymrissa.soaks || []).filter(x => x.pull === pull && x.state === "rain")) add("Orbes", x.soakers.join(", "), "Frost Orb prise pendant la pluie", x.time_s);
+  if (d.nymrissa) for (const x of (d.nymrissa.soaks || []).filter(x => x.pull === pull && x.state === "heavy")) add("Orbes", x.soakers.join(", "), "Frost Orb prise pendant la phase forte de la pluie (à prendre pendant le DoT)", x.time_s);
   return { E: E.sort((a, b) => (a.t ?? 1e9) - (b.t ?? 1e9)), pl };
 }
 function errorsView(b, v) {
