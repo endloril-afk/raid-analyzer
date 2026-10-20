@@ -728,7 +728,22 @@ function nymrissaView(ny, pull) {
   const BDd = BD.filter(x => x.role !== "tank").sort((a, b) => b.total - a.total), BDt = BD.filter(x => x.role === "tank").sort((a, b) => b.total - a.total);
   const bossCard = BD.length ? card(`3. DPS sur le boss (${pc ? "soirée" : `pull ${pull}`})`, muted(`Dégâts de chaque DPS sur Nymrissa, et DPS ramené à la durée ${pc ? "totale des pulls" : "du pull"}. Les tanks sont à part (leur rôle n'est pas les dégâts).`) +
     table(bCols, BDd.map(bRow)) + (BDt.length ? `<details><summary>Tanks (${BDt.length})</summary>${table(bCols, BDt.map(bRow))}</details>` : "")) : "";
-  return orbCard + serCard + perCard + addCard + swCard + bossCard + film + (ny.notes || []).map(n => muted(esc(n))).join("");
+  /* 4. morts des tanks (et soakeurs) : orbe + jet d'eau en même temps ? */
+  const TD = (ny.tank_deaths || []).filter(P), TO = (ny.tank_overlaps || []).filter(P).filter(x => !x.after_cut);
+  const CAUSE = { "orbe + jet d'eau": "bad", "orbe (DoT)": "warn", "jet d'eau": "warn", "autre": "" };
+  const tdSum = new Map(); for (const x of TD.filter(x => !x.after_cut)) { const o = tdSum.get(x.player) || tdSum.set(x.player, { player: x.player, class: x.class, tank: x.tank, n: 0, both: 0, orb: 0, jet: 0, risk: 0 }).get(x.player); o.n++; if (x.cause === "orbe + jet d'eau") o.both++; else if (x.cause === "orbe (DoT)") o.orb++; else if (x.cause === "jet d'eau") o.jet++; }
+  for (const x of TO) { const o = tdSum.get(x.player) || tdSum.set(x.player, { player: x.player, class: null, tank: true, n: 0, both: 0, orb: 0, jet: 0, risk: 0 }).get(x.player); o.risk++; }
+  const tankCard = (TD.length || TO.length) ? card("4. Morts des tanks : orbe + jet d'eau", muted("Le soakeur garde un DoT après l'orbe : s'il prend un jet d'eau pendant ce temps, les deux s'additionnent. Orbe active = coup Frost Orb sur lui dans les 4 s avant la mort ; jet = coup Water Jet dans les 5 s avant. Moments à risque = jet d'eau sur un tank dont l'orbe tique encore (mort ou non), avec sa vie la plus basse. Concerne les tanks et tout joueur mort avec une orbe sur lui.") +
+    table([{ l: "Joueur" }, { l: "Morts", num: 1 }, { l: "Orbe + jet", num: 1 }, { l: "Orbe seule", num: 1 }, { l: "Jet seul", num: 1 }, { l: "Jet pendant l'orbe (moments à risque)", num: 1 }],
+      [...tdSum.values()].sort((a, b) => b.both - a.both || b.risk - a.risk).map(o => [{ h: pl(o.player, o.class, o.tank ? "tank" : null), v: o.player }, o.n, { h: o.both ? `<b class="bad">${o.both}</b>` : "0", v: o.both }, o.orb, o.jet, o.risk])) +
+    (TD.length ? `<details open><summary>Détail des morts (${TD.length})</summary>` + table([...pcol, { l: "Heure", num: 1 }, { l: "Joueur" }, { l: "Cause" }, { l: "80 % → 0", num: 1 }, { l: "5 dernières secondes" }, { l: "Défensifs" }],
+      TD.map(x => [...pv(x), { h: mmss(x.time_s), v: x.time_s }, x.player + (x.tank ? "" : ' <small class="muted">(soakeur)</small>'), { h: x.after_cut ? '<span class="muted small">après la coupure</span>' : chip(x.cause, CAUSE[x.cause] || ""), v: x.cause },
+        { h: x.from80_s != null ? fr(x.from80_s) + " s" : "—", v: x.from80_s ?? -1 },
+        { h: x.top_damage.map(d => `${esc(d.ability)} ${short(d.damage)} (${d.share} %)`).join("<br>") + (x.killing_blow ? `<br><small class="muted">coup fatal : ${esc(x.killing_blow)}</small>` : ""), v: x.jet_dmg_5s },
+        { h: (x.defensives_active.length ? "actifs : " + x.defensives_active.map(esc).join(", ") : '<span class="bad small">aucun actif</span>') + (x.defensives_30s.length ? `<br><small class="muted">utilisés dans les 30 s : ${x.defensives_30s.map(esc).join(", ")}</small>` : ""), v: x.defensives_active.length }])) + `</details>` : "") +
+    (TO.length ? `<details><summary>Moments à risque (${TO.length})</summary>` + table([...pcol, { l: "Heure", num: 1 }, { l: "Tank" }, { l: "Vie la plus basse", num: 1 }, { l: "Issue" }],
+      TO.map(x => [...pv(x), { h: mmss(x.time_s), v: x.time_s }, x.player, { h: x.min_hp != null ? x.min_hp + " %" : "—", v: x.min_hp ?? 101 }, { h: x.died ? chip("mort", "bad") : x.min_hp != null && x.min_hp < 30 ? chip("survécu de justesse", "warn") : chip("survécu", "good"), v: x.died ? 2 : 0 }])) + `</details>` : "")) : "";
+  return orbCard + serCard + perCard + addCard + swCard + bossCard + tankCard + film + (ny.notes || []).map(n => muted(esc(n))).join("");
 }
 
 /* ---------- Erreurs du fight : uniquement ce qui ne va pas, try après try ---------- */
@@ -769,6 +784,7 @@ function pullErrors(b, pull) {
       if (x.state === "heavy") add("Orbes", x.soakers.join(", "), "Frost Orb prise pendant la phase forte de la pluie (à prendre pendant le DoT)", x.time_s);
       if (x.danger) add("Orbes", x.soakers.join(", "), `orbe ${x.series_idx} d'une série, dangereuse : ${x.low.map(l => `${l.player} ${l.pct} %`).join(", ")} sous 30 %`, x.time_s);
     }
+    for (const x of (d.nymrissa.tank_deaths || []).filter(x => x.pull === pull && !x.after_cut && x.cause === "orbe + jet d'eau")) add("Morts", x.player, `mort avec l'orbe (DoT) et un jet d'eau en même temps${x.defensives_active.length ? "" : ", aucun défensif actif"}`, x.time_s);
     for (const x of (d.nymrissa.switches || []).filter(x => x.pull === pull && !x.after_cut && x.poor)) add("Switchs", x.player, `switch peu rentable : add à ${fr(x.dist_m)} m du boss, ${x.add_share != null ? x.add_share + " % de sa vie" : short(x.add_damage)} en ${fr(x.dur_s)} s (perdu sur le boss : ${short(x.boss_lost)})`, x.time_s);
     for (const x of (d.nymrissa.series || []).filter(x => x.pull === pull && !x.after_cut && x.check)) add("Orbes", "raid", `série de ${x.count} orbes d'affilée (${mmss(x.start_s)} → ${mmss(x.end_s)}) : à vérifier`, x.start_s);
   }
