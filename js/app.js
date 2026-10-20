@@ -288,8 +288,8 @@ document.addEventListener("change", e => {
     for (const o of (m.opened || []).filter(o => o.dt <= t + 0.05)) { const c = waves.find(w => w.name === o.by);
       if (c) s += '<line x1="' + sx(c.x) + '" y1="' + sy(c.y) + '" x2="' + sx(o.x) + '" y2="' + sy(o.y) + '" stroke="' + SIDE[o.side] + '" stroke-width="2"/>';
       s += '<rect x="' + (sx(o.x) - 7) + '" y="' + (sy(o.y) - 7) + '" width="14" height="14" fill="' + SIDE[o.side] + '" stroke="var(--card)" stroke-width="2"><title>Totem ' + o.side + ' touché à ' + o.dt + ' s par la vague de ' + (o.by || "?") + (o.killed_s != null ? ', tué ' + o.killed_s + ' s après' : ', pas tué ensuite') + '</title></rect>'; }
-    /* positions possibles d'un totem détruit (seulement quand le log n'a pas les coups de vague sur les totems) : à la distance parcourue, sur chaque branche de chaque croix (le log ne dit pas laquelle) */
-    for (const x of ((m.opened || []).length || (m.totems_at || []).length ? [] : dead).filter(x => x.dist != null)) for (const w of waves) {
+    /* positions possibles d'un totem détruit : à la distance parcourue, sur chaque branche de chaque croix (le log ne dit pas laquelle) */
+    for (const x of dead.filter(x => x.dist != null)) for (const w of waves) { /* toujours affichées : les totems avec position du log (cercles, carrés) s'ajoutent par-dessus */
       const op = t - x.dt < 0.6 ? 1 : 0.45, A = arms(w);
       /* graduation en travers de chaque branche, à la distance parcourue par la vague quand le totem est mort */
       for (const d of A) { const X = w.x + d[0] * x.dist, Y = w.y + d[1] * x.dist, nx = -d[1] * 1.6, ny = d[0] * 1.6;
@@ -314,4 +314,52 @@ document.addEventListener("change", e => {
       timer = setInterval(() => { r.value = Math.min(8, +r.value + 0.1); draw(box); if (+r.value >= 8) { clearInterval(timer); timer = null; b.textContent = "▶ Lecture"; } }, 60); };
   });
   initVk(document);
+})();
+
+/* Nymrissa : film du combat (positions seconde par seconde), animé par un curseur et un bouton Lecture */
+(function () {
+  const ADD = { "Bubblefin Shorerunner": "#facc15", "Bubblefin Berserker": "#ef4444", "Bubblefin Frostscale": "#60a5fa" };
+  const CLS = { DeathKnight: "#C41E3A", DemonHunter: "#A330C9", Druid: "#FF7C0A", Evoker: "#33937F", Hunter: "#AAD372", Mage: "#3FC7EB", Monk: "#00FF98", Paladin: "#F48CBA", Priest: "#FFFFFF", Rogue: "#FFF468", Shaman: "#0070DD", Warlock: "#8788EE", Warrior: "#C69B6D" };
+  const mm = t => Math.floor(t / 60) + ":" + String(Math.floor(t % 60)).padStart(2, "0");
+  /* position à l'instant t : dernière position connue (au plus 8 s avant), sinon rien */
+  const at = (pts, t, hold = 8) => { let q = null; for (const p of pts) { if (p[0] > t) break; q = p; } return q && t - q[0] <= hold ? q : null; };
+  function draw(box) {
+    const F = JSON.parse(box.querySelector(".nydata").textContent), m = F[+box.querySelector(".nysel").value], t = +box.querySelector(".nyt").value;
+    box.querySelector(".nytl").textContent = mm(t) + " / " + mm(m.dur);
+    if (!m) return;
+    if (!m.bounds) { const all = [...m.players.flatMap(p => p.pts), ...m.adds.flatMap(a => a.pts), ...m.boss, ...m.orbs.map(o => [0, o.x, o.y]), ...m.puddles.map(o => [0, o.x, o.y])];
+      const xs = all.map(p => p[1]).sort((a, b) => a - b), ys = all.map(p => p[2]).sort((a, b) => a - b), q = (a, f) => a[Math.floor(f * (a.length - 1))];
+      /* bornes robustes : 1er et 99e centiles (un joueur projeté loin n'écrase pas la carte) */
+      m.bounds = [q(xs, .01) - 8, q(xs, .99) + 8, q(ys, .01) - 8, q(ys, .99) + 8]; }
+    const [x0, x1, y0, y1] = m.bounds, W = 760, H = Math.max(360, Math.min(640, W * (y1 - y0) / Math.max(1, x1 - x0))), k = Math.min(W / (x1 - x0), H / (y1 - y0));
+    const sx = x => (x - x0) * k, sy = y => H - (y - y0) * k;
+    const rain = m.rains.some(([a, b]) => t >= a && t <= b);
+    let s = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Film du combat">';
+    if (rain) s += '<rect width="' + W + '" height="' + H + '" fill="#38bdf8" fill-opacity=".10"/><text x="' + (W - 10) + '" y="22" text-anchor="end" font-weight="700" fill="#38bdf8">PLUIE</text>';
+    for (const p of m.puddles) { if (t < p.from_s) continue; const gone = p.to_s != null && t >= p.to_s;
+      if (gone && t - p.to_s > 3) continue;
+      s += '<circle cx="' + sx(p.x) + '" cy="' + sy(p.y) + '" r="' + 4 * k + '" fill="#bae6fd" fill-opacity="' + (gone ? 0.12 : 0.45) + '" stroke="#7dd3fc" stroke-dasharray="' + (gone ? "3 3" : "0") + '"><title>Flaque (' + (p.src === "orbe" ? "orbe prise" : "glace vue sous des joueurs") + ') depuis ' + mm(p.from_s) + (p.to_s != null ? ", nettoyée à " + mm(p.to_s) + " par le jet vers " + p.cleared_by : ", pas nettoyée") + '</title></circle>'; }
+    for (const j of m.jets) if (t >= j.s && t - j.s <= 1.5) s += '<line x1="' + sx(j.a[0]) + '" y1="' + sy(j.a[1]) + '" x2="' + sx(j.b[0]) + '" y2="' + sy(j.b[1]) + '" stroke="#3b82f6" stroke-width="' + Math.max(4, 10 * k) + '" stroke-opacity=".55" stroke-linecap="round"><title>Water Jet vers ' + j.tank + ' (' + mm(j.s) + ')</title></line>';
+    for (const o of m.orbs) if (t >= o.from_s && t <= o.soak_s + 0.8) s += '<circle cx="' + sx(o.x) + '" cy="' + sy(o.y) + '" r="7" fill="#22d3ee" fill-opacity=".7" stroke="' + (o.state === "rain" ? "#ef4444" : "#0e7490") + '" stroke-width="3"><title>Frost Orb' + (o.dropped_by ? " posée par " + o.dropped_by : "") + ", prise par " + o.by + " à " + mm(o.soak_s) + (o.state === "rain" ? " (pendant la pluie)" : "") + '</title></circle>';
+    for (const a of m.adds) { if (a.death_s != null && t > a.death_s) continue; const q = at(a.pts, t, 6); if (!q) continue; const X = sx(q[1]), Y = sy(q[2]);
+      s += '<path d="M' + X + " " + (Y - 7) + "l6 11h-12z" + '" fill="' + (ADD[a.n] || "#f97316") + '" stroke="var(--card)"><title>' + a.n + '</title></path>'; }
+    const b = at(m.boss, t, 30); if (b) s += '<path d="M' + sx(b[1]) + " " + (sy(b[2]) - 11) + 'l11 11-11 11-11-11z" fill="#a78bfa" stroke="var(--card)" stroke-width="2"><title>Nymrissa</title></path>';
+    for (const p of m.players) { const q = at(p.pts, t, 30); if (!q) continue; const dead = m.deaths.some(d => d.n === p.n && t >= d.s); if (dead) continue; const X = sx(q[1]), Y = sy(q[2]), c = CLS[p.cls] || "#9ca3af";
+      s += p.role === "tank" ? '<rect x="' + (X - 5) + '" y="' + (Y - 5) + '" width="10" height="10" fill="' + c + '" stroke="#000" stroke-opacity=".4"><title>' + p.n + '</title></rect>' : '<circle cx="' + X + '" cy="' + Y + '" r="4.5" fill="' + c + '" stroke="#000" stroke-opacity=".4"><title>' + p.n + '</title></circle>'; }
+    for (const d of m.deaths) if (t >= d.s && t - d.s < 6) s += '<text x="' + sx(d.p[0]) + '" y="' + (sy(d.p[1]) + 5) + '" text-anchor="middle" fill="#ef4444" font-size="16">✕<title>' + d.n + " mort à " + mm(d.s) + '</title></text>';
+    const nP = m.puddles.filter(p => t >= p.from_s && (p.to_s == null || t < p.to_s)).length;
+    s += '<text x="10" y="20" font-weight="700">' + mm(t) + ' · ' + nP + ' flaque(s) au sol</text>';
+    box.querySelector(".nycanvas").innerHTML = s + "</svg>";
+  }
+  window.initNy = root => root.querySelectorAll(".nymap:not([data-init])").forEach(box => {
+    box.dataset.init = "1"; const r = box.querySelector(".nyt"), F = JSON.parse(box.querySelector(".nydata").textContent);
+    draw(box);
+    box.querySelector(".nysel").onchange = () => { r.max = F[+box.querySelector(".nysel").value].dur; r.value = 0; draw(box); };
+    r.oninput = () => draw(box);
+    const b = box.querySelector(".nyplay"); let timer = null;
+    b.onclick = () => { if (timer) { clearInterval(timer); timer = null; b.textContent = "▶ Lecture"; return; }
+      if (+r.value >= +r.max) r.value = 0; b.textContent = "❚❚ Pause";
+      timer = setInterval(() => { r.value = Math.min(+r.max, +r.value + 0.1 * +box.querySelector(".nyspd").value); draw(box); if (+r.value >= +r.max) { clearInterval(timer); timer = null; b.textContent = "▶ Lecture"; } }, 100); };
+  });
+  initNy(document);
 })();
