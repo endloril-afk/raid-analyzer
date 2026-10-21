@@ -592,3 +592,27 @@ table.mini{border-collapse:collapse}table.mini td{padding:4px 6px;border-bottom:
 .anpull .tlw>summary{font-size:14px;font-weight:600;padding:4px 0}
 .anplayers td:nth-child(5){white-space:normal;min-width:200px}
 .anplayers th{white-space:normal}
+/* frise de l'onglet Analyse : calque HTML (noms des lignes, morts, erreurs) posé sur le dessin */
+.frw2{position:relative}
+.frw2 .frise{display:block;width:100%;height:auto}
+.frov{position:absolute;inset:0;pointer-events:none}
+.frov .frl{position:absolute;left:0;transform:translateY(-50%);display:flex;justify-content:flex-end;align-items:center;gap:5px;font-size:12px;color:var(--fg);text-decoration:none;pointer-events:auto;white-space:nowrap;overflow:hidden}
+.frov a.frl:hover span{text-decoration:underline}
+.frov .fdot{position:absolute;transform:translate(-6px,-50%);display:flex;align-items:center;gap:4px;font-size:11px;line-height:1;color:var(--muted);text-decoration:none;pointer-events:auto;white-space:nowrap;cursor:help}
+.frov .fdot .dot{width:10px;height:10px;border-radius:50%;background:#f59e0b;display:inline-block;flex:none}
+.frov .fdot .sk{color:var(--fg);font-size:12px}
+.frov .fdot .sk.bad{color:var(--bad)}
+.frov .fdot:hover span{color:var(--fg)}
+.frov .fdot .dot.q-ok{background:var(--good,#22c55e)}
+.frov .fdot .dot.q-mid{background:#f59e0b}
+.frov .fdot .dot.q-bad{background:var(--bad,#ef4444)}
+.frov .fdot .dot.q-unk{background:var(--muted)}
+.frov .fdot[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 6px);background:var(--card,#16142a);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:6px 9px;font-size:12px;white-space:nowrap;z-index:5;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.frov .fdot:hover{z-index:10}
+.frov .fcast{position:absolute;transform:translate(-8px,-50%);pointer-events:auto;line-height:0;border-radius:4px;box-shadow:0 0 0 1px rgba(0,0,0,.5)}
+.frov .fcast .ic{display:block;border-radius:3px}
+.frov .fcast:hover{z-index:10;box-shadow:0 0 0 2px var(--accent,#8b5cf6)}
+.frise .bcd rect{fill:#8b5cf6;fill-opacity:.35;stroke:#8b5cf6;stroke-opacity:.7}
+.tlleg .k-bcd{display:inline-block;width:18px;height:9px;border-radius:3px;background:#8b5cf6;opacity:.6;margin-right:5px;vertical-align:middle}
+.tlleg .k-q{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle}
+.tlleg .k-q.q-ok{background:var(--good,#22c55e)}.tlleg .k-q.q-mid{background:#f59e0b}.tlleg .k-q.q-bad{background:var(--bad,#ef4444)}
