@@ -156,8 +156,21 @@ function prep(rows) {
 /* Onglet Raid d'une vue (view.raid) */
 function raidView(r, b = null, v = null) {
   const g = r.global, x = r.extras, w = g.wall;
-  const kpis = `<div class="kpis">${kpi("Pulls analysés", g.pulls_analyzed, g.resets_excluded && g.resets_excluded.length ? `${g.resets_excluded.length} reset(s) exclu(s)` : g.pulls_total !== g.pulls_analyzed ? `sur ${g.pulls_total}` : undefined)}${kpi("Résultat", g.kills ? "Kill ✓" : "Wipe", g.kills ? `${g.kills} kill(s)` : `meilleur pull : ${fr(g.best_pct)} %`)}
-    ${kpi("Le mur", w.median_wipe_pct != null ? fr(w.median_wipe_pct) + " %" : "—", w.median_wipe_pct != null ? `pull médian : ${w.median_wipe_duration_s} s (${w.wipes} wipes)` : `pas assez de wipes (${w.wipes ?? 0}, il en faut 4)`)}${kpi("Données gardées", fr(g.kept_minutes) + " min", `sur ${fr(g.total_minutes)} min de combat`)}</div>`;
+  const [labels, panes] = raidLabelsPanes(r, b, v);
+  return tabset(labels, panes);
+}
+/* Indicateurs du boss (pulls analysés, résultat, mur, données gardées) : au-dessus des onglets, seulement quand plusieurs
+   pulls sont analysés et sur la vue « tous les pulls » (pour un pull ou un kill, ils n'apportent rien) */
+function bossKpis(r) {
+  const g = r.global, ex = new Set(g.resets_excluded || []);
+  /* HP moyen du boss : vie du boss à la fin de chaque wipe analysé (resets exclus), en moyenne sur la soirée */
+  const W = (r.pulls || []).filter(p => p.result !== "Kill" && !ex.has(p.pull) && !/^exclu/.test(p.cut_reason || "") && p.boss_pct != null);
+  const avg = W.length ? W.reduce((a, p) => a + p.boss_pct, 0) / W.length : null;
+  return `<div class="kpis">${kpi("Pulls analysés", g.pulls_analyzed, g.resets_excluded && g.resets_excluded.length ? `${g.resets_excluded.length} reset(s) exclu(s)` : g.pulls_total !== g.pulls_analyzed ? `sur ${g.pulls_total}` : undefined)}${g.kills ? kpi("Résultat", "Kill ✓", `${g.kills} kill(s)`) : ""}
+    ${kpi("HP moyen du boss", avg != null ? fr(Math.round(avg * 10) / 10) + " %" : "—", avg != null ? `moyenne de fin des ${W.length} wipe(s) · meilleur pull : ${fr(g.best_pct)} %` : "aucun wipe analysé")}${kpi("Données gardées", fr(g.kept_minutes) + " min", `sur ${fr(g.total_minutes)} min de combat`)}</div>`;
+}
+function raidLabelsPanes(r, b, v) {
+  const g = r.global, x = r.extras;
   const labels = ["Erreurs", "À retenir", "Mécaniques"], panes = [ b ? errorsView(b, v) : muted("Erreurs : vue indisponible."),
     cause(g.kills < g.pulls_analyzed ? x.wipe_cause : null) + card("Note du fight par rôle", rings(g.role_scores) + muted("Moyenne de la note du fight des joueurs de chaque rôle (strat, survie, dégâts ou soins, gameplay : les morts y comptent). Vert à partir de 80 %.")) +
     `<section class="card hero"><h2>À retenir</h2><ul>${g.key_points.map(k => `<li>${esc(k)}</li>`).join("")}</ul></section>` + filterPulls(r.pulls) +
@@ -170,7 +183,7 @@ function raidView(r, b = null, v = null) {
   labels.push("Joueurs", "Morts", "Chronologie");
   panes.push(playersRecap(r.players), deathsCard(x.deaths, g), chrono(x.timelines));
   if (x.prep_available) { labels.push("Préparation"); panes.push(prep(x.prep)); }
-  return kpis + tabset(labels, panes);
+  return [labels, panes];
 }
 
 /* ---------- Analyse détaillée de Vashnik (boss.deep.vashnik) : totems, Plague Froth, dispels, CC, morts, dégâts sur les adds ---------- */
@@ -549,21 +562,60 @@ function bossPage(id, b, mem = "") {
   const killView = pulls.find(v => v.kill);
   const best = [...all.raid.pulls].sort((a, c) => a.boss_pct - c.boss_pct)[0], bestView = best && pulls.find(v => v.key === "p" + best.pull);
   const goBtn = killView ? `<button class="vbtn" data-view-go="${killView.key}">Voir le kill</button>` : bestView ? `<button class="vbtn" data-view-go="${bestView.key}">Voir le meilleur pull</button>` : "";
+  /* Un seul pull (kill compris) : pas de choix de pull à proposer, la barre est masquée (la vue « tous les pulls » est ce pull) */
   /* Vue « tous les pulls » rendue tout de suite ; les vues d'un pull sont rendues à la première sélection (js/app.js, renderView) */
   const viewed = (fn, kind) => b.views.map((v, i) => i ? `<div class="view" data-view="${v.key}" data-lazy="${kind}" hidden></div>` : `<div class="view" data-view="${v.key}">${fn(v)}</div>`).join("");
   /* En-tête : nom du boss et choix du pull, sur l'image du boss (la même que sur l'accueil), hauteur fixe */
   return `<div class="boss" data-boss="${id}" hidden><section class="bhero">${ban(TILE_HUE, initials(b.name), bossImg(b.name))}<div class="bhin"><div class="bhead"><h2>${esc(b.name)}</h2>${diff(b.difficulty)}<span class="muted">${esc(String(b.subtitle ?? "").replace(/\s*·?\s*fiche intégrée/, ""))}</span></div>
-    <div class="viewbar"><label><b>Pulls :</b></label><select class="viewsel">${opts}</select>${goBtn}<button class="vbtn" data-view-go="${all.key}">Tous les pulls</button><span class="muted small">Par défaut, tous les pulls du boss ; choisis le kill ou un pull précis pour le détail.</span></div></div></section>
+    <div class="viewbar"${pulls.length <= 1 ? " hidden" : ""}><label><b>Pulls :</b></label><select class="viewsel">${opts}</select>${goBtn}<button class="vbtn" data-view-go="${all.key}">Tous les pulls</button><span class="muted small">Par défaut, tous les pulls du boss ; choisis le kill ou un pull précis pour le détail.</span></div></div></section>
     ${b.missing.length ? `<details class="miss"><summary>Données incomplètes pour ce boss (${b.missing.length})</summary><ul class="small">${b.missing.map(m => `<li>${esc(m)}</li>`).join("")}</ul><p class="small muted">Relance l'analyse quand le quota est revenu : seules ces données seront téléchargées.</p></details>` : ""}
     ${(b.limits || []).length ? `<details class="miss lim"><summary>Références du top limitées (${b.limits.length})</summary><ul class="small">${b.limits.map(m => `<li>${esc(m)}</li>`).join("")}</ul><p class="small muted">Pas assez de logs du top comparables sur Warcraft Logs : ce n'est pas un manque de quota, une nouvelle analyse ne changera rien.</p></details>` : ""}
-    ${tabset(["Raid", "Membres", "Gameplay", "Stuff", ...(prog ? ["Progression"] : [])], [viewed(v => raidView(v.raid, b, v), "raid"), mem, viewed(v => gameplayView(v, b), "gp"), stuffView(b.stuff), ...(prog ? [progressionView(b)] : [])], true)}</div>`;
+    ${pulls.length >= 2 && (all.raid?.global?.pulls_analyzed ?? 0) >= 2 ? `<div class="bkpis" data-for="${all.key}">${bossKpis(all.raid)}</div>` : ""}
+    ${tabset(["Raid", "Analyse", "Membres", "Gameplay", "Stuff", ...(prog ? ["Progression"] : [])], [viewed(v => raidView(v.raid, b, v), "raid"), viewed(v => analyseView(v, b), "an"), mem, viewed(v => gameplayView(v, b), "gp"), stuffView(b.stuff), ...(prog ? [progressionView(b)] : [])], true)}</div>`;
+}
+
+/* ---------- Onglet « Analyse » : nouveaux écrans, plus lisibles, construits boss par boss ----------
+   Les écrans de l'onglet Raid restent inchangés ; une information peut se trouver aux deux endroits. Chaque boss a (ou aura)
+   son propre contenu : ANALYSE associe un test sur le boss à la fonction qui dessine l'onglet pour la vue choisie
+   (tous les pulls ou un pull). Un boss sans contenu dédié affiche un message d'attente. */
+const ANALYSE = [
+  { test: b => /nek.?zali/i.test(b.name || ""), panes: (v, b) => [] /* écrans propres à Nek'zali : à venir */ },
+];
+function analyseView(v, b) {
+  const r = v.raid, x = r.extras || {};
+  const spec = ANALYSE.find(a => a.test(b)), own = spec ? spec.panes(v, b) : [];
+  /* écrans communs à tous les boss, puis Préparation tout à droite */
+  const labels = [...own.map(o => o[0]), "Joueurs", "Chronologie"], panes = [...own.map(o => o[1]), anPlayers(v), anChrono(x.timelines || [], v.key !== "all")];
+  if (x.prep_available) { labels.push("Préparation"); panes.push(prep(x.prep)); }
+  return tabset(labels, panes);
+}
+/* Joueurs : strat et gameplay côte à côte ; note du fight = moyenne des deux (strat seule si le gameplay manque) */
+function anPlayers(v) {
+  const r = v.raid, gp = new Map();
+  for (const x of (v.gameplay && !v.gameplay.error ? v.gameplay.players : null) || []) if (x.gameplay_score != null) gp.set(x.name + "|dps", x.gameplay_score);
+  for (const h of (v.healers && v.healers.healers) || []) if (h.gameplay_score != null) gp.set(h.name + "|healer", h.gameplay_score);
+  const gOf = p => gp.get(p.player + (p.role === "healer" ? "|healer" : "|dps")) ?? gp.get(p.player + (p.role === "healer" ? "|dps" : "|healer")) ?? null;
+  const rows = r.players.map(p => { const g = gOf(p), n = g != null ? Math.round((p.score + g) / 2 * 10) / 10 : p.score; return { p, g, n }; }).sort((a, b) => b.n - a.n);
+  return `<div class="anplayers">` + card("Joueurs", muted("Strat sur 10 : mécaniques (10 = aucune erreur régulière). Gameplay sur 10 : comparaison aux meilleurs logs de la spé (activité, sorts, CD). Note du fight = moyenne de la strat et du gameplay ; sans gameplay (pas de référence du top), la strat seule, marquée ≈. Les morts sont listées à côté. Clique sur une colonne pour trier.") +
+    table([{ l: "Joueur" }, { l: "Rôle" }, { l: "Pulls", num: 1 }, { l: "Morts / pull", num: 1 }, { l: "Points à améliorer" }, { l: "Strat", num: 1 }, { l: "Gameplay", num: 1 }, { l: "Note du fight", num: 1 }],
+      rows.map(({ p, g, n }) => [{ h: pl(p.player, p.class, p.role, p.sub), v: p.player }, p.role_label, p.pulls, { h: fr(p.deaths_per_pull, 2), v: p.deaths_per_pull },
+        { h: p.issues.map(i => `<span class="issue" title="${esc(i.kind)}">${i.icon ? sp(i.mechanic, i.icon, 16, false, i.spell_id) : ""}<b>${esc(i.mechanic)}</b> ${esc(i.text)} <i>${esc(i.detail)}</i></span>`).join("") || '<span class="muted">—</span>', v: p.issues.length },
+        { h: chip(fr(p.score) + "/10", noteCls(p.score)), v: p.score }, { h: g != null ? chip(fr(g) + "/10", noteCls(g)) : '<span class="muted small">sans réf.</span>', v: g ?? -1 },
+        { h: chip(fr(n) + "/10", noteCls(n)) + (g == null ? '<sup class="partial" title="Strat seule : gameplay sans référence du top">≈</sup>' : ""), v: n }]))) + `</div>`;
+}
+/* Chronologie : un bloc repliable par pull (tous fermés sur la vue « tous les pulls » ; ouvert pour un pull choisi) */
+function anChrono(timelines, one) {
+  if (!timelines.length) return muted("Pas de chronologie pour cette vue.");
+  const leg = `<div class="tlleg"><span><i class="k-ph"></i>Phases du combat</span><span><i class="k-bc"></i>Compétence du boss (un trait par lancer)</span><span><i class="k-dm"></i>Dégâts subis par le raid</span><span><b class="k-sk">✖</b>Mort</span><span><i class="k-er"></i>Erreur de mécanique, une ligne par type</span><span><i class="k-cut"></i>Après la coupe du pull : non compté</span></div>`;
+  return card("Chronologie", leg + muted(one ? "Survole un élément pour le détail ; « Déroulé détaillé » donne la liste complète." : "Un bloc par pull : ouvre celui qui t'intéresse. Survole un élément pour le détail ; « Déroulé détaillé » donne la liste complète.")) +
+    timelines.map(t => `<section class="card anpull">${frise(t).replace('<details class="tlw">', `<details class="tlw"${one ? " open" : ""}>`)}</section>`).join("");
 }
 
 /* Rendu d'une vue d'un pull à la demande : el = <div class="view" data-lazy="raid|gp">, dans la page du boss */
 function renderView(el) {
   const b = X.bosses.find(x => x.key === el.closest(".boss").dataset.boss), v = b && b.views.find(x => x.key === el.dataset.view);
   if (!v) return;
-  el.innerHTML = el.dataset.lazy === "raid" ? raidView(v.raid, b, v) : gameplayView(v, b);
+  el.innerHTML = el.dataset.lazy === "raid" ? raidView(v.raid, b, v) : el.dataset.lazy === "an" ? analyseView(v, b) : gameplayView(v, b);
   el.removeAttribute("data-lazy");
   if (window.initMaps) initMaps(el);
   if (window.initVk) initVk(el);
