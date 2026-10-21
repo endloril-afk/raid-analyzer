@@ -56,7 +56,7 @@ function bossMembers(b) {
   const of = (v, n) => (v.gameplay?.players || []).find(x => x.name === n) || (v.healers?.healers || []).find(x => x.name === n) || null;
   const list = [...b.summary.players].sort((a, c) => c.score - a.score);
   const cols = [{ l: "Joueur" }, { l: "Rôle" }, { l: "Tous les pulls", num: 1 }, ...pulls.map(v => { const [h, t = ""] = String(v.label).split(" — "); return { l: `<span title="${esc(v.label)}">${v.kill ? `<b>${esc(h)}</b>` : esc(h)}<br><small class="muted">${esc(t.replace(/\s*\(.*\)$/, "").replace(/^kill$/, "kill"))}</small></span>`, num: 1 }; }), { l: "Pulls", num: 1 }];
-  const rows = list.map(p => [{ h: pl(p.player, p.class, p.role, p.sub), v: p.player }, ROLE_FR[p.role] || p.role,
+  const rows = list.map(p => [{ h: pl(p.player, p.class, p.role, p.sub), v: p.player }, p.hybrid ? esc(p.hybrid) : ROLE_FR[p.role] || p.role,
     ngo(p.score, p.player, p.role, b.key, null, catsTitle(p), p.partial),
     ...pulls.map(v => { const o = of(v, p.player); return ngo(o?.score ?? null, p.player, p.role, b.key, v.key, catsTitle(o), o?.partial); }),
     { h: p.pulls, v: p.pulls }]);
@@ -88,7 +88,7 @@ function membersKills(cur) {
   const list = [...P.values()].map(p => { const mine = kb.map(b => b.summary.kill.players.find(x => x.player === p.player)), v = mine.filter(Boolean);
     return { p, mine, avg: v.length ? v.reduce((a, x) => a + x.score, 0) / v.length : null, n: v.length }; }).sort((a, b) => (b.avg ?? -1) - (a.avg ?? -1));
   const cols = [{ l: "Joueur" }, { l: "Rôle" }, ...kb.map(b => ({ l: `${b.key === cur ? `<b>${esc(b.name)}</b>` : esc(b.name)}<br><small class="muted">${b.summary.kill.pulls.length > 1 ? `${b.summary.kill.pulls.length} kills` : `pull ${b.summary.kill.pulls[0]}`}</small>`, num: 1 })), { l: "Moyenne", num: 1 }, { l: "Boss tués", num: 1 }];
-  const rows = list.map(r => [{ h: pl(r.p.player, r.p.class, r.p.role, r.p.sub), v: r.p.player }, ROLE_FR[r.p.role] || r.p.role,
+  const rows = list.map(r => [{ h: pl(r.p.player, r.p.class, r.p.role, r.p.sub), v: r.p.player }, r.p.hybrid ? esc(r.p.hybrid) : ROLE_FR[r.p.role] || r.p.role,
     ...r.mine.map((x, i) => ngo(x ? x.score : null, r.p.player, r.p.role, kb[i].key, x ? "p" + x.pull : null, "Note du fight sur le kill · clique pour le détail", x?.partial)),
     { h: `<b>${r.avg == null ? "–" : fr(r.avg)}</b>`, v: r.avg ?? -1 }, { h: r.n, v: r.n }]);
   return `<div class="sechead"><h2>Kills de la soirée</h2><span class="muted small">Note du fight sur les pulls tués uniquement · moyenne des boss tués · clique une note pour voir le détail du kill</span></div><section class="card">${table(cols, rows, "sortable grid")}</section>`;
