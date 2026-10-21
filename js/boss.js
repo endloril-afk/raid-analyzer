@@ -603,12 +603,72 @@ function anPlayers(v) {
         { h: chip(fr(p.score) + "/10", noteCls(p.score)), v: p.score }, { h: g != null ? chip(fr(g) + "/10", noteCls(g)) : '<span class="muted small">sans réf.</span>', v: g ?? -1 },
         { h: chip(fr(n) + "/10", noteCls(n)) + (g == null ? '<sup class="partial" title="Strat seule : gameplay sans référence du top">≈</sup>' : ""), v: n }]))) + `</div>`;
 }
+/* Frise d'un pull pour l'onglet Analyse : noms des compétences du boss et erreurs avec l'infobulle Wowhead ; les erreurs et
+   les morts proches sont réparties sur plusieurs lignes (plus de noms superposés). Le dessin (SVG) garde les phases, les
+   lancers et les dégâts ; noms, morts et erreurs sont des éléments HTML posés dessus (liens Wowhead). */
+function friseAn(t) {
+  const dur = Math.max(1, t.duration_s), W = 1100, L = 200, Rr = 1088, sx = s => L + Math.max(0, Math.min(s, dur)) / dur * (Rr - L);
+  const phases = t.phases.filter(p => p.end > p.start && p.start < dur);
+  const casts = t.boss.filter(c => c.t && c.t.length), deaths = t.events.filter(e => e.kind === "mort");
+  const errs = Object.entries(t.events.filter(e => e.kind !== "mort").reduce((a, e) => ((a[e.cat || (e.kind === "interrupt" ? "Interrupt raté" : e.kind)] ||= []).push(e), a), {}));
+  const nameOf = e => e.who || (e.kind === "mort" ? String(e.text || "").split(" — ")[0] : "");
+  /* lignes de points : un point par événement, nom à droite ; deux événements trop proches passent sur la ligne suivante */
+  const lanes = list => { const ends = []; return list.map(e => { const x = sx(e.t), w = 18 + nameOf(e).length * 6.6; let k = ends.findIndex(v => v < x - 4); if (k < 0) { k = ends.length; ends.push(0); } ends[k] = x + w; return k; }); };
+  /* dispels (Essence Rend…) : un point par dispel, couleur selon l'endroit (vert au bord, orange trop tôt, rouge beaucoup trop tôt) */
+  const DQ = { bord: ["q-ok", "Au bord"], tot: ["q-mid", "Trop tôt"], tres_tot: ["q-bad", "Beaucoup trop tôt"] };
+  const disp = (t.dispels || []).filter(d => d.t != null).sort((a, b) => a.t - b.t);
+  const dl = lanes(deaths), el = errs.map(([, l]) => lanes(l)), dsl = lanes(disp);
+  const LH = 22, hP = n => 10 + Math.max(1, n) * LH;
+  const errLbl = c => c === t.dispel_label ? "Porteur en retard" : "Erreur : " + c;
+  const rows = [["Phases", 26, "ph"], ...casts.map(c => [c.name, 26, "bc", c]), ["Dégâts subis (raid)", 46, "dm"], ["Morts", hP(Math.max(0, ...dl) + 1), "mo"],
+    ...(disp.length ? [[`Dispels : ${t.dispel_label || "debuff"}`, hP(Math.max(0, ...dsl) + 1), "ds", t]] : []), ...errs.map(([c, l], i) => [errLbl(c), hP(Math.max(0, ...el[i]) + 1), "er", l])];
+  let y = 4; const Y = rows.map(([, h]) => { const o = y; y += h; return o; }); const H = y + 24, bottom = y;
+  const px = v => (v / W * 100).toFixed(3) + "%", py = v => (v / H * 100).toFixed(3) + "%";
+  let g = `<svg class="frise" viewBox="0 0 ${W} ${H}">`;
+  for (let m = 0; m * 60 <= dur; m++) g += `<line x1="${sx(m * 60)}" x2="${sx(m * 60)}" y1="8" y2="${bottom}" class="gl"/><text x="${sx(m * 60)}" y="${bottom + 18}" text-anchor="middle">${m}:00</text>`;
+  rows.forEach(([, h], i) => { g += `<line x1="${L}" x2="${Rr}" y1="${Y[i] + h}" y2="${Y[i] + h}" class="sep"/>`; });
+  phases.forEach((p, k) => { g += `<g><title>${esc(p.name)} : ${mmss(p.start)} → ${mmss(Math.min(p.end, dur))}</title><rect x="${sx(p.start)}" y="${Y[0] + 4}" width="${sx(p.end) - sx(p.start)}" height="18" rx="3" class="ph ${p.inter ? "inter" : "p" + (k % 3)}"/><text x="${sx(p.start) + 4}" y="${Y[0] + 17}" class="phl">${esc(p.name)}</text></g>`; });
+  /* lancers : durée des dégâts en bande (dégâts sur la durée) ; l'icône du sort est posée par le calque HTML ; sans icône
+     connue, un trait comme avant */
+  casts.forEach((c, i) => c.t.forEach((x, k) => { if (x > dur) return; const d = c.d && c.d[k];
+    if (Array.isArray(d)) g += `<g class="bcd"><title>${esc(c.name)} : dégâts de ${mmss(d[0])} à ${mmss(d[1])} (${Math.round(d[1] - d[0])} s)</title><rect x="${sx(d[0])}" y="${Y[i + 1] + 7}" width="${Math.max(3, sx(d[1]) - sx(d[0]))}" height="12" rx="3"/></g>`;
+    if (!c.icon) g += `<g class="bc"><title>${esc(c.name)} à ${mmss(x)}</title><rect x="${sx(x)}" y="${Y[i + 1] + 6}" width="6" height="14" rx="2"/></g>`; }));
+  const di = casts.length + 1, dy = Y[di], dh = 46, v = (t.raid_damage && t.raid_damage.values) || [], mx = Math.max(1, ...v), bin = (t.raid_damage && t.raid_damage.bin_s) || 1;
+  if (v.length) g += `<path class="rda2" d="M${L},${dy + dh}` + v.map((d, k) => `L${sx(k * bin).toFixed(1)},${(dy + dh - d / mx * (dh - 6)).toFixed(1)}`).join("") + `L${sx((v.length - 1) * bin)},${dy + dh}Z"/>`;
+  if (t.cut_s != null && t.cut_s < dur) g += `<g><title>Après la coupe (${esc(t.cut_reason)}) : non compté dans l'analyse</title><rect x="${sx(t.cut_s)}" y="8" width="${Rr - sx(t.cut_s)}" height="${bottom - 8}" class="cutz"/></g>`;
+  g += "</svg>";
+  /* calque HTML : noms des lignes (Wowhead pour les compétences et les erreurs), morts et erreurs */
+  const wh = (id, inner, cls, style, title) => id ? `<a class="${cls}" href="https://www.wowhead.com/fr/spell=${id}" target="_blank" rel="noopener" style="${style}">${inner}</a>` : `<span class="${cls}" style="${style}"${title ? ` title="${esc(title)}"` : ""}>${inner}</span>`;
+  let o = "";
+  rows.forEach(([lbl, h, kind, extra], i) => {
+    const st = `top:${py(Y[i] + (kind === "mo" || kind === "er" || kind === "ds" ? 5 + LH / 2 : h / 2))};width:${px(L - 10)}`;
+    if (kind === "bc") o += wh(extra.id, `${extra.icon ? img(extra.icon, 16) : ""}<span>${esc(lbl)}</span>`, "frl", st);
+    else if (kind === "ds") o += wh(extra.id, `${extra.icon ? img(extra.icon, 16) : ""}<span>${esc(lbl)}</span>`, "frl", st);
+    else if (kind === "er") { const id = (extra.find(e => e.id) || {}).id, ic = (extra.find(e => e.icon) || {}).icon; o += wh(id, `${ic ? img(ic, 16) : ""}<span>${esc(lbl)}</span>`, "frl", st); }
+    else o += `<span class="frl" style="${st}"><span>${esc(lbl)}</span></span>`;
+  });
+  /* icône du sort à chaque lancer (infobulle Wowhead) */
+  casts.forEach((c, i) => { if (!c.icon) return; c.t.forEach((x, k) => { if (x > dur) return; const d = c.d && c.d[k];
+    o += wh(c.id, img(c.icon, 16), "fcast", `left:${px(sx(x))};top:${py(Y[i + 1] + 13)}`, `${c.name} à ${mmss(x)}${Array.isArray(d) ? ` · dégâts pendant ${Math.round(d[1] - d[0])} s` : d === 0 ? " · coup unique" : ""}`); }); });
+  const mi = di + 1;
+  deaths.forEach((d, k) => { const st = `left:${px(sx(d.t))};top:${py(Y[mi] + 5 + LH / 2 + dl[k] * LH)}`;
+    o += wh(d.id, `<b class="sk${d.bad ? " bad" : ""}">✖</b><span>${esc(nameOf(d))}</span>`, "fdot mort", st, `${mmss(d.t)} — Mort : ${d.text}`); });
+  const off = disp.length ? 1 : 0;
+  if (off) disp.forEach((d, k) => { const st = `left:${px(sx(d.t))};top:${py(Y[mi + 1] + 5 + LH / 2 + dsl[k] * LH)}`, [cls, lab] = DQ[d.q] || ["q-unk", "position inconnue"];
+    o += `<span class="fdot ds" style="${st}" data-tip="${esc(`${mmss(d.t)} · dispel par ${d.by} — ${lab}${d.who ? ` (porteur : ${d.who})` : ""}`)}"><i class="dot ${cls}"></i><span>${esc(d.who || "")}</span></span>`; });
+  /* erreurs : pas d'infobulle Wowhead (le nom de la ligne dit de quoi il s'agit), le détail de l'erreur au survol */
+  errs.forEach(([, list], r) => list.forEach((e, k) => { const st = `left:${px(sx(e.t))};top:${py(Y[mi + 1 + off + r] + 5 + LH / 2 + el[r][k] * LH)}`;
+    o += `<span class="fdot err" style="${st}" data-tip="${esc(`${mmss(e.t)} — ${e.text}`)}"><i class="dot"></i><span>${esc(nameOf(e))}</span></span>`; }));
+  const evs = [...phases.map(p => [p.start, "Phase", p.name]), ...t.events.map(e => [e.t, e.kind === "mort" ? "Mort" : "Erreur", e.text])].sort((a, b) => a[0] - b[0]);
+  return `<details class="tlw"><summary>Pull ${t.pull} · ${esc(t.result)} · ${mmss(dur)} · ${deaths.length} mort(s) · ${t.events.length - deaths.length} erreur(s)</summary>
+    <div class="frisew frw2">${g}<div class="frov">${o}</div></div><details class="evlist"><summary>Déroulé détaillé (${evs.length} événements)</summary>${table([{ l: "Temps", num: 1 }, { l: "Type" }, { l: "Détail" }], evs.map(e => [{ h: mmss(e[0]), v: e[0] }, e[1], e[2]]))}</details></details>`;
+}
 /* Chronologie : un bloc repliable par pull (tous fermés sur la vue « tous les pulls » ; ouvert pour un pull choisi) */
 function anChrono(timelines, one) {
   if (!timelines.length) return muted("Pas de chronologie pour cette vue.");
-  const leg = `<div class="tlleg"><span><i class="k-ph"></i>Phases du combat</span><span><i class="k-bc"></i>Compétence du boss (un trait par lancer)</span><span><i class="k-dm"></i>Dégâts subis par le raid</span><span><b class="k-sk">✖</b>Mort</span><span><i class="k-er"></i>Erreur de mécanique, une ligne par type</span><span><i class="k-cut"></i>Après la coupe du pull : non compté</span></div>`;
-  return card("Chronologie", leg + muted(one ? "Survole un élément pour le détail ; « Déroulé détaillé » donne la liste complète." : "Un bloc par pull : ouvre celui qui t'intéresse. Survole un élément pour le détail ; « Déroulé détaillé » donne la liste complète.")) +
-    timelines.map(t => `<section class="card anpull">${frise(t).replace('<details class="tlw">', `<details class="tlw"${one ? " open" : ""}>`)}</section>`).join("");
+  const leg = `<div class="tlleg"><span><i class="k-ph"></i>Phases du combat</span><span><i class="k-bcd"></i>Icône = lancer d'une compétence du boss ; bande = durée de ses dégâts (rien si coup unique)</span><span><i class="k-dm"></i>Dégâts subis par le raid</span><span><b class="k-sk">✖</b>Mort</span><span><i class="k-q q-ok"></i>Dispel au bord</span><span><i class="k-q q-mid"></i>Dispel trop tôt</span><span><i class="k-q q-bad"></i>Dispel beaucoup trop tôt</span><span><i class="k-er"></i>Erreur, une ligne par type</span><span><i class="k-cut"></i>Après la coupe du pull : non compté</span></div>`;
+  return card("Chronologie", leg + muted(`${one ? "" : "Un bloc par pull : ouvre celui qui t'intéresse. "}Survole le nom ou l'icône d'une compétence du boss, ou une mort, pour l'infobulle Wowhead du sort (pour une mort : le sort qui l'a tuée) ; survole un dispel ou une erreur pour le détail. Les événements proches sont décalés sur plusieurs lignes. « Déroulé détaillé » donne la liste complète.`)) +
+    timelines.map(t => `<section class="card anpull">${friseAn(t).replace('<details class="tlw">', `<details class="tlw"${one ? " open" : ""}>`)}</section>`).join("");
 }
 
 /* Rendu d'une vue d'un pull à la demande : el = <div class="view" data-lazy="raid|gp">, dans la page du boss */
