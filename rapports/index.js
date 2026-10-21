@@ -5,10 +5,10 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": "Exaltés au Cimetière",
   "server": "Garona",
-  "next_update": 1792597551777,
+  "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792435634241,
-  "generated": 1792596651790,
+  "generated": 1792596699225,
   "pulls": 13,
   "note": 7.5,
   "bosses": [
@@ -78,7 +78,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 8.3,
+      "note": 8.2,
       "pulls": 3
      },
      {
@@ -126,7 +126,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 6.6,
+      "note": 6.2,
       "pulls": 3
      },
      {
@@ -267,7 +267,7 @@ window.RAPPORTS_INDEX = [
       "class": "Paladin",
       "role": "healer",
       "sub": null,
-      "note": 7.7,
+      "note": 7.6,
       "pulls": 10
      },
      {
@@ -275,7 +275,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 8.1,
+      "note": 8.2,
       "pulls": 10
      },
      {
@@ -283,7 +283,7 @@ window.RAPPORTS_INDEX = [
       "class": "Evoker",
       "role": "healer",
       "sub": null,
-      "note": 7.7,
+      "note": 7.8,
       "pulls": 10
      },
      {
@@ -419,7 +419,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 7.7,
+      "note": 8,
       "pulls": 10
      }
     ]
@@ -477,7 +477,7 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "healer",
     "sub": null,
-    "note": 8.1,
+    "note": 8.2,
     "pulls": 13,
     "deaths": 2
    },
@@ -531,7 +531,7 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "healer",
     "sub": null,
-    "note": 7.4,
+    "note": 7.6,
     "pulls": 13,
     "deaths": 2
    },
@@ -549,7 +549,7 @@ window.RAPPORTS_INDEX = [
     "class": "Evoker",
     "role": "healer",
     "sub": null,
-    "note": 7.8,
+    "note": 7.9,
     "pulls": 13,
     "deaths": 1
    },
@@ -576,7 +576,7 @@ window.RAPPORTS_INDEX = [
     "class": "Paladin",
     "role": "healer",
     "sub": null,
-    "note": 7.8,
+    "note": 7.7,
     "pulls": 13,
     "deaths": 2
    },
@@ -627,7 +627,7 @@ window.RAPPORTS_INDEX = [
    }
   ],
   "complete": false,
-  "auto": true,
+  "auto": false,
   "extension_version": "0.40.64",
   "file": "rapports/Raid_2026-10-19_The_Venomous_Abyss_Z1vNp7AGR4XYdqPF.html",
   "json": "rapports/Raid_2026-10-19_The_Venomous_Abyss_Z1vNp7AGR4XYdqPF.json"
