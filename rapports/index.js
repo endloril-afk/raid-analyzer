@@ -637,10 +637,10 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": null,
   "server": null,
-  "next_update": 1792592763173,
+  "next_update": 1792593946154,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1792591863184,
+  "generated": 1792593046160,
   "pulls": 21,
   "note": 8.2,
   "bosses": [
@@ -666,7 +666,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 8.6,
+      "note": 8.5,
       "pulls": 1
      },
      {
@@ -678,51 +678,11 @@ window.RAPPORTS_INDEX = [
       "pulls": 1
      },
      {
-      "name": "Drtyrran",
-      "class": "Shaman",
-      "role": "dps",
-      "sub": "ranged",
-      "note": 7.6,
-      "pulls": 1
-     },
-     {
-      "name": "Darlkira",
-      "class": "DemonHunter",
-      "role": "dps",
-      "sub": "ranged",
-      "note": 8.4,
-      "pulls": 1
-     },
-     {
       "name": "Lücîøle",
       "class": "Rogue",
       "role": "dps",
       "sub": "melee",
       "note": 6.9,
-      "pulls": 1
-     },
-     {
-      "name": "Harmoniaque",
-      "class": "Priest",
-      "role": "dps",
-      "sub": "ranged",
-      "note": 9.5,
-      "pulls": 1
-     },
-     {
-      "name": "Jeangrip",
-      "class": "DeathKnight",
-      "role": "dps",
-      "sub": "melee",
-      "note": 6.3,
-      "pulls": 1
-     },
-     {
-      "name": "Toufoux",
-      "class": "Hunter",
-      "role": "dps",
-      "sub": "ranged",
-      "note": 8,
       "pulls": 1
      },
      {
@@ -734,11 +694,27 @@ window.RAPPORTS_INDEX = [
       "pulls": 1
      },
      {
-      "name": "Yörr",
+      "name": "Drtyrran",
+      "class": "Shaman",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 7.8,
+      "pulls": 1
+     },
+     {
+      "name": "Harmoniaque",
+      "class": "Priest",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.7,
+      "pulls": 1
+     },
+     {
+      "name": "Toufoux",
       "class": "Hunter",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.7,
+      "note": 8.1,
       "pulls": 1
      },
      {
@@ -750,8 +726,40 @@ window.RAPPORTS_INDEX = [
       "pulls": 1
      },
      {
+      "name": "Hazizoul",
+      "class": "Priest",
+      "role": "healer",
+      "sub": null,
+      "note": 8.1,
+      "pulls": 1
+     },
+     {
+      "name": "Darlkira",
+      "class": "DemonHunter",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 8.7,
+      "pulls": 1
+     },
+     {
       "name": "Aelminster",
       "class": "Mage",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 8.8,
+      "pulls": 1
+     },
+     {
+      "name": "Môy",
+      "class": "Paladin",
+      "role": "healer",
+      "sub": null,
+      "note": 6.7,
+      "pulls": 1
+     },
+     {
+      "name": "Yörr",
+      "class": "Hunter",
       "role": "dps",
       "sub": "ranged",
       "note": 8.8,
@@ -766,27 +774,11 @@ window.RAPPORTS_INDEX = [
       "pulls": 1
      },
      {
-      "name": "Dyâlise",
-      "class": "Paladin",
+      "name": "Jeangrip",
+      "class": "DeathKnight",
       "role": "dps",
       "sub": "melee",
-      "note": 8.1,
-      "pulls": 1
-     },
-     {
-      "name": "Môy",
-      "class": "Paladin",
-      "role": "healer",
-      "sub": null,
-      "note": 6.9,
-      "pulls": 1
-     },
-     {
-      "name": "Hazizoul",
-      "class": "Priest",
-      "role": "healer",
-      "sub": null,
-      "note": 8.4,
+      "note": 6.7,
       "pulls": 1
      },
      {
@@ -811,6 +803,14 @@ window.RAPPORTS_INDEX = [
       "role": "tank",
       "sub": null,
       "note": 8,
+      "pulls": 1
+     },
+     {
+      "name": "Dyâlise",
+      "class": "Paladin",
+      "role": "dps",
+      "sub": "melee",
+      "note": 8.2,
       "pulls": 1
      }
     ]
@@ -1418,24 +1418,6 @@ window.RAPPORTS_INDEX = [
     "deaths": 1
    },
    {
-    "name": "Drtyrran",
-    "class": "Shaman",
-    "role": "dps",
-    "sub": "ranged",
-    "note": 7.7,
-    "pulls": 19,
-    "deaths": 1
-   },
-   {
-    "name": "Darlkira",
-    "class": "DemonHunter",
-    "role": "dps",
-    "sub": "ranged",
-    "note": 8.7,
-    "pulls": 19,
-    "deaths": 1
-   },
-   {
     "name": "Lücîøle",
     "class": "Rogue",
     "role": "dps",
@@ -1443,33 +1425,6 @@ window.RAPPORTS_INDEX = [
     "note": 7.7,
     "pulls": 19,
     "deaths": 5
-   },
-   {
-    "name": "Harmoniaque",
-    "class": "Priest",
-    "role": "dps",
-    "sub": "ranged",
-    "note": 8.4,
-    "pulls": 19,
-    "deaths": 2
-   },
-   {
-    "name": "Jeangrip",
-    "class": "DeathKnight",
-    "role": "dps",
-    "sub": "melee",
-    "note": 7,
-    "pulls": 19,
-    "deaths": 3
-   },
-   {
-    "name": "Toufoux",
-    "class": "Hunter",
-    "role": "dps",
-    "sub": "ranged",
-    "note": 8.1,
-    "pulls": 19,
-    "deaths": 4
    },
    {
     "name": "Lauenat",
@@ -1481,13 +1436,31 @@ window.RAPPORTS_INDEX = [
     "deaths": 2
    },
    {
-    "name": "Yörr",
+    "name": "Drtyrran",
+    "class": "Shaman",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 7.7,
+    "pulls": 19,
+    "deaths": 1
+   },
+   {
+    "name": "Harmoniaque",
+    "class": "Priest",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 8.4,
+    "pulls": 19,
+    "deaths": 2
+   },
+   {
+    "name": "Toufoux",
     "class": "Hunter",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.8,
+    "note": 8.2,
     "pulls": 19,
-    "deaths": 0
+    "deaths": 4
    },
    {
     "name": "Tyry",
@@ -1495,6 +1468,24 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 8.6,
+    "pulls": 19,
+    "deaths": 1
+   },
+   {
+    "name": "Hazizoul",
+    "class": "Priest",
+    "role": "healer",
+    "sub": null,
+    "note": 8.5,
+    "pulls": 19,
+    "deaths": 0
+   },
+   {
+    "name": "Darlkira",
+    "class": "DemonHunter",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 8.7,
     "pulls": 19,
     "deaths": 1
    },
@@ -1508,24 +1499,6 @@ window.RAPPORTS_INDEX = [
     "deaths": 3
    },
    {
-    "name": "Shrakle",
-    "class": "Evoker",
-    "role": "healer",
-    "sub": null,
-    "note": 8,
-    "pulls": 19,
-    "deaths": 2
-   },
-   {
-    "name": "Dyâlise",
-    "class": "Paladin",
-    "role": "dps",
-    "sub": "melee",
-    "note": 8.7,
-    "pulls": 19,
-    "deaths": 0
-   },
-   {
     "name": "Môy",
     "class": "Paladin",
     "role": "healer",
@@ -1535,13 +1508,31 @@ window.RAPPORTS_INDEX = [
     "deaths": 3
    },
    {
-    "name": "Hazizoul",
-    "class": "Priest",
-    "role": "healer",
-    "sub": null,
-    "note": 8.5,
+    "name": "Yörr",
+    "class": "Hunter",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 8.8,
     "pulls": 19,
     "deaths": 0
+   },
+   {
+    "name": "Shrakle",
+    "class": "Evoker",
+    "role": "healer",
+    "sub": null,
+    "note": 8,
+    "pulls": 19,
+    "deaths": 2
+   },
+   {
+    "name": "Jeangrip",
+    "class": "DeathKnight",
+    "role": "dps",
+    "sub": "melee",
+    "note": 7,
+    "pulls": 19,
+    "deaths": 3
    },
    {
     "name": "Snøz",
@@ -1569,11 +1560,20 @@ window.RAPPORTS_INDEX = [
     "note": 8.1,
     "pulls": 19,
     "deaths": 6
+   },
+   {
+    "name": "Dyâlise",
+    "class": "Paladin",
+    "role": "dps",
+    "sub": "melee",
+    "note": 8.7,
+    "pulls": 19,
+    "deaths": 0
    }
   ],
   "complete": false,
   "auto": true,
-  "extension_version": "0.40.59",
+  "extension_version": "0.40.62",
   "file": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.html",
   "json": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.json"
  }
