@@ -617,3 +617,6 @@ table.mini{border-collapse:collapse}table.mini td{padding:4px 6px;border-bottom:
 .tlleg .k-q{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:middle}
 .tlleg .k-q.q-ok{background:var(--good,#22c55e)}.tlleg .k-q.q-mid{background:#f59e0b}.tlleg .k-q.q-bad{background:var(--bad,#ef4444)}
 .frov .fdot.aft{opacity:.45}
+.frov .fdot.lft{flex-direction:row-reverse;transform:translate(calc(-100% + 6px),-50%)}
+.frov .fdot.lft[data-tip]:hover::after{left:auto;right:0}
+.frise .rdbg{fill:#e11d48;fill-opacity:.16;stroke:#e11d48;stroke-opacity:.45;stroke-width:1}
