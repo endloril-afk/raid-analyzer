@@ -605,7 +605,7 @@ const SPEC_IC = { "DeathKnight|Blood": "spell_deathknight_bloodpresence", "Death
   "Rogue|Assassination": "ability_rogue_deadlybrew", "Rogue|Outlaw": "ability_rogue_waylay", "Rogue|Subtlety": "ability_stealth",
   "Shaman|Elemental": "spell_nature_lightning", "Shaman|Enhancement": "spell_shaman_improvedstormstrike", "Shaman|Restoration": "spell_nature_magicimmunity",
   "Warlock|Affliction": "spell_shadow_deathcoil", "Warlock|Demonology": "spell_shadow_metamorphosis", "Warlock|Destruction": "spell_shadow_rainoffire",
-  "Warrior|Arms": "ability_warrior_savageblow", "Warrior|Fury": "ability_warrior_innerrage", "Warrior|Protection": "ability_warrior_defensivestance" };
+  "DemonHunter|Devourer": "classicon_demonhunter", "Warrior|Arms": "ability_warrior_savageblow", "Warrior|Fury": "ability_warrior_innerrage", "Warrior|Protection": "ability_warrior_defensivestance" };
 const specIc = (cls, spec, size = 18) => { const k = `${String(cls || "").replace(/\s/g, "")}|${String(spec || "").replace(/\s/g, "")}`, ic = SPEC_IC[k];
   return ic ? `<span class="specic" title="${esc(spec)}">${img(ic, size)}</span>` : spec ? `<span class="specic muted small" title="${esc(spec)}">${esc(spec)}</span>` : ""; };
 /* Récapitulatif : joueur (classe, spé, rôle), morts par pull, points à améliorer, notes Gameplay, Strat et Globale.
@@ -619,7 +619,7 @@ function anPlayers(v) {
   return `<div class="anplayers">` + card("Récapitulatif", muted("Strat sur 10 : mécaniques (10 = aucune erreur régulière). Gameplay sur 10 : comparaison aux meilleurs logs de la spé (activité, sorts, CD). Globale = moyenne exacte de la Strat et du Gameplay : un gros écart entre Gameplay et Globale vient d'une Strat très différente du Gameplay (ex. Strat 10 et Gameplay 5 donnent 7,5). Sans gameplay (pas de référence du top), la Globale reprend la Strat, marquée ≈. Clique sur une colonne pour trier.") +
     table([{ l: "Joueur" }, { l: "Morts / pull", num: 1, title: "Morts avant la coupure du pull, divisées par le nombre de pulls joués" }, { l: "Points à améliorer" }, { l: "Gameplay", num: 1 }, { l: "Strat", num: 1 }, { l: "Globale", num: 1 }],
       rows.map(({ p, g, n, spec }) => [{ h: `<span class="pl">${clsic(p.class, 20)} ${specIc(p.class, spec)} ${rolic(roleKey(p.role, p.sub))} ${esc(p.player)}${p.hybrid ? ` <small class="muted">${esc(p.role_label)}</small>` : ""}</span>`, v: p.player },
-        { h: fr(p.deaths_per_pull, 2), v: p.deaths_per_pull },
+        { h: p.deaths_per_pull ? fr(p.deaths_per_pull, 2) : '<span class="muted">—</span>', v: p.deaths_per_pull },
         { h: p.issues.map(i => `<span class="issue" title="${esc(i.kind)}">${i.icon ? sp(i.mechanic, i.icon, 16, false, i.spell_id) : ""}<b>${esc(i.mechanic)}</b> ${esc(i.text)} <i>${esc(i.detail)}</i></span>`).join("") || '<span class="muted">—</span>', v: p.issues.length },
         { h: g != null ? chip(fr(g) + "/10", noteCls(g)) : '<span class="muted small">sans réf.</span>', v: g ?? -1 },
         { h: chip(fr(p.score) + "/10", noteCls(p.score)), v: p.score },
