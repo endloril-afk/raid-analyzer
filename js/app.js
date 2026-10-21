@@ -23,6 +23,8 @@ document.addEventListener("change", e => {
   if (s.matches && s.matches(".viewsel")) {
     const b = s.closest(".boss") || document;
     b.querySelectorAll(".view").forEach(v => { if (v.dataset.view === s.value && v.dataset.lazy) renderView(v); v.hidden = v.dataset.view !== s.value; });
+    /* indicateurs de la soirée (au-dessus des onglets) : seulement sur la vue « tous les pulls » */
+    b.querySelectorAll(".bkpis").forEach(k => { k.hidden = k.dataset.for !== s.value; });
   }
 });
 
