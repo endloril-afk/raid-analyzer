@@ -588,23 +588,42 @@ function analyseView(v, b) {
   const r = v.raid, x = r.extras || {};
   const spec = ANALYSE.find(a => a.test(b)), own = spec ? spec.panes(v, b) : [];
   /* écrans communs à tous les boss, puis Préparation tout à droite */
-  const labels = [...own.map(o => o[0]), "Joueurs", "Chronologie"], panes = [...own.map(o => o[1]), anPlayers(v), anChrono(x.timelines || [], v.key !== "all", b)];
+  const labels = [...own.map(o => o[0]), "Récapitulatif", "Chronologie"], panes = [...own.map(o => o[1]), anPlayers(v), anChrono(x.timelines || [], v.key !== "all", b)];
   if (x.prep_available) { labels.push("Préparation"); panes.push(prep(x.prep)); }
   return tabset(labels, panes);
 }
-/* Joueurs : strat et gameplay côte à côte ; note du fight = moyenne des deux (strat seule si le gameplay manque) */
+/* Icônes des spécialisations (Wowhead), clé « Classe|Spé » sans espaces */
+const SPEC_IC = { "DeathKnight|Blood": "spell_deathknight_bloodpresence", "DeathKnight|Frost": "spell_deathknight_frostpresence", "DeathKnight|Unholy": "spell_deathknight_unholypresence",
+  "DemonHunter|Havoc": "ability_demonhunter_specdps", "DemonHunter|Vengeance": "ability_demonhunter_spectank",
+  "Druid|Balance": "spell_nature_starfall", "Druid|Feral": "ability_druid_catform", "Druid|Guardian": "ability_racial_bearform", "Druid|Restoration": "spell_nature_healingtouch",
+  "Evoker|Devastation": "classicon_evoker_devastation", "Evoker|Preservation": "classicon_evoker_preservation", "Evoker|Augmentation": "classicon_evoker_augmentation",
+  "Hunter|BeastMastery": "ability_hunter_bestialdiscipline", "Hunter|Marksmanship": "ability_hunter_focusedaim", "Hunter|Survival": "ability_hunter_camouflage",
+  "Mage|Arcane": "spell_holy_magicalsentry", "Mage|Fire": "spell_fire_firebolt02", "Mage|Frost": "spell_frost_frostbolt02",
+  "Monk|Brewmaster": "spell_monk_brewmaster_spec", "Monk|Mistweaver": "spell_monk_mistweaver_spec", "Monk|Windwalker": "spell_monk_windwalker_spec",
+  "Paladin|Holy": "spell_holy_holybolt", "Paladin|Protection": "ability_paladin_shieldofthetemplar", "Paladin|Retribution": "spell_holy_auraoflight",
+  "Priest|Discipline": "spell_holy_powerwordshield", "Priest|Holy": "spell_holy_guardianspirit", "Priest|Shadow": "spell_shadow_shadowwordpain",
+  "Rogue|Assassination": "ability_rogue_deadlybrew", "Rogue|Outlaw": "ability_rogue_waylay", "Rogue|Subtlety": "ability_stealth",
+  "Shaman|Elemental": "spell_nature_lightning", "Shaman|Enhancement": "spell_shaman_improvedstormstrike", "Shaman|Restoration": "spell_nature_magicimmunity",
+  "Warlock|Affliction": "spell_shadow_deathcoil", "Warlock|Demonology": "spell_shadow_metamorphosis", "Warlock|Destruction": "spell_shadow_rainoffire",
+  "Warrior|Arms": "ability_warrior_savageblow", "Warrior|Fury": "ability_warrior_innerrage", "Warrior|Protection": "ability_warrior_defensivestance" };
+const specIc = (cls, spec, size = 18) => { const k = `${String(cls || "").replace(/\s/g, "")}|${String(spec || "").replace(/\s/g, "")}`, ic = SPEC_IC[k];
+  return ic ? `<span class="specic" title="${esc(spec)}">${img(ic, size)}</span>` : spec ? `<span class="specic muted small" title="${esc(spec)}">${esc(spec)}</span>` : ""; };
+/* Récapitulatif : joueur (classe, spé, rôle), morts par pull, points à améliorer, notes Gameplay, Strat et Globale.
+   Globale = moyenne exacte de la Strat et du Gameplay (strat seule, marquée ≈, quand le gameplay n'a pas de référence du top). */
 function anPlayers(v) {
   const r = v.raid, gp = new Map();
-  for (const x of (v.gameplay && !v.gameplay.error ? v.gameplay.players : null) || []) if (x.gameplay_score != null) gp.set(x.name + "|dps", x.gameplay_score);
-  for (const h of (v.healers && v.healers.healers) || []) if (h.gameplay_score != null) gp.set(h.name + "|healer", h.gameplay_score);
-  const gOf = p => gp.get(p.player + (p.role === "healer" ? "|healer" : "|dps")) ?? gp.get(p.player + (p.role === "healer" ? "|dps" : "|healer")) ?? null;
-  const rows = r.players.map(p => { const g = gOf(p), n = g != null ? Math.round((p.score + g) / 2 * 10) / 10 : p.score; return { p, g, n }; }).sort((a, b) => b.n - a.n);
-  return `<div class="anplayers">` + card("Joueurs", muted("Strat sur 10 : mécaniques (10 = aucune erreur régulière). Gameplay sur 10 : comparaison aux meilleurs logs de la spé (activité, sorts, CD). Note du fight = moyenne de la strat et du gameplay ; sans gameplay (pas de référence du top), la strat seule, marquée ≈. Les morts sont listées à côté. Clique sur une colonne pour trier.") +
-    table([{ l: "Joueur" }, { l: "Rôle" }, { l: "Pulls", num: 1 }, { l: "Morts / pull", num: 1 }, { l: "Points à améliorer" }, { l: "Strat", num: 1 }, { l: "Gameplay", num: 1 }, { l: "Note du fight", num: 1 }],
-      rows.map(({ p, g, n }) => [{ h: pl(p.player, p.class, p.role, p.sub), v: p.player }, p.role_label, p.pulls, { h: fr(p.deaths_per_pull, 2), v: p.deaths_per_pull },
+  for (const x of (v.gameplay && !v.gameplay.error ? v.gameplay.players : null) || []) gp.set(x.name + "|dps", { g: x.gameplay_score ?? null, spec: x.spec });
+  for (const h of (v.healers && v.healers.healers) || []) gp.set(h.name + "|healer", { g: h.gameplay_score ?? null, spec: h.spec });
+  const gOf = p => gp.get(p.player + (p.role === "healer" ? "|healer" : "|dps")) ?? gp.get(p.player + (p.role === "healer" ? "|dps" : "|healer")) ?? {};
+  const rows = r.players.map(p => { const o = gOf(p), g = o.g ?? null, n = g != null ? Math.round((p.score + g) / 2 * 10) / 10 : p.score; return { p, g, n, spec: o.spec }; }).sort((a, b) => b.n - a.n);
+  return `<div class="anplayers">` + card("Récapitulatif", muted("Strat sur 10 : mécaniques (10 = aucune erreur régulière). Gameplay sur 10 : comparaison aux meilleurs logs de la spé (activité, sorts, CD). Globale = moyenne exacte de la Strat et du Gameplay : un gros écart entre Gameplay et Globale vient d'une Strat très différente du Gameplay (ex. Strat 10 et Gameplay 5 donnent 7,5). Sans gameplay (pas de référence du top), la Globale reprend la Strat, marquée ≈. Clique sur une colonne pour trier.") +
+    table([{ l: "Joueur" }, { l: "Morts / pull", num: 1, title: "Morts avant la coupure du pull, divisées par le nombre de pulls joués" }, { l: "Points à améliorer" }, { l: "Gameplay", num: 1 }, { l: "Strat", num: 1 }, { l: "Globale", num: 1 }],
+      rows.map(({ p, g, n, spec }) => [{ h: `<span class="pl">${clsic(p.class, 20)} ${specIc(p.class, spec)} ${rolic(roleKey(p.role, p.sub))} ${esc(p.player)}${p.hybrid ? ` <small class="muted">${esc(p.role_label)}</small>` : ""}</span>`, v: p.player },
+        { h: fr(p.deaths_per_pull, 2), v: p.deaths_per_pull },
         { h: p.issues.map(i => `<span class="issue" title="${esc(i.kind)}">${i.icon ? sp(i.mechanic, i.icon, 16, false, i.spell_id) : ""}<b>${esc(i.mechanic)}</b> ${esc(i.text)} <i>${esc(i.detail)}</i></span>`).join("") || '<span class="muted">—</span>', v: p.issues.length },
-        { h: chip(fr(p.score) + "/10", noteCls(p.score)), v: p.score }, { h: g != null ? chip(fr(g) + "/10", noteCls(g)) : '<span class="muted small">sans réf.</span>', v: g ?? -1 },
-        { h: chip(fr(n) + "/10", noteCls(n)) + (g == null ? '<sup class="partial" title="Strat seule : gameplay sans référence du top">≈</sup>' : ""), v: n }]))) + `</div>`;
+        { h: g != null ? chip(fr(g) + "/10", noteCls(g)) : '<span class="muted small">sans réf.</span>', v: g ?? -1 },
+        { h: chip(fr(p.score) + "/10", noteCls(p.score)), v: p.score },
+        { h: `<span title="${g != null ? `(Strat ${fr(p.score)} + Gameplay ${fr(g)}) / 2` : "Strat seule : gameplay sans référence du top"}">${chip(fr(n) + "/10", noteCls(n))}${g == null ? '<sup class="partial">≈</sup>' : ""}</span>`, v: n }]))) + `</div>`;
 }
 /* Frise d'un pull pour l'onglet Analyse : noms des compétences du boss et erreurs avec l'infobulle Wowhead ; les erreurs et
    les morts proches sont réparties sur plusieurs lignes (plus de noms superposés). Le dessin (SVG) garde les phases, les
