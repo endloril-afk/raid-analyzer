@@ -119,7 +119,7 @@ function deathsCard(deaths, g) {
 /* Frise chronologique d'un pull (extras.timelines) */
 /* largeur de dessin des frises = largeur réelle disponible (en pixels) : sur un grand écran la frise s'allonge au lieu de
    tout agrandir (textes, marges) ; 1100 au minimum (défilement horizontal sur petit écran) */
-function frW() { try { const vw = window.innerWidth || 1400, w = vw <= 900 ? vw - 80 : vw - 240 - 20 - 64 - 40 - 24; return Math.max(1100, Math.min(3200, Math.round(w))); } catch (e) { return 1100; } }
+function frW() { try { const vw = window.innerWidth || 1400, w = vw <= 900 ? vw - 80 : vw - 64 - 40 - 24; return Math.max(1100, Math.min(3200, Math.round(w))); } catch (e) { return 1100; } }
 function frise(t) {
   const W = frW(), dur = t.duration_s, L = 170, Rr = W - 12, sx = s => L + Math.max(0, Math.min(s, dur)) / dur * (Rr - L);
   const phases = t.phases.filter(p => p.end > p.start && p.start < dur); /* phases incohérentes (fin avant début) ignorées */
