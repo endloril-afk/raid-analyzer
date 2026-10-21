@@ -117,8 +117,11 @@ function deathsCard(deaths, g) {
 }
 
 /* Frise chronologique d'un pull (extras.timelines) */
+/* largeur de dessin des frises = largeur réelle disponible (en pixels) : sur un grand écran la frise s'allonge au lieu de
+   tout agrandir (textes, marges) ; 1100 au minimum (défilement horizontal sur petit écran) */
+function frW() { try { const vw = window.innerWidth || 1400, w = vw <= 900 ? vw - 80 : vw - 240 - 20 - 64 - 40 - 24; return Math.max(1100, Math.min(3200, Math.round(w))); } catch (e) { return 1100; } }
 function frise(t) {
-  const dur = t.duration_s, W = 1100, L = 170, Rr = 1088, sx = s => L + Math.max(0, Math.min(s, dur)) / dur * (Rr - L);
+  const W = frW(), dur = t.duration_s, L = 170, Rr = W - 12, sx = s => L + Math.max(0, Math.min(s, dur)) / dur * (Rr - L);
   const phases = t.phases.filter(p => p.end > p.start && p.start < dur); /* phases incohérentes (fin avant début) ignorées */
   const casts = t.boss.filter(c => c.t && c.t.length), deaths = t.events.filter(e => e.kind === "mort");
   const errs = Object.entries(t.events.filter(e => e.kind !== "mort").reduce((a, e) => ((a[e.cat || e.kind] ||= []).push(e), a), {}));
@@ -607,20 +610,24 @@ function anPlayers(v) {
    les morts proches sont réparties sur plusieurs lignes (plus de noms superposés). Le dessin (SVG) garde les phases, les
    lancers et les dégâts ; noms, morts et erreurs sont des éléments HTML posés dessus (liens Wowhead). */
 function friseAn(t) {
-  const dur = Math.max(1, t.duration_s), W = 1100, L = 200, Rr = 1088, sx = s => L + Math.max(0, Math.min(s, dur)) / dur * (Rr - L);
+  const W = frW(), dur = Math.max(1, t.duration_s), L = 200, Rr = W - 12, sx = s => L + Math.max(0, Math.min(s, dur)) / dur * (Rr - L);
   const phases = t.phases.filter(p => p.end > p.start && p.start < dur);
   const casts = t.boss.filter(c => c.t && c.t.length), deaths = t.events.filter(e => e.kind === "mort");
-  const errs = Object.entries(t.events.filter(e => e.kind !== "mort").reduce((a, e) => ((a[e.cat || (e.kind === "interrupt" ? "Interrupt raté" : e.kind)] ||= []).push(e), a), {}));
+  const hasCuts = !!(t.cuts && t.cuts.length), hasCar = !!(t.carriers && t.carriers.length);
+  const errs = Object.entries(t.events.filter(e => e.kind !== "mort" && !(hasCuts && e.kind === "interrupt") && !(hasCar && e.cat === t.dispel_label)).reduce((a, e) => ((a[e.cat || (e.kind === "interrupt" ? "Interrupt raté" : e.kind)] ||= []).push(e), a), {}));
   const nameOf = e => e.who || (e.kind === "mort" ? String(e.text || "").split(" — ")[0] : "");
   /* lignes de points : un point par événement, nom à droite ; deux événements trop proches passent sur la ligne suivante */
   const lanes = list => { const ends = []; return list.map(e => { const x = sx(e.t), w = 18 + nameOf(e).length * 6.6; let k = ends.findIndex(v => v < x - 4); if (k < 0) { k = ends.length; ends.push(0); } ends[k] = x + w; return k; }); };
   /* dispels (Essence Rend…) : un point par dispel, couleur selon l'endroit (vert au bord, orange trop tôt, rouge beaucoup trop tôt) */
   const DQ = { bord: ["q-ok", "Au bord"], tot: ["q-mid", "Trop tôt"], tres_tot: ["q-bad", "Beaucoup trop tôt"] };
   const disp = (t.dispels || []).filter(d => d.t != null).sort((a, b) => a.t - b.t);
-  const dl = lanes(deaths), el = errs.map(([, l]) => lanes(l)), dsl = lanes(disp);
+  const cuts = hasCuts ? [...t.cuts].sort((a, b) => a.t - b.t) : [], car = hasCar ? [...t.carriers].sort((a, b) => a.t - b.t) : [];
+  const dl = lanes(deaths), el = errs.map(([, l]) => lanes(l)), dsl = lanes(disp), cul = lanes(cuts), cal = lanes(car);
   const LH = 22, hP = n => 10 + Math.max(1, n) * LH;
   const errLbl = c => c === t.dispel_label ? "Porteur en retard" : "Erreur : " + c;
   const rows = [["Phases", 26, "ph"], ...casts.map(c => [c.name, 26, "bc", c]), ["Dégâts subis (raid)", 46, "dm"], ["Morts", hP(Math.max(0, ...dl) + 1), "mo"],
+    ...(cuts.length ? [[`Cuts : ${t.cut_label || "interruptions"}`, hP(Math.max(0, ...cul) + 1), "cu", t]] : []),
+    ...(car.length ? [[`Porteurs : ${t.dispel_label || "debuff"}`, hP(Math.max(0, ...cal) + 1), "ca", t]] : []),
     ...(disp.length ? [[`Dispels : ${t.dispel_label || "debuff"}`, hP(Math.max(0, ...dsl) + 1), "ds", t]] : []), ...errs.map(([c, l], i) => [errLbl(c), hP(Math.max(0, ...el[i]) + 1), "er", l])];
   let y = 4; const Y = rows.map(([, h]) => { const o = y; y += h; return o; }); const H = y + 24, bottom = y;
   const px = v => (v / W * 100).toFixed(3) + "%", py = v => (v / H * 100).toFixed(3) + "%";
@@ -641,7 +648,7 @@ function friseAn(t) {
   const wh = (id, inner, cls, style, title) => id ? `<a class="${cls}" href="https://www.wowhead.com/fr/spell=${id}" target="_blank" rel="noopener" style="${style}">${inner}</a>` : `<span class="${cls}" style="${style}"${title ? ` title="${esc(title)}"` : ""}>${inner}</span>`;
   let o = "";
   rows.forEach(([lbl, h, kind, extra], i) => {
-    const st = `top:${py(Y[i] + (kind === "mo" || kind === "er" || kind === "ds" ? 5 + LH / 2 : h / 2))};width:${px(L - 10)}`;
+    const st = `top:${py(Y[i] + (["mo", "er", "ds", "cu", "ca"].includes(kind) ? 5 + LH / 2 : h / 2))};width:${px(L - 10)}`;
     if (kind === "bc") o += wh(extra.id, `${extra.icon ? img(extra.icon, 16) : ""}<span>${esc(lbl)}</span>`, "frl", st);
     else if (kind === "ds") o += wh(extra.id, `${extra.icon ? img(extra.icon, 16) : ""}<span>${esc(lbl)}</span>`, "frl", st);
     else if (kind === "er") { const id = (extra.find(e => e.id) || {}).id, ic = (extra.find(e => e.icon) || {}).icon; o += wh(id, `${ic ? img(ic, 16) : ""}<span>${esc(lbl)}</span>`, "frl", st); }
@@ -653,11 +660,22 @@ function friseAn(t) {
   const mi = di + 1;
   deaths.forEach((d, k) => { const st = `left:${px(sx(d.t))};top:${py(Y[mi] + 5 + LH / 2 + dl[k] * LH)}`;
     o += wh(d.id, `<b class="sk${d.bad ? " bad" : ""}">✖</b><span>${esc(nameOf(d))}</span>`, "fdot mort", st, `${mmss(d.t)} — Mort : ${d.text}`); });
+  /* lignes optionnelles dans l'ordre : cuts, porteurs, dispels, puis les erreurs */
+  let ri = mi + 1;
+  const dotAt = (row, lane, x) => `left:${px(sx(x))};top:${py(Y[row] + 5 + LH / 2 + lane * LH)}`;
+  if (cuts.length) { const CQ = { ok: ["q-ok", "Cut réussi"], miss: ["q-bad", "Cut raté"], waste: ["q-mid", "Cut dans le vent"] };
+    cuts.forEach((c, k) => { const [cls, lab] = CQ[c.q] || ["q-unk", "?"];
+      const tip = `${mmss(c.t)} · ${lab}${c.q === "ok" ? ` par ${c.who} (${c.what})` : c.q === "miss" ? ` : ${c.what} non interrompu` : ` : ${c.who} (${c.what}) n'a rien coupé`}${c.after ? " · après la coupe du pull" : ""}`;
+      o += `<span class="fdot cu${c.after ? " aft" : ""}" style="${dotAt(ri, cul[k], c.t)}" data-tip="${esc(tip)}"><i class="dot ${cls}"></i><span>${esc(c.who || "")}</span></span>`; }); ri++; }
+  if (car.length) { const late = t.late_s ?? 4;
+    car.forEach((c, k) => { const cls = { ok: "q-ok", mid: "q-mid", bad: "q-bad" }[c.q] || "q-unk";
+      const tip = `${mmss(c.t)} · porteur ${c.who} : ` + (c.q === "ok" ? `au bord en ${fr(c.reach_s)} s` : c.q === "mid" ? (c.reach_s != null ? `au bord en ${fr(c.reach_s)} s, trop tard (plus de ${late} s)` : `s'est rapproché du bord (${fr(c.moved_m)} m) sans l'atteindre`) : c.q === "bad" ? "n'a pas bougé vers le bord" : "position inconnue") + (c.dur_s != null ? ` · dispel après ${fr(c.dur_s)} s` : "");
+      o += `<span class="fdot ca" style="${dotAt(ri, cal[k], c.t)}" data-tip="${esc(tip)}"><i class="dot ${cls}"></i><span>${esc(c.who || "")}</span></span>`; }); ri++; }
   const off = disp.length ? 1 : 0;
-  if (off) disp.forEach((d, k) => { const st = `left:${px(sx(d.t))};top:${py(Y[mi + 1] + 5 + LH / 2 + dsl[k] * LH)}`, [cls, lab] = DQ[d.q] || ["q-unk", "position inconnue"];
+  if (off) disp.forEach((d, k) => { const st = dotAt(ri, dsl[k], d.t), [cls, lab] = DQ[d.q] || ["q-unk", "position inconnue"];
     o += `<span class="fdot ds" style="${st}" data-tip="${esc(`${mmss(d.t)} · dispel par ${d.by} — ${lab}${d.who ? ` (porteur : ${d.who})` : ""}`)}"><i class="dot ${cls}"></i><span>${esc(d.who || "")}</span></span>`; });
   /* erreurs : pas d'infobulle Wowhead (le nom de la ligne dit de quoi il s'agit), le détail de l'erreur au survol */
-  errs.forEach(([, list], r) => list.forEach((e, k) => { const st = `left:${px(sx(e.t))};top:${py(Y[mi + 1 + off + r] + 5 + LH / 2 + el[r][k] * LH)}`;
+  errs.forEach(([, list], r) => list.forEach((e, k) => { const st = dotAt(ri + off + r, el[r][k], e.t);
     o += `<span class="fdot err" style="${st}" data-tip="${esc(`${mmss(e.t)} — ${e.text}`)}"><i class="dot"></i><span>${esc(nameOf(e))}</span></span>`; }));
   const evs = [...phases.map(p => [p.start, "Phase", p.name]), ...t.events.map(e => [e.t, e.kind === "mort" ? "Mort" : "Erreur", e.text])].sort((a, b) => a[0] - b[0]);
   return `<details class="tlw"><summary>Pull ${t.pull} · ${esc(t.result)} · ${mmss(dur)} · ${deaths.length} mort(s) · ${t.events.length - deaths.length} erreur(s)</summary>
@@ -666,7 +684,7 @@ function friseAn(t) {
 /* Chronologie : un bloc repliable par pull (tous fermés sur la vue « tous les pulls » ; ouvert pour un pull choisi) */
 function anChrono(timelines, one) {
   if (!timelines.length) return muted("Pas de chronologie pour cette vue.");
-  const leg = `<div class="tlleg"><span><i class="k-ph"></i>Phases du combat</span><span><i class="k-bcd"></i>Icône = lancer d'une compétence du boss ; bande = durée de ses dégâts (rien si coup unique)</span><span><i class="k-dm"></i>Dégâts subis par le raid</span><span><b class="k-sk">✖</b>Mort</span><span><i class="k-q q-ok"></i>Dispel au bord (le cercle du dispel touche le mur)</span><span><i class="k-q q-mid"></i>Dispel trop tôt</span><span><i class="k-q q-bad"></i>Dispel beaucoup trop tôt</span><span><i class="k-er"></i>Erreur, une ligne par type</span><span><i class="k-cut"></i>Après la coupe du pull : non compté</span></div>`;
+  const leg = `<div class="tlleg"><span><i class="k-ph"></i>Phases du combat</span><span><i class="k-bcd"></i>Icône = lancer d'une compétence du boss ; bande = durée de ses dégâts (rien si coup unique)</span><span><i class="k-dm"></i>Dégâts subis par le raid</span><span><b class="k-sk">✖</b>Mort</span><span><i class="k-q q-ok"></i>Bien : cut réussi, porteur au bord vite, dispel au bord (le cercle touche le mur)</span><span><i class="k-q q-mid"></i>Moyen : cut dans le vent, porteur trop lent ou arrêté avant le bord, dispel trop tôt</span><span><i class="k-q q-bad"></i>Mauvais : cut raté, porteur immobile, dispel beaucoup trop tôt</span><span><i class="k-er"></i>Erreur, une ligne par type</span><span><i class="k-cut"></i>Après la coupe du pull : non compté</span></div>`;
   return card("Chronologie", leg + muted(`${one ? "" : "Un bloc par pull : ouvre celui qui t'intéresse. "}Survole le nom ou l'icône d'une compétence du boss, ou une mort, pour l'infobulle Wowhead du sort (pour une mort : le sort qui l'a tuée) ; survole un dispel ou une erreur pour le détail. Les événements proches sont décalés sur plusieurs lignes. « Déroulé détaillé » donne la liste complète.`)) +
     timelines.map(t => `<section class="card anpull">${friseAn(t).replace('<details class="tlw">', `<details class="tlw"${one ? " open" : ""}>`)}</section>`).join("");
 }
