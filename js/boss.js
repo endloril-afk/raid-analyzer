@@ -588,7 +588,7 @@ function analyseView(v, b) {
   const r = v.raid, x = r.extras || {};
   const spec = ANALYSE.find(a => a.test(b)), own = spec ? spec.panes(v, b) : [];
   /* écrans communs à tous les boss, puis Préparation tout à droite */
-  const labels = [...own.map(o => o[0]), "Joueurs", "Chronologie"], panes = [...own.map(o => o[1]), anPlayers(v), anChrono(x.timelines || [], v.key !== "all")];
+  const labels = [...own.map(o => o[0]), "Joueurs", "Chronologie"], panes = [...own.map(o => o[1]), anPlayers(v), anChrono(x.timelines || [], v.key !== "all", b)];
   if (x.prep_available) { labels.push("Préparation"); panes.push(prep(x.prep)); }
   return tabset(labels, panes);
 }
@@ -609,8 +609,9 @@ function anPlayers(v) {
 /* Frise d'un pull pour l'onglet Analyse : noms des compétences du boss et erreurs avec l'infobulle Wowhead ; les erreurs et
    les morts proches sont réparties sur plusieurs lignes (plus de noms superposés). Le dessin (SVG) garde les phases, les
    lancers et les dégâts ; noms, morts et erreurs sont des éléments HTML posés dessus (liens Wowhead). */
-function friseAn(t) {
+function friseAn(t, extra = []) {
   const W = frW(), dur = Math.max(1, t.duration_s), L = 200, Rr = W - 12, sx = s => L + Math.max(0, Math.min(s, dur)) / dur * (Rr - L);
+  const nearEnd = x => sx(x) > Rr - 110; /* nom à gauche du point près du bord droit (sinon coupé) */
   const phases = t.phases.filter(p => p.end > p.start && p.start < dur);
   const casts = t.boss.filter(c => c.t && c.t.length), deaths = t.events.filter(e => e.kind === "mort");
   const hasCuts = !!(t.cuts && t.cuts.length), hasCar = !!(t.carriers && t.carriers.length);
@@ -623,12 +624,16 @@ function friseAn(t) {
   const disp = (t.dispels || []).filter(d => d.t != null).sort((a, b) => a.t - b.t);
   const cuts = hasCuts ? [...t.cuts].sort((a, b) => a.t - b.t) : [], car = hasCar ? [...t.carriers].sort((a, b) => a.t - b.t) : [];
   const dl = lanes(deaths), el = errs.map(([, l]) => lanes(l)), dsl = lanes(disp), cul = lanes(cuts), cal = lanes(car);
+  const XR = (extra || []).filter(r => r.items && r.items.length).map(r => ({ ...r, items: [...r.items].sort((a, b) => a.t - b.t) })), xl = XR.map(r => lanes(r.items));
   const LH = 22, hP = n => 10 + Math.max(1, n) * LH;
   const errLbl = c => c === t.dispel_label ? "Porteur en retard" : "Erreur : " + c;
-  const rows = [["Phases", 26, "ph"], ...casts.map(c => [c.name, 26, "bc", c]), ["Dégâts subis (raid)", 46, "dm"], ["Morts", hP(Math.max(0, ...dl) + 1), "mo"],
+  /* BG : dégâts subis par le raid dessinés en fond derrière les compétences du boss (au lieu d'une ligne à part) */
+  const BG = !(typeof window !== "undefined" && window.RA_FRISE_BG === false);
+  const rows = [["Phases", 26, "ph"], ...casts.map(c => [c.name, BG ? 30 : 26, "bc", c]), ...(BG ? [] : [["Dégâts subis (raid)", 46, "dm"]]), ["Morts", hP(Math.max(0, ...dl) + 1), "mo"],
     ...(cuts.length ? [[`Cuts : ${t.cut_label || "interruptions"}`, hP(Math.max(0, ...cul) + 1), "cu", t]] : []),
     ...(car.length ? [[`Porteurs : ${t.dispel_label || "debuff"}`, hP(Math.max(0, ...cal) + 1), "ca", t]] : []),
-    ...(disp.length ? [[`Dispels : ${t.dispel_label || "debuff"}`, hP(Math.max(0, ...dsl) + 1), "ds", t]] : []), ...errs.map(([c, l], i) => [errLbl(c), hP(Math.max(0, ...el[i]) + 1), "er", l])];
+    ...(disp.length ? [[`Dispels : ${t.dispel_label || "debuff"}`, hP(Math.max(0, ...dsl) + 1), "ds", t]] : []),
+    ...XR.map((r, i) => [r.label, hP(Math.max(0, ...xl[i]) + 1), "xr", r]), ...errs.map(([c, l], i) => [errLbl(c), hP(Math.max(0, ...el[i]) + 1), "er", l])];
   let y = 4; const Y = rows.map(([, h]) => { const o = y; y += h; return o; }); const H = y + 24, bottom = y;
   const px = v => (v / W * 100).toFixed(3) + "%", py = v => (v / H * 100).toFixed(3) + "%";
   let g = `<svg class="frise" viewBox="0 0 ${W} ${H}">`;
@@ -640,15 +645,18 @@ function friseAn(t) {
   casts.forEach((c, i) => c.t.forEach((x, k) => { if (x > dur) return; const d = c.d && c.d[k];
     if (Array.isArray(d)) g += `<g class="bcd"><title>${esc(c.name)} : dégâts de ${mmss(d[0])} à ${mmss(d[1])} (${Math.round(d[1] - d[0])} s)</title><rect x="${sx(d[0])}" y="${Y[i + 1] + 7}" width="${Math.max(3, sx(d[1]) - sx(d[0]))}" height="12" rx="3"/></g>`;
     if (!c.icon) g += `<g class="bc"><title>${esc(c.name)} à ${mmss(x)}</title><rect x="${sx(x)}" y="${Y[i + 1] + 6}" width="6" height="14" rx="2"/></g>`; }));
-  const di = casts.length + 1, dy = Y[di], dh = 46, v = (t.raid_damage && t.raid_damage.values) || [], mx = Math.max(1, ...v), bin = (t.raid_damage && t.raid_damage.bin_s) || 1;
-  if (v.length) g += `<path class="rda2" d="M${L},${dy + dh}` + v.map((d, k) => `L${sx(k * bin).toFixed(1)},${(dy + dh - d / mx * (dh - 6)).toFixed(1)}`).join("") + `L${sx((v.length - 1) * bin)},${dy + dh}Z"/>`;
+  const di = casts.length + 1, v = (t.raid_damage && t.raid_damage.values) || [], mx = Math.max(1, ...v), bin = (t.raid_damage && t.raid_damage.bin_s) || 1;
+  const dy = BG ? Y[1] : Y[di], dh = BG ? (Y[di] - Y[1]) : 46;
+  if (v.length) { const pth = `M${L},${dy + dh}` + v.map((d, k) => `L${sx(k * bin).toFixed(1)},${(dy + dh - d / mx * (dh - 6)).toFixed(1)}`).join("") + `L${sx((v.length - 1) * bin)},${dy + dh}Z`;
+    g = BG ? g.replace(/^(<svg[^>]*>)/, `$1<path class="rdbg" d="${pth}"><title>Dégâts subis par le raid</title></path>`) : g + `<path class="rda2" d="${pth}"/>`; }
   if (t.cut_s != null && t.cut_s < dur) g += `<g><title>Après la coupe (${esc(t.cut_reason)}) : non compté dans l'analyse</title><rect x="${sx(t.cut_s)}" y="8" width="${Rr - sx(t.cut_s)}" height="${bottom - 8}" class="cutz"/></g>`;
   g += "</svg>";
   /* calque HTML : noms des lignes (Wowhead pour les compétences et les erreurs), morts et erreurs */
   const wh = (id, inner, cls, style, title) => id ? `<a class="${cls}" href="https://www.wowhead.com/fr/spell=${id}" target="_blank" rel="noopener" style="${style}">${inner}</a>` : `<span class="${cls}" style="${style}"${title ? ` title="${esc(title)}"` : ""}>${inner}</span>`;
   let o = "";
   rows.forEach(([lbl, h, kind, extra], i) => {
-    const st = `top:${py(Y[i] + (["mo", "er", "ds", "cu", "ca"].includes(kind) ? 5 + LH / 2 : h / 2))};width:${px(L - 10)}`;
+    const st = `top:${py(Y[i] + (["mo", "er", "ds", "cu", "ca", "xr"].includes(kind) ? 5 + LH / 2 : h / 2))};width:${px(L - 10)}`;
+    if (kind === "xr") { o += wh(extra.id, `${extra.icon ? img(extra.icon, 16) : ""}<span>${esc(lbl)}</span>`, "frl", st); return; }
     if (kind === "bc") o += wh(extra.id, `${extra.icon ? img(extra.icon, 16) : ""}<span>${esc(lbl)}</span>`, "frl", st);
     else if (kind === "ds") o += wh(extra.id, `${extra.icon ? img(extra.icon, 16) : ""}<span>${esc(lbl)}</span>`, "frl", st);
     else if (kind === "er") { const id = (extra.find(e => e.id) || {}).id, ic = (extra.find(e => e.icon) || {}).icon; o += wh(id, `${ic ? img(ic, 16) : ""}<span>${esc(lbl)}</span>`, "frl", st); }
@@ -657,36 +665,68 @@ function friseAn(t) {
   /* icône du sort à chaque lancer (infobulle Wowhead) */
   casts.forEach((c, i) => { if (!c.icon) return; c.t.forEach((x, k) => { if (x > dur) return; const d = c.d && c.d[k];
     o += wh(c.id, img(c.icon, 16), "fcast", `left:${px(sx(x))};top:${py(Y[i + 1] + 13)}`, `${c.name} à ${mmss(x)}${Array.isArray(d) ? ` · dégâts pendant ${Math.round(d[1] - d[0])} s` : d === 0 ? " · coup unique" : ""}`); }); });
-  const mi = di + 1;
+  const mi = rows.findIndex(r => r[2] === "mo");
   deaths.forEach((d, k) => { const st = `left:${px(sx(d.t))};top:${py(Y[mi] + 5 + LH / 2 + dl[k] * LH)}`;
-    o += wh(d.id, `<b class="sk${d.bad ? " bad" : ""}">✖</b><span>${esc(nameOf(d))}</span>`, "fdot mort", st, `${mmss(d.t)} — Mort : ${d.text}`); });
+    o += wh(d.id, `<b class="sk${d.bad ? " bad" : ""}">✖</b><span>${esc(nameOf(d))}</span>`, "fdot mort" + (nearEnd(d.t) ? " lft" : ""), st, `${mmss(d.t)} — Mort : ${d.text}`); });
   /* lignes optionnelles dans l'ordre : cuts, porteurs, dispels, puis les erreurs */
   let ri = mi + 1;
   const dotAt = (row, lane, x) => `left:${px(sx(x))};top:${py(Y[row] + 5 + LH / 2 + lane * LH)}`;
   if (cuts.length) { const CQ = { ok: ["q-ok", "Cut réussi"], miss: ["q-bad", "Cut raté"], waste: ["q-mid", "Cut dans le vent"] };
     cuts.forEach((c, k) => { const [cls, lab] = CQ[c.q] || ["q-unk", "?"];
       const tip = `${mmss(c.t)} · ${lab}${c.q === "ok" ? ` par ${c.who} (${c.what})` : c.q === "miss" ? ` : ${c.what} non interrompu` : ` : ${c.who} (${c.what}) n'a rien coupé`}${c.after ? " · après la coupe du pull" : ""}`;
-      o += `<span class="fdot cu${c.after ? " aft" : ""}" style="${dotAt(ri, cul[k], c.t)}" data-tip="${esc(tip)}"><i class="dot ${cls}"></i><span>${esc(c.who || "")}</span></span>`; }); ri++; }
+      o += `<span class="fdot cu${c.after ? " aft" : ""}${nearEnd(c.t) ? " lft" : ""}" style="${dotAt(ri, cul[k], c.t)}" data-tip="${esc(tip)}"><i class="dot ${cls}"></i><span>${esc(c.who || "")}</span></span>`; }); ri++; }
   if (car.length) { const late = t.late_s ?? 4;
     car.forEach((c, k) => { const cls = { ok: "q-ok", mid: "q-mid", bad: "q-bad" }[c.q] || "q-unk";
       const tip = `${mmss(c.t)} · porteur ${c.who} : ` + (c.q === "ok" ? `au bord en ${fr(c.reach_s)} s` : c.q === "mid" ? (c.reach_s != null ? `au bord en ${fr(c.reach_s)} s, trop tard (plus de ${late} s)` : `s'est rapproché du bord (${fr(c.moved_m)} m) sans l'atteindre`) : c.q === "bad" ? "n'a pas bougé vers le bord" : "position inconnue") + (c.dur_s != null ? ` · dispel après ${fr(c.dur_s)} s` : "");
-      o += `<span class="fdot ca" style="${dotAt(ri, cal[k], c.t)}" data-tip="${esc(tip)}"><i class="dot ${cls}"></i><span>${esc(c.who || "")}</span></span>`; }); ri++; }
+      o += `<span class="fdot ca${nearEnd(c.t) ? " lft" : ""}" style="${dotAt(ri, cal[k], c.t)}" data-tip="${esc(tip)}"><i class="dot ${cls}"></i><span>${esc(c.who || "")}</span></span>`; }); ri++; }
   const off = disp.length ? 1 : 0;
   if (off) disp.forEach((d, k) => { const st = dotAt(ri, dsl[k], d.t), [cls, lab] = DQ[d.q] || ["q-unk", "position inconnue"];
-    o += `<span class="fdot ds" style="${st}" data-tip="${esc(`${mmss(d.t)} · dispel par ${d.by} — ${lab}${d.who ? ` (porteur : ${d.who})` : ""}`)}"><i class="dot ${cls}"></i><span>${esc(d.who || "")}</span></span>`; });
+    o += `<span class="fdot ds${nearEnd(d.t) ? " lft" : ""}" style="${st}" data-tip="${esc(`${mmss(d.t)} · dispel par ${d.by} — ${lab}${d.who ? ` (porteur : ${d.who})` : ""}`)}"><i class="dot ${cls}"></i><span>${esc(d.who || "")}</span></span>`; });
+  /* lignes propres au boss (analyse détaillée : orbes, Plague Froth, Serpent's Fury…) */
+  const XQ = { ok: "q-ok", mid: "q-mid", bad: "q-bad" };
+  XR.forEach((r, j) => { r.items.forEach((it, k) => { o += `<span class="fdot xr${it.after ? " aft" : ""}${nearEnd(it.t) ? " lft" : ""}" style="${dotAt(ri + off + j, xl[j][k], it.t)}" data-tip="${esc(`${mmss(it.t)} · ${it.tip || ""}${it.after ? " · après la coupe du pull" : ""}`)}"><i class="dot ${XQ[it.q] || "q-unk"}"></i><span>${esc(it.who || "")}</span></span>`; }); });
+  const offX = XR.length;
   /* erreurs : pas d'infobulle Wowhead (le nom de la ligne dit de quoi il s'agit), le détail de l'erreur au survol */
-  errs.forEach(([, list], r) => list.forEach((e, k) => { const st = dotAt(ri + off + r, el[r][k], e.t);
-    o += `<span class="fdot err" style="${st}" data-tip="${esc(`${mmss(e.t)} — ${e.text}`)}"><i class="dot"></i><span>${esc(nameOf(e))}</span></span>`; }));
+  errs.forEach(([, list], r) => list.forEach((e, k) => { const st = dotAt(ri + off + offX + r, el[r][k], e.t);
+    o += `<span class="fdot err${nearEnd(e.t) ? " lft" : ""}" style="${st}" data-tip="${esc(`${mmss(e.t)} — ${e.text}`)}"><i class="dot"></i><span>${esc(nameOf(e))}</span></span>`; }));
   const evs = [...phases.map(p => [p.start, "Phase", p.name]), ...t.events.map(e => [e.t, e.kind === "mort" ? "Mort" : "Erreur", e.text])].sort((a, b) => a[0] - b[0]);
   return `<details class="tlw"><summary>Pull ${t.pull} · ${esc(t.result)} · ${mmss(dur)} · ${deaths.length} mort(s) · ${t.events.length - deaths.length} erreur(s)</summary>
     <div class="frisew frw2">${g}<div class="frov">${o}</div></div><details class="evlist"><summary>Déroulé détaillé (${evs.length} événements)</summary>${table([{ l: "Temps", num: 1 }, { l: "Type" }, { l: "Détail" }], evs.map(e => [{ h: mmss(e[0]), v: e[0] }, e[1], e[2]]))}</details></details>`;
 }
+/* Lignes de la chronologie propres à chaque boss, tirées de son analyse détaillée (boss.deep) : un point par événement,
+   vert = bien, orange = moyen, rouge = mauvais ; le détail au survol. */
+function deepRows(b, pull) {
+  const D = (b && b.deep) || {}, R = [], P = x => x.pull === pull;
+  const names = a => (a || []).join(", ");
+  if (D.nymrissa) { const ny = D.nymrissa;
+    R.push({ label: "Frost Orb", items: (ny.soaks || []).filter(P).map(x => ({ t: x.time_s, who: names(x.soakers), after: x.after_cut,
+      q: (x.unauthorized || []).length || x.state === "heavy" || x.state === "heavy_cut" ? "bad" : x.danger ? "mid" : x.state === "dot" ? "ok" : "mid",
+      tip: `orbe prise par ${names(x.soakers)} — ${x.rel || ""}${(x.unauthorized || []).length ? ` · non autorisé : ${names(x.unauthorized)}` : ""}${x.danger ? ` · dangereuse : ${(x.low || []).map(l => `${l.player} ${l.pct} %`).join(", ")}` : ""}${x.burst_hit ? ` · Frost Burst sur ${x.burst_hit} joueur(s)` : ""}` })) });
+    R.push({ label: "Jet d'eau pendant l'orbe", items: (ny.tank_overlaps || []).filter(P).map(x => ({ t: x.time_s, who: x.player, after: x.after_cut, q: x.died ? "bad" : "mid", tip: `${x.player} touché par un jet d'eau pendant son orbe${x.min_hp != null ? ` · vie au plus bas ${x.min_hp} %` : ""}${x.died ? " · mort" : ""}` })) });
+    R.push({ label: "Switchs peu rentables", items: (ny.switches || []).filter(P).filter(x => x.poor).map(x => ({ t: x.time_s, who: x.player, after: x.after_cut, q: "mid", tip: `${x.player} : add à ${x.dist_m ?? "?"} m du boss, ${short(x.add_damage)} sur l'add contre ${short(x.boss_lost)} perdus sur le boss` })) });
+  }
+  if (D.vashnik) { const vk = D.vashnik;
+    R.push({ label: "Plague Froth", items: (vk.froth || []).filter(P).map(x => ({ t: x.burst_s, who: (x.carriers || []).map(c => c.player).join(", "), after: x.after_cut,
+      q: x.goal == null ? "unk" : x.enough ? "ok" : "bad", tip: `Plague Froth ${x.wave} : ${x.totems_destroyed}/${x.totems_alive} totems détruits${x.goal != null ? `, objectif ${x.goal}` : x.not_judged ? ` (${x.not_judged})` : ""}` })) });
+    R.push({ label: "Imbibe (totems)", items: (vk.totems || []).filter(P).filter(x => x.imbibe_s != null).map(x => ({ t: x.imbibe_s, who: x.exploded ? `${x.exploded} explosent` : "", q: x.exploded ? "bad" : "ok", tip: `Imbibe ${x.wave} : ${x.exploded ? `${x.exploded} totem(s) encore en vie explosent` : "tous les totems détruits"}` })) });
+    R.push({ label: "Dispels Exploding Infection", items: (vk.dispel_waves || []).filter(P).flatMap(w => { const ds = [...(w.dispels || [])].sort((a, c) => a.time_s - c.time_s);
+      return ds.map((d, i) => ({ t: d.time_s, who: d.healer, after: w.after_cut, q: i && d.time_s - ds[i - 1].time_s < 3 ? "mid" : "ok", tip: `vague ${w.wave} : dispel par ${d.healer} sur ${d.target}${i && d.time_s - ds[i - 1].time_s < 3 ? " · moins de 3 s après le précédent (un par un)" : ""}` })); }) });
+    R.push({ label: "Add sous CC frappé", items: (vk.cc_hits || []).filter(P).map(x => ({ t: x.time_s, who: x.player, q: "bad", tip: `${x.player} a frappé ${x.add} sous ${x.cc}${x.cc_by ? ` (de ${x.cc_by})` : ""}` })) });
+  }
+  if (D.sszorak) { const sz = D.sszorak;
+    R.push({ label: "Serpent's Fury", items: (sz.fury || []).filter(P).filter(x => x.pop_s != null).map(x => ({ t: x.pop_s, who: x.carrier, after: x.after_cut, q: x.verdict === "ok" ? "ok" : x.enough === false ? "bad" : "mid", tip: `porteur ${x.carrier} · ${x.soakers} soakers · ${x.verdict}` })) });
+    R.push({ label: "Crosswinds", items: (sz.crosswinds || []).filter(P).map(x => ({ t: x.knock_s ?? x.t_s, who: names(x.fell), after: x.after_cut, q: (x.died || []).length ? "bad" : (x.fell || []).length ? "mid" : "ok", tip: `série ${x.set}${(x.fell || []).length ? ` · tombés : ${names(x.fell)}` : " · personne n'est tombé"}${(x.died || []).length ? ` · morts : ${names(x.died)}` : ""}` })) });
+    R.push({ label: "Mutilate", items: (sz.mutilate || []).filter(P).map(x => ({ t: x.t_s, who: x.tank, after: x.after_cut, q: (x.died || []).length ? "bad" : x.low ? "mid" : "ok", tip: `${x.count} soakers${x.low ? " (trop peu)" : ""}${(x.again || []).length ? ` · deux fois de suite : ${names(x.again)}` : ""}${(x.died || []).length ? ` · morts : ${names(x.died)}` : ""}` })) });
+    R.push({ label: "Kystes", items: (sz.cysts || []).filter(P).map(x => ({ t: x.t_s, who: x.placed_by || "", after: x.after_cut, q: x.during_int ? "ok" : "bad", tip: `kyste ${x.n} : ${x.hit} joueur(s) touché(s)${x.during_int ? " pendant l'intermission" : " hors intermission"}${x.placed_by ? ` · posé par ${x.placed_by}` : ""}` })) });
+  }
+  return R;
+}
 /* Chronologie : un bloc repliable par pull (tous fermés sur la vue « tous les pulls » ; ouvert pour un pull choisi) */
-function anChrono(timelines, one) {
+function anChrono(timelines, one, b = null) {
   if (!timelines.length) return muted("Pas de chronologie pour cette vue.");
-  const leg = `<div class="tlleg"><span><i class="k-ph"></i>Phases du combat</span><span><i class="k-bcd"></i>Icône = lancer d'une compétence du boss ; bande = durée de ses dégâts (rien si coup unique)</span><span><i class="k-dm"></i>Dégâts subis par le raid</span><span><b class="k-sk">✖</b>Mort</span><span><i class="k-q q-ok"></i>Bien : cut réussi, porteur au bord vite, dispel au bord (le cercle touche le mur)</span><span><i class="k-q q-mid"></i>Moyen : cut dans le vent, porteur trop lent ou arrêté avant le bord, dispel trop tôt</span><span><i class="k-q q-bad"></i>Mauvais : cut raté, porteur immobile, dispel beaucoup trop tôt</span><span><i class="k-er"></i>Erreur, une ligne par type</span><span><i class="k-cut"></i>Après la coupe du pull : non compté</span></div>`;
+  const leg = `<div class="tlleg"><span><i class="k-ph"></i>Phases du combat</span><span><i class="k-bcd"></i>Icône = lancer d'une compétence du boss ; bande = durée de ses dégâts (rien si coup unique)</span><span><i class="k-dm"></i>Dégâts subis par le raid</span><span><b class="k-sk">✖</b>Mort</span><span><i class="k-q q-ok"></i>Bien : cut réussi, porteur au bord vite, dispel au bord (le cercle touche le mur)</span><span><i class="k-q q-mid"></i>Moyen : cut dans le vent, porteur trop lent ou arrêté avant le bord, dispel trop tôt</span><span><i class="k-q q-bad"></i>Mauvais : cut raté, porteur immobile, dispel beaucoup trop tôt</span><span>Lignes propres au boss (orbes, Plague Froth, Serpent's Fury…) : même code couleur, détail au survol</span><span><i class="k-er"></i>Erreur, une ligne par type</span><span><i class="k-cut"></i>Après la coupe du pull : non compté</span></div>`;
   return card("Chronologie", leg + muted(`${one ? "" : "Un bloc par pull : ouvre celui qui t'intéresse. "}Survole le nom ou l'icône d'une compétence du boss, ou une mort, pour l'infobulle Wowhead du sort (pour une mort : le sort qui l'a tuée) ; survole un dispel ou une erreur pour le détail. Les événements proches sont décalés sur plusieurs lignes. « Déroulé détaillé » donne la liste complète.`)) +
-    timelines.map(t => `<section class="card anpull">${friseAn(t).replace('<details class="tlw">', `<details class="tlw"${one ? " open" : ""}>`)}</section>`).join("");
+    timelines.map(t => `<section class="card anpull">${friseAn(t, deepRows(b, t.pull)).replace('<details class="tlw">', `<details class="tlw"${one ? " open" : ""}>`)}</section>`).join("");
 }
 
 /* Rendu d'une vue d'un pull à la demande : el = <div class="view" data-lazy="raid|gp">, dans la page du boss */
