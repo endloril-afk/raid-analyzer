@@ -5,12 +5,12 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": "Exaltés au Cimetière",
   "server": "Garona",
-  "next_update": null,
+  "next_update": 1792591180179,
   "zone": "The Venomous Abyss",
   "raid_date": 1792435634241,
-  "generated": 1792508166124,
+  "generated": 1792590280185,
   "pulls": 13,
-  "note": 7.5,
+  "note": 9,
   "bosses": [
    {
     "name": "Nek'zali the Soulcoiler",
@@ -626,9 +626,9 @@ window.RAPPORTS_INDEX = [
     "deaths": 1
    }
   ],
-  "complete": true,
-  "auto": false,
-  "extension_version": "0.40.49",
+  "complete": false,
+  "auto": true,
+  "extension_version": "0.40.54",
   "file": "rapports/Raid_2026-10-19_The_Venomous_Abyss_Z1vNp7AGR4XYdqPF.html",
   "json": "rapports/Raid_2026-10-19_The_Venomous_Abyss_Z1vNp7AGR4XYdqPF.json"
  },
