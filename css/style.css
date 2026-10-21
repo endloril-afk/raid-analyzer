@@ -92,6 +92,7 @@ ul.plain li{padding:3px 0}
 .main>.tnav button{padding:12px 18px}
 .viewbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
 .viewbar select{font:inherit;padding:6px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--fg);min-width:260px}
+.viewbar[hidden]{display:none}
 table.flag{margin-top:4px}
 table.flag th,table.flag td{white-space:normal;padding:6px 6px}
 table.flag td:last-child{min-width:0}
@@ -585,3 +586,9 @@ table.mini{border-collapse:collapse}table.mini td{padding:4px 6px;border-bottom:
 .tl .ev.ok rect{stroke:#8a8fa3;stroke-opacity:.6}
 .szl{font-size:11px;fill:var(--muted)}.szt{display:block;margin:6px 0}
 .errl{margin:4px 0 10px;padding-left:18px}.errl li{margin:2px 0}
+/* onglet Analyse : un bloc par pull dans la chronologie */
+.anpull{padding:10px 18px}
+.anpull .tlw{border-top:0;padding:0}
+.anpull .tlw>summary{font-size:14px;font-weight:600;padding:4px 0}
+.anplayers td:nth-child(5){white-space:normal;min-width:200px}
+.anplayers th{white-space:normal}
