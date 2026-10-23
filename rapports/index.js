@@ -8,7 +8,7 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792435634241,
-  "generated": 1792757243829,
+  "generated": 1792757243899,
   "pulls": 13,
   "note": 7.5,
   "bosses": [
@@ -166,7 +166,7 @@ window.RAPPORTS_INDEX = [
       "class": "Paladin",
       "role": "healer",
       "sub": null,
-      "note": 8.3,
+      "note": 8.2,
       "pulls": 3
      },
      {
@@ -576,7 +576,7 @@ window.RAPPORTS_INDEX = [
     "class": "Paladin",
     "role": "healer",
     "sub": null,
-    "note": 7.8,
+    "note": 7.7,
     "pulls": 13,
     "deaths": 2
    },
