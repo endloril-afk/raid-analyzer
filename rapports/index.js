@@ -5,12 +5,12 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": "Exaltés au Cimetière",
   "server": "Garona",
-  "next_update": 1792620186516,
+  "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792435634241,
-  "generated": 1792619286518,
+  "generated": 1792757243829,
   "pulls": 13,
-  "note": 7.6,
+  "note": 7.5,
   "bosses": [
    {
     "name": "Nek'zali the Soulcoiler",
@@ -263,14 +263,6 @@ window.RAPPORTS_INDEX = [
     "pulls": 10,
     "players": [
      {
-      "name": "Endloril",
-      "class": "Druid",
-      "role": "healer",
-      "sub": null,
-      "note": 8.6,
-      "pulls": 10
-     },
-     {
       "name": "Môy",
       "class": "Paladin",
       "role": "healer",
@@ -279,27 +271,27 @@ window.RAPPORTS_INDEX = [
       "pulls": 10
      },
      {
+      "name": "Endloril",
+      "class": "Druid",
+      "role": "healer",
+      "sub": null,
+      "note": 8.2,
+      "pulls": 10
+     },
+     {
       "name": "Shrakle",
       "class": "Evoker",
       "role": "healer",
       "sub": null,
-      "note": 8,
+      "note": 7.8,
       "pulls": 10
      },
      {
-      "name": "Snøz",
-      "class": "Monk",
+      "name": "Pattotomate",
+      "class": "DeathKnight",
       "role": "tank",
       "sub": null,
       "note": 5.9,
-      "pulls": 10
-     },
-     {
-      "name": "Luluisback",
-      "class": "Hunter",
-      "role": "dps",
-      "sub": "melee",
-      "note": 5.8,
       "pulls": 10
      },
      {
@@ -307,7 +299,7 @@ window.RAPPORTS_INDEX = [
       "class": "Warrior",
       "role": "dps",
       "sub": "melee",
-      "note": 6.7,
+      "note": 6.2,
       "pulls": 10
      },
      {
@@ -319,43 +311,19 @@ window.RAPPORTS_INDEX = [
       "pulls": 10
      },
      {
-      "name": "Jeangrip",
-      "class": "DeathKnight",
-      "role": "dps",
-      "sub": "melee",
-      "note": 6.1,
-      "pulls": 10
-     },
-     {
-      "name": "Lücîøle",
-      "class": "Rogue",
-      "role": "dps",
-      "sub": "melee",
-      "note": 7.6,
-      "pulls": 10
-     },
-     {
-      "name": "Darlkira",
-      "class": "DemonHunter",
-      "role": "dps",
-      "sub": "ranged",
-      "note": 8.6,
-      "pulls": 10
-     },
-     {
-      "name": "Aelminster",
-      "class": "Mage",
-      "role": "dps",
-      "sub": "ranged",
-      "note": 8.2,
-      "pulls": 10
-     },
-     {
-      "name": "Sylvaenya",
-      "class": "Druid",
-      "role": "healer",
+      "name": "Snøz",
+      "class": "Monk",
+      "role": "tank",
       "sub": null,
-      "note": 8.6,
+      "note": 6,
+      "pulls": 10
+     },
+     {
+      "name": "Luluisback",
+      "class": "Hunter",
+      "role": "dps",
+      "sub": "melee",
+      "note": 6,
       "pulls": 10
      },
      {
@@ -363,14 +331,6 @@ window.RAPPORTS_INDEX = [
       "class": "Hunter",
       "role": "dps",
       "sub": "ranged",
-      "note": 6.9,
-      "pulls": 10
-     },
-     {
-      "name": "Pattotomate",
-      "class": "DeathKnight",
-      "role": "tank",
-      "sub": null,
       "note": 6.3,
       "pulls": 10
      },
@@ -379,7 +339,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.7,
+      "note": 9,
       "pulls": 10
      },
      {
@@ -395,7 +355,7 @@ window.RAPPORTS_INDEX = [
       "class": "Mage",
       "role": "dps",
       "sub": "ranged",
-      "note": 7.6,
+      "note": 7.5,
       "pulls": 10
      },
      {
@@ -403,7 +363,7 @@ window.RAPPORTS_INDEX = [
       "class": "Hunter",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.4,
+      "note": 8,
       "pulls": 10
      },
      {
@@ -411,7 +371,39 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "dps",
       "sub": "ranged",
-      "note": 7,
+      "note": 7.9,
+      "pulls": 10
+     },
+     {
+      "name": "Jeangrip",
+      "class": "DeathKnight",
+      "role": "dps",
+      "sub": "melee",
+      "note": 5.9,
+      "pulls": 10
+     },
+     {
+      "name": "Lücîøle",
+      "class": "Rogue",
+      "role": "dps",
+      "sub": "melee",
+      "note": 7.6,
+      "pulls": 10
+     },
+     {
+      "name": "Darlkira",
+      "class": "DemonHunter",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 8.8,
+      "pulls": 10
+     },
+     {
+      "name": "Aelminster",
+      "class": "Mage",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 7.9,
       "pulls": 10
      },
      {
@@ -419,7 +411,15 @@ window.RAPPORTS_INDEX = [
       "class": "Paladin",
       "role": "dps",
       "sub": "melee",
-      "note": 7.7,
+      "note": 8.4,
+      "pulls": 10
+     },
+     {
+      "name": "Sylvaenya",
+      "class": "Druid",
+      "role": "healer",
+      "sub": null,
+      "note": 8,
       "pulls": 10
      }
     ]
@@ -450,7 +450,7 @@ window.RAPPORTS_INDEX = [
     "class": "Hunter",
     "role": "dps",
     "sub": "ranged",
-    "note": 6.9,
+    "note": 6.5,
     "pulls": 13,
     "deaths": 4
    },
@@ -459,7 +459,7 @@ window.RAPPORTS_INDEX = [
     "class": "Paladin",
     "role": "dps",
     "sub": "melee",
-    "note": 7.8,
+    "note": 8.3,
     "pulls": 13,
     "deaths": 1
    },
@@ -468,7 +468,7 @@ window.RAPPORTS_INDEX = [
     "class": "Mage",
     "role": "dps",
     "sub": "ranged",
-    "note": 8,
+    "note": 7.8,
     "pulls": 13,
     "deaths": 1
    },
@@ -477,7 +477,7 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "healer",
     "sub": null,
-    "note": 8.5,
+    "note": 8.2,
     "pulls": 13,
     "deaths": 2
    },
@@ -486,7 +486,7 @@ window.RAPPORTS_INDEX = [
     "class": "DemonHunter",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.6,
+    "note": 8.8,
     "pulls": 13,
     "deaths": 1
    },
@@ -513,7 +513,7 @@ window.RAPPORTS_INDEX = [
     "class": "Hunter",
     "role": "dps",
     "sub": "melee",
-    "note": 6.3,
+    "note": 6.5,
     "pulls": 13,
     "deaths": 5
    },
@@ -522,7 +522,7 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.7,
+    "note": 8.9,
     "pulls": 13,
     "deaths": 4
    },
@@ -531,7 +531,7 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "healer",
     "sub": null,
-    "note": 8,
+    "note": 7.6,
     "pulls": 13,
     "deaths": 2
    },
@@ -540,7 +540,7 @@ window.RAPPORTS_INDEX = [
     "class": "Warrior",
     "role": "dps",
     "sub": "melee",
-    "note": 7.1,
+    "note": 6.7,
     "pulls": 13,
     "deaths": 3
    },
@@ -549,7 +549,7 @@ window.RAPPORTS_INDEX = [
     "class": "Evoker",
     "role": "healer",
     "sub": null,
-    "note": 8,
+    "note": 7.9,
     "pulls": 13,
     "deaths": 1
    },
@@ -558,7 +558,7 @@ window.RAPPORTS_INDEX = [
     "class": "Monk",
     "role": "tank",
     "sub": null,
-    "note": 6.1,
+    "note": 6.2,
     "pulls": 13,
     "deaths": 5
    },
@@ -567,7 +567,7 @@ window.RAPPORTS_INDEX = [
     "class": "Mage",
     "role": "dps",
     "sub": "ranged",
-    "note": 7.7,
+    "note": 7.6,
     "pulls": 13,
     "deaths": 2
    },
@@ -585,7 +585,7 @@ window.RAPPORTS_INDEX = [
     "class": "DeathKnight",
     "role": "dps",
     "sub": "melee",
-    "note": 6.1,
+    "note": 5.9,
     "pulls": 13,
     "deaths": 1
    },
@@ -594,7 +594,7 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "healer",
     "sub": null,
-    "note": 7.4,
+    "note": 8.1,
     "pulls": 13,
     "deaths": 0
    },
@@ -603,7 +603,7 @@ window.RAPPORTS_INDEX = [
     "class": "DeathKnight",
     "role": "tank",
     "sub": null,
-    "note": 6.8,
+    "note": 6.5,
     "pulls": 13,
     "deaths": 3
    },
@@ -612,7 +612,7 @@ window.RAPPORTS_INDEX = [
     "class": "Hunter",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.4,
+    "note": 8.1,
     "pulls": 11,
     "deaths": 1
    },
@@ -626,8 +626,8 @@ window.RAPPORTS_INDEX = [
     "deaths": 1
    }
   ],
-  "complete": false,
-  "auto": true,
+  "complete": true,
+  "auto": false,
   "extension_version": "0.40.66",
   "file": "rapports/Raid_2026-10-19_The_Venomous_Abyss_Z1vNp7AGR4XYdqPF.html",
   "json": "rapports/Raid_2026-10-19_The_Venomous_Abyss_Z1vNp7AGR4XYdqPF.json"
