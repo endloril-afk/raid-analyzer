@@ -8,7 +8,7 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792608753141,
-  "generated": 1793007885365,
+  "generated": 1793007931401,
   "pulls": 19,
   "note": 7.6,
   "bosses": [
@@ -178,7 +178,7 @@ window.RAPPORTS_INDEX = [
       "class": "DemonHunter",
       "role": "tank",
       "sub": null,
-      "note": 7.8,
+      "note": 8,
       "pulls": 9
      },
      {
@@ -379,7 +379,7 @@ window.RAPPORTS_INDEX = [
       "class": "Shaman",
       "role": "dps",
       "sub": "ranged",
-      "note": 7.1,
+      "note": 6.8,
       "pulls": 10
      },
      {
@@ -558,7 +558,7 @@ window.RAPPORTS_INDEX = [
     "class": "Shaman",
     "role": "dps",
     "sub": "ranged",
-    "note": 7.5,
+    "note": 7.3,
     "pulls": 19,
     "deaths": 2
    },
@@ -567,7 +567,7 @@ window.RAPPORTS_INDEX = [
     "class": "DemonHunter",
     "role": "tank",
     "sub": null,
-    "note": 7.8,
+    "note": 8,
     "pulls": 9,
     "deaths": 1
    },
