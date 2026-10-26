@@ -4,12 +4,12 @@
   "title": "The Venomous Abyss",
   "guild": "Exaltés au Cimetière",
   "server": "Garona",
-  "next_update": 1793054247755,
+  "next_update": 1793054890856,
   "zone": "The Venomous Abyss",
   "raid_date": 1793044121863,
-  "generated": 1793053647758,
-  "pulls": 32,
-  "note": 7.4,
+  "generated": 1793054290859,
+  "pulls": 33,
+  "note": 7.3,
   "bosses": [
    {
     "name": "Nek'zali the Soulcoiler",
@@ -58,15 +58,15 @@
     "tried": true,
     "kills": 0,
     "best_pct": 70,
-    "pulls": 32,
+    "pulls": 33,
     "players": [
      {
       "name": "Endloril",
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 6.5,
-      "pulls": 32
+      "note": 6.4,
+      "pulls": 33
      },
      {
       "name": "Continum",
@@ -74,7 +74,7 @@
       "role": "dps",
       "sub": "melee",
       "note": 7.1,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Sylvaenya",
@@ -82,7 +82,7 @@
       "role": "healer",
       "sub": null,
       "note": 7,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Höjö",
@@ -90,15 +90,15 @@
       "role": "dps",
       "sub": "melee",
       "note": 6.2,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Môy",
       "class": "Paladin",
       "role": "healer",
       "sub": null,
-      "note": 5.4,
-      "pulls": 32
+      "note": 5.2,
+      "pulls": 33
      },
      {
       "name": "Luluisback",
@@ -106,7 +106,15 @@
       "role": "dps",
       "sub": "melee",
       "note": 7.9,
-      "pulls": 32
+      "pulls": 33
+     },
+     {
+      "name": "Dyâlise",
+      "class": "Paladin",
+      "role": "dps",
+      "sub": "melee",
+      "note": 8.4,
+      "pulls": 33
      },
      {
       "name": "Absoludrÿ",
@@ -114,7 +122,7 @@
       "role": "dps",
       "sub": "ranged",
       "note": 7.3,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Lauenat",
@@ -122,15 +130,7 @@
       "role": "dps",
       "sub": "ranged",
       "note": 9.2,
-      "pulls": 32
-     },
-     {
-      "name": "Dyâlise",
-      "class": "Paladin",
-      "role": "dps",
-      "sub": "melee",
-      "note": 8.5,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Darlkira",
@@ -138,7 +138,7 @@
       "role": "dps",
       "sub": "ranged",
       "note": 7,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Yörr",
@@ -146,7 +146,7 @@
       "role": "dps",
       "sub": "ranged",
       "note": 7.5,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Toufoux",
@@ -154,7 +154,7 @@
       "role": "dps",
       "sub": "ranged",
       "note": 7.9,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Aelminster",
@@ -162,7 +162,7 @@
       "role": "dps",
       "sub": "ranged",
       "note": 8.3,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Harmoniaque",
@@ -170,7 +170,7 @@
       "role": "dps",
       "sub": "ranged",
       "note": 9.3,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Dèàthstroke",
@@ -178,7 +178,7 @@
       "role": "dps",
       "sub": "ranged",
       "note": 6.3,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Shrakle",
@@ -186,7 +186,7 @@
       "role": "healer",
       "sub": null,
       "note": 7.1,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Drtyrran",
@@ -194,7 +194,7 @@
       "role": "dps",
       "sub": "ranged",
       "note": 6.7,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Pattopaprika",
@@ -202,7 +202,7 @@
       "role": "tank",
       "sub": null,
       "note": 8.2,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Tyry",
@@ -210,7 +210,7 @@
       "role": "healer",
       "sub": null,
       "note": 7.1,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Snøz",
@@ -218,7 +218,7 @@
       "role": "tank",
       "sub": null,
       "note": 6.8,
-      "pulls": 32
+      "pulls": 33
      }
     ]
    },
@@ -279,8 +279,8 @@
     "class": "Druid",
     "role": "healer",
     "sub": null,
-    "note": 6.5,
-    "pulls": 32,
+    "note": 6.4,
+    "pulls": 33,
     "deaths": 3
    },
    {
@@ -289,7 +289,7 @@
     "role": "dps",
     "sub": "melee",
     "note": 7.1,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 5
    },
    {
@@ -298,7 +298,7 @@
     "role": "healer",
     "sub": null,
     "note": 7,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 3
    },
    {
@@ -307,7 +307,7 @@
     "role": "dps",
     "sub": "melee",
     "note": 6.2,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 10
    },
    {
@@ -315,8 +315,8 @@
     "class": "Paladin",
     "role": "healer",
     "sub": null,
-    "note": 5.4,
-    "pulls": 32,
+    "note": 5.2,
+    "pulls": 33,
     "deaths": 10
    },
    {
@@ -325,7 +325,16 @@
     "role": "dps",
     "sub": "melee",
     "note": 7.9,
-    "pulls": 32,
+    "pulls": 33,
+    "deaths": 8
+   },
+   {
+    "name": "Dyâlise",
+    "class": "Paladin",
+    "role": "dps",
+    "sub": "melee",
+    "note": 8.4,
+    "pulls": 33,
     "deaths": 8
    },
    {
@@ -334,7 +343,7 @@
     "role": "dps",
     "sub": "ranged",
     "note": 7.3,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 7
    },
    {
@@ -343,16 +352,7 @@
     "role": "dps",
     "sub": "ranged",
     "note": 9.2,
-    "pulls": 32,
-    "deaths": 7
-   },
-   {
-    "name": "Dyâlise",
-    "class": "Paladin",
-    "role": "dps",
-    "sub": "melee",
-    "note": 8.5,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 7
    },
    {
@@ -361,7 +361,7 @@
     "role": "dps",
     "sub": "ranged",
     "note": 7,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 6
    },
    {
@@ -370,7 +370,7 @@
     "role": "dps",
     "sub": "ranged",
     "note": 7.5,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 5
    },
    {
@@ -379,7 +379,7 @@
     "role": "dps",
     "sub": "ranged",
     "note": 7.9,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 4
    },
    {
@@ -388,7 +388,7 @@
     "role": "dps",
     "sub": "ranged",
     "note": 8.3,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 4
    },
    {
@@ -397,7 +397,7 @@
     "role": "dps",
     "sub": "ranged",
     "note": 9.3,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 4
    },
    {
@@ -406,7 +406,7 @@
     "role": "dps",
     "sub": "ranged",
     "note": 6.3,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 3
    },
    {
@@ -415,7 +415,7 @@
     "role": "healer",
     "sub": null,
     "note": 7.1,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 2
    },
    {
@@ -424,7 +424,7 @@
     "role": "dps",
     "sub": "ranged",
     "note": 6.7,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 2
    },
    {
@@ -433,7 +433,7 @@
     "role": "tank",
     "sub": null,
     "note": 8.2,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 2
    },
    {
@@ -442,7 +442,7 @@
     "role": "healer",
     "sub": null,
     "note": 7.1,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 1
    },
    {
@@ -451,7 +451,7 @@
     "role": "tank",
     "sub": null,
     "note": 6.8,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 0
    }
   ],
