@@ -835,7 +835,61 @@ function sszorakView(sz, pull) {
   const cy = card("5. Viscous Cyst", muted("Kystes posés par les joueurs marqués (Venomous Surge) : ils doivent exploser pendant les vents de l'intermission (un kyste par poussée) ; un kyste qui éclate ailleurs projette tout le raid.") +
     (CY.length ? table([...pcol, { l: "Heure", num: 1 }, { l: "Joueurs projetés", num: 1 }, { l: "Moment" }, { l: "Posé par" }],
       CY.map(x => [...pv(x), { h: mmss(x.t_s), v: x.t_s }, x.hit, { h: x.during_int ? '<span class="good">intermission</span>' : '<span class="bad">hors intermission</span>', v: x.during_int ? 0 : 1 }, x.placed_by ? `${esc(x.placed_by)} <small class="muted">${mmss(x.placed_s)}</small>` : "—"])) : muted("Aucun kyste éclaté sur cette vue.")));
-  return tl + fury + vir + cw + mut + cy + (sz.notes || []).map(n => muted(esc(n))).join("");
+  /* 6. soaks de Mutilate par groupe (DPS seulement ; vue soirée : la moyenne de groupe n'a de sens que sur plusieurs Mutilate) */
+  const SG = sz.soak_groups || [];
+  const sgc = SG.length ? card("6. Soaks de Mutilate par groupe", muted("Les Mutilate alternent entre deux groupes de soak (groupes 1-2 puis 3-4). Groupe de chaque DPS = celui dont il soake le plus de Mutilate. Taux = Mutilate de son groupe soakés, parmi ceux où il était disponible : un Mutilate n'est pas compté s'il était occupé par une autre mécanique (Raging Crosswinds, Serpent's Fury, Virulence, Venomous Surge) ou mort. Signalé : 15 points ou plus sous la moyenne de son groupe (et au moins 2 soaks manqués). Healers et tanks ne sont pas concernés. Calculé sur toute la soirée.") +
+    [1, 2, null].map(g => { const G = SG.filter(x => x.group === g); if (!G.length) return ""; return `<h4>${g ? `Groupe de soak ${g}${G[0].group_avg != null ? ` · moyenne ${G[0].group_avg} %` : ""}` : "Jamais soaké"}</h4>` +
+      table([{ l: "Joueur" }, { l: "Soaks", num: 1 }, { l: "Disponible", num: 1 }, { l: "Occupé ailleurs", num: 1 }, { l: "Taux", num: 1 }, { l: "Manqués (pull · heure)" }],
+        G.map(x => [{ h: pl(x.player, x.class), v: x.player }, x.soaks, x.chances, x.busy || 0, { h: x.rate == null ? "—" : x.low ? `<span class="bad">${x.rate} %</span>` : `${x.rate} %`, v: x.rate ?? -1 },
+          { h: (x.missed || []).length ? esc(x.missed.map(m => `${m.pull} · ${mmss(m.t_s)}`).join(", ")) : '<span class="muted">—</span>', v: (x.missed || []).length }])); }).join("")) : "";
+  /* 7. projections des Crosswinds */
+  const BU = (sz.bumps || []).filter(P);
+  const buc = card("7. Projections (Raging Crosswinds)", muted(`Distance parcourue par chaque joueur projeté : de sa position juste avant la projection au point le plus éloigné dans les 3 s. Distance normale = médiane des joueurs ciblés qui n'ont ni chuté ni péri${sz.bump_norm_m != null ? ` : <b>${fr(sz.bump_norm_m)} m</b>` : ""} ; trop loin = au-delà de 1,4 × la normale + 5 m, ou chute. <b>Projeté sans être ciblé</b> = un joueur non marqué qui chute (sûr), ou qui se déplace de plus de 25 m (ou 1,5 × la normale) en 1,5 s, bien plus vite qu'en courant (probable : un saut ou une charge de classe peut donner le même déplacement) : il se trouvait sur le chemin d'une projection. Les positions du log sont espacées d'environ une seconde : les distances sont approchées.`) +
+    (BU.length ? table([...pcol, { l: "Set", num: 1 }, { l: "Heure", num: 1 }, { l: "Joueur" }, { l: "Cas" }, { l: "Distance", num: 1 }, { l: "Suite" }],
+      BU.sort((a, b) => (b.stray ? 1 : 0) - (a.stray ? 1 : 0) || a.pull - b.pull || a.t_s - b.t_s).map(b => [...pv(b), b.set, { h: mmss(b.t_s), v: b.t_s }, { h: pl(b.player, b.class), v: b.player },
+        { h: b.stray ? chip(b.sure ? "projeté sans être ciblé" : "probablement projeté sans être ciblé", "bad") : chip("ciblé, projeté trop loin", "warn"), v: b.stray ? 1 : 0 }, { h: `${fr(b.dist_m)} m`, v: b.dist_m },
+        { h: [b.fell ? '<span class="bad">chute</span>' : "", b.died ? '<span class="bad">mort</span>' : "", b.after_cut ? '<small class="muted">après la coupure</small>' : ""].filter(Boolean).join(" · ") || "—", v: (b.fell ? 1 : 0) + (b.died ? 2 : 0) }])) : muted("Aucune projection anormale sur cette vue.")));
+  /* 8. intermission : repack 3 s avant chaque changement de vent */
+  const RP = (sz.repack || []).filter(P);
+  const rpc = RP.length ? card("8. Intermission : repack avant chaque vent", muted("Distance de chaque joueur au centre du pack (médiane des positions du raid) 3 s avant chaque changement de sens du vent. Changements de vent = kystes éclatés sur tout le raid pendant l'intermission (un kyste par poussée) ; à défaut, 3, 11 et 20 s après le début. Loin du pack = au-delà de 2,5 × la distance médiane du raid (10 m minimum). Positions lues environ toutes les 2 s : distances approchées.") +
+    table([...pcol, { l: "Intermission", num: 1 }, { l: "Vent", num: 1 }, { l: "Heure", num: 1 }, { l: "Distance médiane", num: 1 }, { l: "Loin du pack" }, { l: "Tout le raid (du plus loin au plus près)" }],
+      RP.map(r => [...pv(r), r.inter, { h: r.wind + (r.from_cysts ? "" : ' <small class="muted">estimé</small>'), v: r.wind }, { h: mmss(r.t_s), v: r.t_s }, { h: `${fr(r.median_m)} m`, v: r.median_m },
+        { h: r.far.length ? r.far.map(x => `<span class="bad">${esc(x.player)}</span> ${fr(x.dist_m)} m`).join("<br>") : '<span class="good">personne</span>', v: r.far.length },
+        { h: `<details><summary>${r.players.length} joueurs</summary>${r.players.map(x => `${esc(x.player)} ${fr(x.dist_m)} m`).join(" · ")}</details>`, v: r.players.length }]))) : "";
+  /* 9. tanks : Ravage */
+  const RV = (sz.ravage || []).filter(P);
+  const rvc = RV.length ? card("9. Tanks : Ravage", muted("Ravage = cône frontal sur le tank (vulnérabilité massive ensuite) : le tank le tourne loin du raid, et les tanks alternent. Erreurs : même tank touché par deux Ravage de suite (pas de swap), ou cône qui touche des joueurs du raid.") +
+    table([...pcol, { l: "Ravage", num: 1 }, { l: "Heure", num: 1 }, { l: "Tank" }, { l: "Deux de suite" }, { l: "Raid touché" }, { l: "Morts" }],
+      RV.map(r => [...pv(r), r.n, { h: mmss(r.t_s) + (r.after_cut ? ' <small class="muted">après la coupure</small>' : ""), v: r.t_s }, r.tank || "?",
+        { h: r.twice ? `<span class="bad">oui</span> <small class="muted">(précédent à ${mmss(r.prev_s)})</small>` : '<span class="good">non</span>', v: r.twice ? 1 : 0 },
+        { h: r.raid_hit.length ? `<span class="bad">${esc(r.raid_hit.join(", "))}</span>` : '<span class="good">personne</span>', v: r.raid_hit.length },
+        { h: r.died.length ? `<span class="bad">${esc(r.died.join(", "))}</span>` : "—", v: r.died.length }]))) : "";
+  /* 10. soins et dégâts du raid, CD des healers et compétences du boss superposés */
+  const HC = (sz.heal_charts || []).filter(P);
+  const hcc = HC.length ? card("10. Soins, dégâts subis, CD et compétences du boss", muted("Par pull : dégâts subis par le raid (zone rouge) et soins du raid (courbe verte) par tranches de 5 s, CD de soin des healers (une ligne par healer) et compétences du boss (une ligne par sort). Zones grises = intermissions, croix = morts. Survole un élément pour le détail.") +
+    HC.map((h, i) => `<details class="tlw"${i === 0 || !pc ? " open" : ""}><summary>Pull ${h.pull} · ${mmss(h.dur_s)}</summary>${szHealChart(h)}</details>`).join("")) : "";
+  return tl + fury + vir + cw + mut + cy + sgc + buc + rpc + rvc + hcc + (sz.notes || []).map(n => muted(esc(n))).join("");
+}
+/* Courbes superposées d'un pull de Sszorak : dégâts subis (zone), soins (ligne), CD des healers, compétences du boss */
+function szHealChart(h) {
+  const W = frW(), L = 170, R = W - 12, dur = Math.max(1, h.dur_s), x = t => L + Math.max(0, Math.min(t, dur)) / dur * (R - L);
+  const healers = [...new Set((h.cds || []).map(c => c.healer))], boss = h.boss || [];
+  const CH = 150, T = 10, ROW = 22, H = T + CH + 10 + healers.length * ROW + 8 + boss.length * ROW + 26, top2 = T + CH + 10, top3 = top2 + healers.length * ROW + 8;
+  const dv = (h.dmg && h.dmg.values) || [], hv = (h.heal && h.heal.values) || [], bin = (h.dmg && h.dmg.bin_s) || (h.heal && h.heal.bin_s) || 5, mx = Math.max(1, ...dv, ...hv);
+  const yv = v => T + CH - v / mx * (CH - 8);
+  let g = `<svg class="frise" viewBox="0 0 ${W} ${H}">`;
+  for (const it of h.intermissions || []) g += `<rect x="${x(it.start_s)}" y="${T}" width="${Math.max(2, x(it.end_s) - x(it.start_s))}" height="${H - T - 24}" fill="var(--line)" fill-opacity=".35"><title>Intermission ${mmss(it.start_s)} → ${mmss(it.end_s)}</title></rect>`;
+  for (let m = 0; m * 60 <= dur; m++) g += `<line x1="${x(m * 60)}" x2="${x(m * 60)}" y1="${T}" y2="${H - 24}" class="gl"/><text x="${x(m * 60)}" y="${H - 8}" text-anchor="middle">${m}:00</text>`;
+  if (dv.length) g += `<path d="M${L},${T + CH}` + dv.map((d, k) => `L${x(k * bin).toFixed(1)},${yv(d).toFixed(1)}`).join("") + `L${x((dv.length - 1) * bin)},${T + CH}Z" fill="#e11d48" fill-opacity=".25" stroke="#e11d48" stroke-opacity=".6"><title>Dégâts subis par le raid</title></path>`;
+  if (hv.length) g += `<path d="M` + hv.map((d, k) => `${k ? "L" : ""}${x(k * bin).toFixed(1)},${yv(d).toFixed(1)}`).join("") + `" fill="none" stroke="#22c55e" stroke-width="2"><title>Soins du raid</title></path>`;
+  g += `<text x="${L - 8}" y="${T + 14}" text-anchor="end" class="ll">Dégâts subis</text><text x="${L - 8}" y="${T + 30}" text-anchor="end" class="ll" fill="#22c55e">Soins</text>`;
+  for (const d of h.deaths || []) g += `<g><title>${mmss(d.t_s)} — mort de ${esc(d.player)} (${esc(d.killer)})</title><text x="${x(d.t_s)}" y="${T + CH - 2}" text-anchor="middle" class="sk">✖</text></g>`;
+  healers.forEach((n, i) => { const y = top2 + i * ROW; g += `<text x="${L - 8}" y="${y + 15}" text-anchor="end" class="ll">${esc(n)}</text><line x1="${L}" x2="${R}" y1="${y + ROW}" y2="${y + ROW}" class="sep"/>`;
+    for (const c of h.cds.filter(c => c.healer === n)) g += `<g><title>${esc(n)} : ${esc(c.spell)} à ${mmss(c.t)}</title><rect x="${x(c.t) - 4}" y="${y + 4}" width="8" height="14" rx="2" fill="#22c55e" fill-opacity=".8"/></g>`; });
+  boss.forEach((b, i) => { const y = top3 + i * ROW; g += `<text x="${L - 8}" y="${y + 15}" text-anchor="end" class="ll">${esc(b.name)}</text><line x1="${L}" x2="${R}" y1="${y + ROW}" y2="${y + ROW}" class="sep"/>`;
+    for (const t of b.t) g += `<g><title>${esc(b.name)} à ${mmss(t)}</title><rect x="${x(t) - 3}" y="${y + 5}" width="6" height="12" rx="2" fill="#8b5cf6" fill-opacity=".8"/></g>`; });
+  if (h.cut_s != null && h.cut_s < dur) g += `<rect x="${x(h.cut_s)}" y="${T}" width="${R - x(h.cut_s)}" height="${H - T - 24}" class="cutz"><title>Après la coupure : non compté</title></rect>`;
+  return `<div class="frisew">${g}</svg></div>`;
 }
 
 /* ---------- Nymrissa : orbes de givre prises pendant la pluie, film du combat ---------- */
@@ -966,6 +1020,9 @@ function pullErrors(b, pull) {
     for (const x of (sz.mutilate || []).filter(P)) { if (x.low) add("Mutilate", "raid", `${x.count} soakers seulement (5 minimum)`, x.t_s); if (x.again.length) add("Mutilate", x.again.join(", "), "deux soaks de suite (alternance)", x.t_s); }
     for (const x of (sz.cysts || []).filter(x => P(x) && !x.during_int)) add("Kystes", x.placed_by || "?", `kyste éclaté hors intermission (${x.hit} joueurs projetés)`, x.t_s);
     for (const p of (sz.pulls || []).filter(x => x.pull === pull && x.enrage_s != null)) add("Serpent's Fury", "boss", "enrage (Unbound Ferocity)", p.enrage_s);
+    for (const b of (sz.bumps || []).filter(x => x.pull === pull && !x.after_cut)) add("Crosswinds", b.player, b.stray ? `${b.sure ? "" : "probablement "}projeté sans être ciblé (${fr(b.dist_m)} m)` : `projeté trop loin (${fr(b.dist_m)} m)`, b.t_s);
+    for (const r of (sz.repack || []).filter(x => x.pull === pull && !x.after_cut)) for (const f of r.far) add("Intermission", f.player, `à ${fr(f.dist_m)} m du pack 3 s avant le vent ${r.wind}`, r.t_s);
+    for (const r of (sz.ravage || []).filter(x => x.pull === pull && !x.after_cut)) { if (r.twice) add("Tanks", r.tank || "?", "deux Ravage de suite (pas de swap)", r.t_s); if (r.raid_hit.length) add("Tanks", r.tank || "?", `Ravage sur le raid : ${r.raid_hit.join(", ")}`, r.t_s); }
   }
   if (d.nymrissa) {
     for (const x of (d.nymrissa.soaks || []).filter(x => x.pull === pull && !x.after_cut)) {
