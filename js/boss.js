@@ -786,6 +786,65 @@ function szTimeline(p, refPops) {
   if (p.enrage_s != null) g += `<line x1="${x(p.enrage_s)}" x2="${x(p.enrage_s)}" y1="${T - 6}" y2="${T + rows.length * RH}" stroke="#ef4444" stroke-width="3"><title>Enrage (Unbound Ferocity) ${mmss(p.enrage_s)}</title></line>`;
   return `<svg viewBox="0 0 ${W} ${H}" class="szt" style="width:100%;max-width:${W}px" role="img" aria-label="Frise du pull ${p.pull}">${g}</svg>`;
 }
+/* Carte d'une projection de Raging Crosswinds : position de chaque joueur à la projection, trajet des 3 s d'avant (orange
+   si le joueur a bougé de 3 m ou plus dans la dernière 1,5 s), flèche = direction où la marque projette, trait pointillé
+   entre les deux joueurs d'une paire (distance), puis trajet après la projection (rouge si chute ou mort) */
+const cwAt = (p, t) => { let b = null, n = null; for (const q of p.pts) { if (q[0] <= t) b = q; else { n = q; break; } }
+  if (b && n && n[0] - b[0] <= 4) { const k = (t - b[0]) / (n[0] - b[0]); return [b[1] + (n[1] - b[1]) * k, b[2] + (n[2] - b[2]) * k]; }
+  return b ? [b[1], b[2]] : n ? [n[1], n[2]] : null; };
+const cwMate = p => p.near || p.partner;
+function szWindMap(mp) {
+  const P = mp.players, at = cwAt;
+  const all = P.flatMap(p => p.pts.filter(q => q[0] <= 1.5)).map(q => [q[1], q[2]]);
+  if (!all.length) return "";
+  const xs = all.map(q => q[0]).sort((a, b) => a - b), ys = all.map(q => q[1]).sort((a, b) => a - b), qn = (a, f) => a[Math.floor(f * (a.length - 1))];
+  const x0 = qn(xs, .02) - 10, x1 = qn(xs, .98) + 10, y0 = qn(ys, .02) - 10, y1 = qn(ys, .98) + 10;
+  const W = 620, H = Math.max(300, Math.min(560, W * (y1 - y0) / Math.max(1, x1 - x0))), k = Math.min(W / (x1 - x0), H / (y1 - y0));
+  const sx = x => (x - x0) * k, sy = y => H - (y - y0) * k, PAL = ["#38bdf8", "#a78bfa", "#f472b6", "#facc15", "#34d399", "#fb923c", "#60a5fa", "#e879f9"];
+  const pairs = [], seen = new Set();
+  for (const p of P.filter(p => p.marked)) { if (seen.has(p.n)) continue; const q = P.find(x => x.n === cwMate(p)); seen.add(p.n); if (q) seen.add(q.n); pairs.push([p, q || null]); }
+  const col = new Map(); pairs.forEach((pr, i) => pr.forEach(p => p && col.set(p.n, PAL[i % PAL.length])));
+  let g = "";
+  /* trajets d'avant la projection */
+  for (const p of P) { const L = p.pts.filter(q => q[0] >= -3 && q[0] <= 0); if (L.length < 2) continue; const late = (p.late_m ?? 0) >= 3;
+    g += `<polyline points="${L.map(q => sx(q[1]) + "," + sy(q[2])).join(" ")}" fill="none" stroke="${late ? "#f97316" : "#94a3b8"}" stroke-width="${late ? 2.5 : 1.2}" stroke-opacity="${late ? 0.9 : 0.5}"><title>${esc(p.n)} : trajet des 3 s avant la projection${p.late_m != null ? ` · ${fr(p.late_m)} m dans la dernière 1,5 s` : ""}</title></polyline>`; }
+  /* trajets d'après la projection */
+  for (const p of P) { const a = at(p, 0), L = p.pts.filter(q => q[0] > 0 && q[0] <= 3); if (!a || !L.length) continue; const e = L[L.length - 1], d = Math.hypot(e[1] - a[0], e[2] - a[1]);
+    if (!p.marked && d < 8) continue; const bad = p.fell || p.died;
+    g += `<line x1="${sx(a[0])}" y1="${sy(a[1])}" x2="${sx(e[1])}" y2="${sy(e[2])}" stroke="${bad ? "#ef4444" : "#64748b"}" stroke-width="${bad ? 2.5 : 1.5}" stroke-dasharray="2 4"><title>${esc(p.n)} après la projection : ${fr(Math.round(d))} m en ${fr(e[0])} s${p.fell ? " · chute" : ""}${p.died ? " · mort" : ""}</title></line>`; }
+  /* paires : trait entre les deux joueurs au moment de la projection */
+  for (const [a, b] of pairs) { if (!b) continue; const A = at(a, 0), B = at(b, 0); if (!A || !B) continue; const d = Math.hypot(A[0] - B[0], A[1] - B[1]);
+    g += `<line x1="${sx(A[0])}" y1="${sy(A[1])}" x2="${sx(B[0])}" y2="${sy(B[1])}" stroke="${col.get(a.n)}" stroke-width="1.5" stroke-dasharray="5 3"><title>${esc(a.n)} + ${esc(b.n)} : ${fr(Math.round(d * 10) / 10)} m à la projection</title></line>`;
+    if (d >= 4) g += `<text x="${(sx(A[0]) + sx(B[0])) / 2}" y="${(sy(A[1]) + sy(B[1])) / 2 - 4}" class="szl" fill="${col.get(a.n)}">${fr(Math.round(d))} m</text>`; }
+  /* joueurs à la projection */
+  for (const p of P) { const a = at(p, 0); if (!a) continue;
+    if (!p.marked) { g += `<circle cx="${sx(a[0])}" cy="${sy(a[1])}" r="3.5" fill="${clsColor(p.cls)}" fill-opacity=".7"><title>${esc(p.n)}${p.late_m != null ? ` · ${fr(p.late_m)} m dans la dernière 1,5 s` : ""}</title></circle>`; continue; }
+    const c = col.get(p.n) || "#f59e0b";
+    if (p.dir) { const ex = sx(a[0] + p.dir[0] * 7), ey = sy(a[1] + p.dir[1] * 7), ux = p.dir[0], uy = -p.dir[1], h = 7;
+      g += `<line x1="${sx(a[0])}" y1="${sy(a[1])}" x2="${ex}" y2="${ey}" stroke="${c}" stroke-width="3"/><polygon points="${ex + ux * h},${ey + uy * h} ${ex - uy * h * .6},${ey + ux * h * .6} ${ex + uy * h * .6},${ey - ux * h * .6}" fill="${c}"/>`; }
+    g += `<g><circle cx="${sx(a[0])}" cy="${sy(a[1])}" r="6.5" fill="${clsColor(p.cls)}" stroke="${p.fell || p.died ? "#ef4444" : c}" stroke-width="2.5"/><text x="${sx(a[0]) + 9}" y="${sy(a[1]) - 7}" class="szl" font-weight="700">${esc(p.n)}</text>` +
+      `<title>${esc(p.n)} (marqué${cwMate(p) ? `, paire avec ${esc(cwMate(p))}` : ""}) · ${p.late_m != null ? fr(p.late_m) + " m dans la dernière 1,5 s" : "déplacement inconnu"}${p.dist_m != null ? ` · projeté de ${fr(p.dist_m)} m` : ""}${p.fell ? " · chute" : ""}${p.died ? " · mort" : ""}</title></g>`; }
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;background:var(--bg2,transparent)" role="img" aria-label="Carte de la projection">${g}</svg>`;
+}
+/* problèmes d'une projection, seulement quand un joueur marqué chute, meurt ou est projeté loin (20 m ou plus) : pour sa
+   paire, qui a bougé dans la dernière 1,5 s, et si les deux étaient face à face (chacun projeté vers l'autre) et alignés ;
+   puis les joueurs non marqués projetés après avoir bougé au dernier moment */
+function szWindIssues(mp) {
+  const P = mp.players, bad = p => p && (p.fell || p.died || (p.dist_m ?? 0) >= 20), what = p => p.fell ? "chute" : p.died ? "meurt" : `est projeté de ${fr(p.dist_m)} m`, out = [], seen = new Set();
+  for (const p of P.filter(p => p.marked)) { if (seen.has(p.n)) continue; const q = P.find(x => x.n === cwMate(p) && !seen.has(x.n)); seen.add(p.n); if (q) seen.add(q.n);
+    const pr = [p, q].filter(Boolean); if (!pr.some(bad)) continue;
+    const why = [];
+    for (const x of pr) if ((x.late_m ?? 0) >= 3) why.push(`<b>${esc(x.n)}</b> a bougé de ${fr(x.late_m)} m dans la dernière 1,5 s`);
+    if (q && p.dir && q.dir) { const A = cwAt(p, 0), B = cwAt(q, 0);
+      if (A && B) { const dx = B[0] - A[0], dy = B[1] - A[1], d = Math.hypot(dx, dy);
+        if (d >= 2) { const fa = (dx * p.dir[0] + dy * p.dir[1]) / d, lat = Math.abs(dx * p.dir[1] - dy * p.dir[0]);
+          if (fa < 0.5) why.push(`pas face à face (flèches qui ne se rejoignent pas, ${fr(Math.round(d))} m d'écart)`);
+          else if (lat >= 4) why.push(`décalés de ${fr(Math.round(lat))} m sur le côté (pas sur la même ligne)`); } } }
+    if (!q) why.push("pas de partenaire de direction opposée trouvé");
+    out.push(`${pr.map(x => `<b>${esc(x.n)}</b>`).join(" + ")} : ${pr.filter(bad).map(x => `${esc(x.n)} ${what(x)}`).join(", ")}${why.length ? ` — ${why.join(" ; ")}` : " — position correcte d'après le log (cause ailleurs : cancel, grip, immunité ?)"}`); }
+  for (const p of P.filter(p => !p.marked && (p.late_m ?? 0) >= 3 && bad(p))) out.push(`<b>${esc(p.n)}</b> (non marqué) a bougé de ${fr(p.late_m)} m dans la dernière 1,5 s et ${what(p)}`);
+  return out;
+}
 /* Carte d'un éclatement de Virulence : chaque porteur et sa croix (axes de la salle, longueur approximative), victimes en rouge */
 function szMap(w) {
   const m = w.map; if (!m) return "";
@@ -832,6 +891,11 @@ function sszorakView(sz, pull) {
     (X.length ? table([...pcol, { l: "Set", num: 1 }, { l: "Projection", num: 1 }, { l: "Paires" }, { l: "Chute" }, { l: "Mort" }],
       X.map(x => [...pv(x), x.set, { h: mmss(x.knock_s), v: x.knock_s }, { h: x.pairs.map(p => esc(p.join(" + "))).join("<br>"), v: x.pairs.length },
         { h: x.fell.length ? `<span class="bad">${esc(x.fell.join(", "))}</span>` : '<span class="good">aucune</span>', v: x.fell.length }, { h: x.died.length ? `<span class="bad">${esc(x.died.join(", "))}</span>` : '<span class="good">aucune</span>', v: x.died.length }])) : muted("Aucun Raging Crosswinds sur cette vue.")));
+  const CWM = (sz.cw_maps || []).filter(P);
+  const cwm = CWM.length ? card("3 bis. Carte des projections (Raging Crosswinds)", muted("Une carte par projection. Gros point = joueur marqué (contour de la couleur de sa paire, rouge s'il chute ou meurt) ; flèche = direction où sa marque le projette ; pointillés de couleur = sa paire au moment de la projection (distance) ; trait gris = trajet des 3 s d'avant, <b style=\"color:#f97316\">orange</b> si le joueur a bougé de 3 m ou plus dans la dernière 1,5 s ; pointillés gris ou rouges = trajet après la projection. Une paire bien placée se touche, chacun du côté où il sera projeté, et ne bouge plus.") +
+    CWM.map(mp => { const I = szWindIssues(mp), nb = mp.players.filter(p => p.marked && (p.fell || p.died)).length;
+      return `<details${I.length && !mp.after_cut ? " open" : ""}><summary>Pull ${mp.pull} — set ${mp.set} (${mmss(mp.knock_s)})${mp.after_cut ? " · après la coupure" : ""}${nb ? ` · <span class="bad">${nb} chute(s) ou mort(s)</span>` : ""}${I.length ? ` · <span class="warn">${I.length} mouvement(s) de dernière seconde</span>` : ""}</summary>` +
+        (I.length ? `<ul class="small">${I.map(x => `<li>${x}</li>`).join("")}</ul>` : "") + szWindMap(mp) + `</details>`; }).join("")) : "";
   const MU = sz.mutilate.filter(P);
   const mut = card("4. Mutilate (soak de groupe)", muted("Cône du tank tourné vers le groupe : deux groupes égaux en alternance, moins de 5 joueurs dans le soak = mortel. « Déjà au soak précédent » = joueurs qui ont soaké deux Mutilate de suite (alternance ratée).") +
     (MU.length ? table([...pcol, { l: "Mutilate", num: 1 }, { l: "Heure", num: 1 }, { l: "Soakers", num: 1 }, { l: "Déjà au soak précédent" }, { l: "Morts" }],
@@ -873,7 +937,7 @@ function sszorakView(sz, pull) {
   const HC = (sz.heal_charts || []).filter(P);
   const hcc = HC.length ? card("10. Soins, dégâts subis, CD et compétences du boss", muted("Par pull : dégâts subis par le raid (zone rouge) et soins du raid (courbe verte) par tranches de 5 s, CD de soin des healers (une ligne par healer) et compétences du boss (une ligne par sort). Zones grises = intermissions, croix = morts. Survole un élément pour le détail.") +
     HC.map((h, i) => `<details class="tlw"${i === 0 || !pc ? " open" : ""}><summary>Pull ${h.pull} · ${mmss(h.dur_s)}</summary>${szHealChart(h)}</details>`).join("")) : "";
-  return tl + fury + vir + cw + mut + cy + sgc + buc + rpc + rvc + hcc + (sz.notes || []).map(n => muted(esc(n))).join("");
+  return tl + fury + vir + cw + cwm + mut + cy + sgc + buc + rpc + rvc + hcc + (sz.notes || []).map(n => muted(esc(n))).join("");
 }
 /* Courbes superposées d'un pull de Sszorak : dégâts subis (zone), soins (ligne), CD des healers, compétences du boss */
 function szHealChart(h) {
