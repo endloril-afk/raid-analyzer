@@ -146,7 +146,7 @@ window.RAPPORTS_INDEX = [
       "class": "Monk",
       "role": "tank",
       "sub": null,
-      "note": 6.5,
+      "note": 6.4,
       "pulls": 9
      },
      {
@@ -154,7 +154,7 @@ window.RAPPORTS_INDEX = [
       "class": "Mage",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.7,
+      "note": 8.8,
       "pulls": 9
      },
      {
@@ -170,7 +170,7 @@ window.RAPPORTS_INDEX = [
       "class": "Shaman",
       "role": "dps",
       "sub": "ranged",
-      "note": 7.8,
+      "note": 7.9,
       "pulls": 9
      },
      {
@@ -178,7 +178,7 @@ window.RAPPORTS_INDEX = [
       "class": "DemonHunter",
       "role": "tank",
       "sub": null,
-      "note": 8,
+      "note": 7.8,
       "pulls": 9
      },
      {
@@ -210,7 +210,7 @@ window.RAPPORTS_INDEX = [
       "class": "DemonHunter",
       "role": "dps",
       "sub": "ranged",
-      "note": 7.8,
+      "note": 8.1,
       "pulls": 9
      },
      {
@@ -379,7 +379,7 @@ window.RAPPORTS_INDEX = [
       "class": "Shaman",
       "role": "dps",
       "sub": "ranged",
-      "note": 6.8,
+      "note": 7.1,
       "pulls": 10
      },
      {
@@ -558,7 +558,7 @@ window.RAPPORTS_INDEX = [
     "class": "Shaman",
     "role": "dps",
     "sub": "ranged",
-    "note": 7.3,
+    "note": 7.5,
     "pulls": 19,
     "deaths": 2
    },
@@ -567,7 +567,7 @@ window.RAPPORTS_INDEX = [
     "class": "DemonHunter",
     "role": "tank",
     "sub": null,
-    "note": 8,
+    "note": 7.8,
     "pulls": 9,
     "deaths": 1
    },
@@ -603,7 +603,7 @@ window.RAPPORTS_INDEX = [
     "class": "DemonHunter",
     "role": "dps",
     "sub": "ranged",
-    "note": 8,
+    "note": 8.2,
     "pulls": 19,
     "deaths": 1
    },
