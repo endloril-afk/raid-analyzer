@@ -470,7 +470,7 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792608753141,
-  "generated": 1793041469881,
+  "generated": 1793054862954,
   "pulls": 19,
   "note": 7.6,
   "bosses": [
@@ -1106,9 +1106,9 @@ window.RAPPORTS_INDEX = [
     "deaths": 1
    }
   ],
-  "complete": true,
+  "complete": false,
   "auto": false,
-  "extension_version": "0.40.72",
+  "extension_version": "0.40.74",
   "file": "rapports/Raid_2026-10-21_The_Venomous_Abyss_tC9nXpmLDavrF4xB.html",
   "json": "rapports/Raid_2026-10-21_The_Venomous_Abyss_tC9nXpmLDavrF4xB.json"
  },
