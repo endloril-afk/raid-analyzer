@@ -5,12 +5,12 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": "Exaltés au Cimetière",
   "server": "Garona",
-  "next_update": 1793054247755,
+  "next_update": 1793054890856,
   "zone": "The Venomous Abyss",
   "raid_date": 1793044121863,
-  "generated": 1793053647758,
-  "pulls": 32,
-  "note": 7.4,
+  "generated": 1793054290859,
+  "pulls": 33,
+  "note": 7.3,
   "bosses": [
    {
     "name": "Nek'zali the Soulcoiler",
@@ -59,15 +59,15 @@ window.RAPPORTS_INDEX = [
     "tried": true,
     "kills": 0,
     "best_pct": 70,
-    "pulls": 32,
+    "pulls": 33,
     "players": [
      {
       "name": "Endloril",
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 6.5,
-      "pulls": 32
+      "note": 6.4,
+      "pulls": 33
      },
      {
       "name": "Continum",
@@ -75,7 +75,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 7.1,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Sylvaenya",
@@ -83,7 +83,7 @@ window.RAPPORTS_INDEX = [
       "role": "healer",
       "sub": null,
       "note": 7,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Höjö",
@@ -91,15 +91,15 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 6.2,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Môy",
       "class": "Paladin",
       "role": "healer",
       "sub": null,
-      "note": 5.4,
-      "pulls": 32
+      "note": 5.2,
+      "pulls": 33
      },
      {
       "name": "Luluisback",
@@ -107,7 +107,15 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 7.9,
-      "pulls": 32
+      "pulls": 33
+     },
+     {
+      "name": "Dyâlise",
+      "class": "Paladin",
+      "role": "dps",
+      "sub": "melee",
+      "note": 8.4,
+      "pulls": 33
      },
      {
       "name": "Absoludrÿ",
@@ -115,7 +123,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 7.3,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Lauenat",
@@ -123,15 +131,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.2,
-      "pulls": 32
-     },
-     {
-      "name": "Dyâlise",
-      "class": "Paladin",
-      "role": "dps",
-      "sub": "melee",
-      "note": 8.5,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Darlkira",
@@ -139,7 +139,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 7,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Yörr",
@@ -147,7 +147,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 7.5,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Toufoux",
@@ -155,7 +155,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 7.9,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Aelminster",
@@ -163,7 +163,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 8.3,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Harmoniaque",
@@ -171,7 +171,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.3,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Dèàthstroke",
@@ -179,7 +179,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 6.3,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Shrakle",
@@ -187,7 +187,7 @@ window.RAPPORTS_INDEX = [
       "role": "healer",
       "sub": null,
       "note": 7.1,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Drtyrran",
@@ -195,7 +195,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 6.7,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Pattopaprika",
@@ -203,7 +203,7 @@ window.RAPPORTS_INDEX = [
       "role": "tank",
       "sub": null,
       "note": 8.2,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Tyry",
@@ -211,7 +211,7 @@ window.RAPPORTS_INDEX = [
       "role": "healer",
       "sub": null,
       "note": 7.1,
-      "pulls": 32
+      "pulls": 33
      },
      {
       "name": "Snøz",
@@ -219,7 +219,7 @@ window.RAPPORTS_INDEX = [
       "role": "tank",
       "sub": null,
       "note": 6.8,
-      "pulls": 32
+      "pulls": 33
      }
     ]
    },
@@ -280,8 +280,8 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "healer",
     "sub": null,
-    "note": 6.5,
-    "pulls": 32,
+    "note": 6.4,
+    "pulls": 33,
     "deaths": 3
    },
    {
@@ -290,7 +290,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "melee",
     "note": 7.1,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 5
    },
    {
@@ -299,7 +299,7 @@ window.RAPPORTS_INDEX = [
     "role": "healer",
     "sub": null,
     "note": 7,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 3
    },
    {
@@ -308,7 +308,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "melee",
     "note": 6.2,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 10
    },
    {
@@ -316,8 +316,8 @@ window.RAPPORTS_INDEX = [
     "class": "Paladin",
     "role": "healer",
     "sub": null,
-    "note": 5.4,
-    "pulls": 32,
+    "note": 5.2,
+    "pulls": 33,
     "deaths": 10
    },
    {
@@ -326,7 +326,16 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "melee",
     "note": 7.9,
-    "pulls": 32,
+    "pulls": 33,
+    "deaths": 8
+   },
+   {
+    "name": "Dyâlise",
+    "class": "Paladin",
+    "role": "dps",
+    "sub": "melee",
+    "note": 8.4,
+    "pulls": 33,
     "deaths": 8
    },
    {
@@ -335,7 +344,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 7.3,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 7
    },
    {
@@ -344,16 +353,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 9.2,
-    "pulls": 32,
-    "deaths": 7
-   },
-   {
-    "name": "Dyâlise",
-    "class": "Paladin",
-    "role": "dps",
-    "sub": "melee",
-    "note": 8.5,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 7
    },
    {
@@ -362,7 +362,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 7,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 6
    },
    {
@@ -371,7 +371,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 7.5,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 5
    },
    {
@@ -380,7 +380,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 7.9,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 4
    },
    {
@@ -389,7 +389,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 8.3,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 4
    },
    {
@@ -398,7 +398,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 9.3,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 4
    },
    {
@@ -407,7 +407,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 6.3,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 3
    },
    {
@@ -416,7 +416,7 @@ window.RAPPORTS_INDEX = [
     "role": "healer",
     "sub": null,
     "note": 7.1,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 2
    },
    {
@@ -425,7 +425,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 6.7,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 2
    },
    {
@@ -434,7 +434,7 @@ window.RAPPORTS_INDEX = [
     "role": "tank",
     "sub": null,
     "note": 8.2,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 2
    },
    {
@@ -443,7 +443,7 @@ window.RAPPORTS_INDEX = [
     "role": "healer",
     "sub": null,
     "note": 7.1,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 1
    },
    {
@@ -452,7 +452,7 @@ window.RAPPORTS_INDEX = [
     "role": "tank",
     "sub": null,
     "note": 6.8,
-    "pulls": 32,
+    "pulls": 33,
     "deaths": 0
    }
   ],
