@@ -81,7 +81,9 @@ const ban = (hue, txt, image) => `<div class="ban" style="--a:${hue[0]};--b:${hu
 /* Tableau triable. cols : [{l, num, title}] ; rows : [[{h, v} | texte]] */
 function table(cols, rows, cls = "sortable") {
   const th = cols.map(c => `<th class="${c.num ? "num" : ""}"${c.title ? ` title="${esc(c.title)}"` : ""}>${c.l}${c.title ? ' <span class="qm">?</span>' : ""}</th>`).join("");
-  const tr = rows.map(r => "<tr>" + r.map((c, i) => {
+  /* tableau par pull (1re colonne « Pull ») : trait épais entre deux pulls, pour séparer les essais */
+  const byPull = cols[0] && cols[0].l === "Pull", pk = r => { const c = r[0]; return typeof c === "object" && c !== null ? c.v : c; };
+  const tr = rows.map((r, k) => (byPull && k > 0 && pk(r) !== pk(rows[k - 1]) ? '<tr class="psep">' : "<tr>") + r.map((c, i) => {
     const o = typeof c === "object" && c !== null ? c : { h: esc(c), v: c };
     return `<td class="${cols[i] && cols[i].num ? "num" : ""}" data-v="${esc(o.v ?? "")}">${o.h}</td>`;
   }).join("") + "</tr>").join("");
@@ -133,4 +135,7 @@ document.addEventListener("click", e => {
     return asc ? r : -r;
   });
   rows.forEach(r => tb.appendChild(r));
+  /* séparateurs de pull : recalculés après le tri (seulement si la 1re colonne est « Pull ») */
+  const h0 = th.parentNode.children[0], byPull = h0 && h0.textContent.trim().startsWith("Pull");
+  rows.forEach((r, k) => r.classList.toggle("psep", byPull && k > 0 && (r.cells[0].dataset.v ?? r.cells[0].textContent) !== (rows[k - 1].cells[0].dataset.v ?? rows[k - 1].cells[0].textContent)));
 });
