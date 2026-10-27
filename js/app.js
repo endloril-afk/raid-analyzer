@@ -366,3 +366,71 @@ document.addEventListener("change", e => {
   });
   initNy(document);
 })();
+
+/* Sszorak : lecteur d'une projection de Raging Crosswinds (de -4 s à +3 s autour de la projection). Positions relevées dans
+   le log (dégâts subis, lancers), interpolées entre deux relevés. */
+(function () {
+  const PAL = ["#38bdf8", "#a78bfa", "#f472b6", "#facc15", "#34d399", "#fb923c", "#60a5fa", "#e879f9"];
+  const fmt = x => (x > 0 ? "+" : x < 0 ? "−" : "") + Math.abs(x).toFixed(1).replace(".", ",") + " s";
+  const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  /* position à t : interpolée entre deux relevés à moins de 4 s d'écart, sinon le relevé le plus proche (2,5 s avant, 1 s après) */
+  const at = (p, t) => { let b = null, n = null; for (const q of p.pts) { if (q[0] <= t) b = q; else { n = q; break; } }
+    if (b && n && n[0] - b[0] <= 4) { const k = (t - b[0]) / (n[0] - b[0]); return [b[1] + (n[1] - b[1]) * k, b[2] + (n[2] - b[2]) * k]; }
+    return b && t - b[0] <= 2.5 ? [b[1], b[2]] : n && n[0] - t <= 1 ? [n[1], n[2]] : null; };
+  function prep(m) {
+    if (m.bounds) return;
+    const all = m.players.flatMap(p => p.pts.filter(q => q[0] <= 1)), xs = all.map(q => q[1]).sort((a, b) => a - b), ys = all.map(q => q[2]).sort((a, b) => a - b), qn = (a, f) => a[Math.floor(f * (a.length - 1))];
+    m.bounds = all.length ? [qn(xs, .02) - 12, qn(xs, .98) + 12, qn(ys, .02) - 12, qn(ys, .98) + 12] : [0, 1, 0, 1];
+    /* couleur de chaque paire */
+    const seen = new Set(); let i = 0; m.col = {};
+    for (const p of m.players.filter(p => p.marked)) { if (seen.has(p.n)) continue; const mate = p.mate !== undefined ? p.mate : (p.near || p.partner); seen.add(p.n); if (mate) seen.add(mate);
+      m.col[p.n] = PAL[i % PAL.length]; if (mate) m.col[mate] = PAL[i % PAL.length]; i++; }
+  }
+  function draw(box) {
+    const D = JSON.parse(box.querySelector(".cwdata").textContent), m = D[+box.querySelector(".cwsel").value], t = +box.querySelector(".cwt").value;
+    if (!m) return; prep(m);
+    box.querySelector(".cwtl").textContent = "t = " + fmt(t);
+    box.querySelector(".cwiss").innerHTML = m.issues.length ? "<ul class=\"small\">" + m.issues.map(x => "<li>" + x + "</li>").join("") + "</ul>" : "<p class=\"small muted\">Aucun problème détecté sur cette projection.</p>";
+    const [x0, x1, y0, y1] = m.bounds, W = 760, H = Math.max(380, Math.min(620, W * (y1 - y0) / Math.max(1, x1 - x0))), k = Math.min(W / (x1 - x0), H / (y1 - y0));
+    const sx = x => (x - x0) * k, sy = y => H - (y - y0) * k;
+    let s = '<svg viewBox="0 0 ' + W + " " + H + '" role="img" aria-label="Projection de Raging Crosswinds">';
+    /* bandeau de phase */
+    const ph = t < -1.5 ? ["placement", "var(--muted)"] : t < 0 ? ["dernière 1,5 s : ne plus bouger", "#f97316"] : ["projection", "#ef4444"];
+    if (t >= 0) s += '<rect width="' + W + '" height="' + H + '" fill="#ef4444" fill-opacity=".06"/>';
+    s += '<text x="' + (W - 12) + '" y="22" text-anchor="end" font-weight="700" font-size="13" fill="' + ph[1] + '">' + ph[0].toUpperCase() + "</text>";
+    /* échelle 10 m */
+    s += '<line x1="12" y1="' + (H - 14) + '" x2="' + (12 + 10 * k) + '" y2="' + (H - 14) + '" stroke="var(--muted)" stroke-width="2"/><text x="12" y="' + (H - 20) + '" fill="var(--muted)">10 m</text>';
+    /* traînées : 1,5 s avant t */
+    for (const p of m.players) { const L = []; for (let u = Math.max(-4, t - 1.5); u <= t + 1e-6; u += 0.25) { const q = at(p, u); if (q) L.push(q); }
+      if (L.length < 2) continue; const mv = Math.hypot(L[L.length - 1][0] - L[0][0], L[L.length - 1][1] - L[0][1]);
+      const c = t > 0 && mv >= 8 ? (p.fell || p.died ? "#ef4444" : "#94a3b8") : t <= 0 && t >= -1.6 && mv >= 3 ? "#f97316" : "#94a3b8";
+      s += '<polyline points="' + L.map(q => sx(q[0]).toFixed(1) + "," + sy(q[1]).toFixed(1)).join(" ") + '" fill="none" stroke="' + c + '" stroke-width="' + (c === "#94a3b8" ? 1.2 : 2.6) + '" stroke-opacity="' + (c === "#94a3b8" ? 0.45 : 0.9) + '" stroke-linecap="round"/>'; }
+    /* paires : trait entre les deux joueurs (jusqu'à la projection) */
+    if (t <= 0.3) { const done = new Set();
+      for (const p of m.players.filter(p => p.marked)) { const mate = p.mate !== undefined ? p.mate : (p.near || p.partner), q = mate ? m.players.find(x => x.n === mate) : null; if (!q || done.has(p.n) || done.has(q.n)) continue; done.add(p.n); done.add(q.n);
+        const A = at(p, t), B = at(q, t); if (!A || !B) continue; const d = Math.hypot(A[0] - B[0], A[1] - B[1]);
+        s += '<line x1="' + sx(A[0]) + '" y1="' + sy(A[1]) + '" x2="' + sx(B[0]) + '" y2="' + sy(B[1]) + '" stroke="' + m.col[p.n] + '" stroke-width="1.5" stroke-dasharray="6 4"/>';
+        s += '<text x="' + ((sx(A[0]) + sx(B[0])) / 2 + 4) + '" y="' + ((sy(A[1]) + sy(B[1])) / 2 - 4) + '" fill="' + m.col[p.n] + '" font-weight="700">' + Math.round(d) + " m</text>"; } }
+    /* joueurs */
+    for (const p of m.players) { const a = at(p, t); if (!a) continue; const X = sx(a[0]), Y = sy(a[1]);
+      const late = (p.late_m ?? 0) >= 3, bad = (p.fell || p.died) && t > 0;
+      if (!p.marked) { s += '<g><circle cx="' + X + '" cy="' + Y + '" r="4" fill="' + p.color + '" stroke="' + (bad ? "#ef4444" : "none") + '" stroke-width="2"/>' + (late || bad ? '<text x="' + (X + 7) + '" y="' + (Y - 5) + '">' + esc(p.n) + "</text>" : "") + "<title>" + esc(p.n) + (p.late_m != null ? " · " + String(p.late_m).replace(".", ",") + " m dans la dernière 1,5 s" : "") + (p.fell ? " · chute" : "") + (p.died ? " · mort" : "") + "</title></g>"; continue; }
+      const c = m.col[p.n] || "#f59e0b";
+      if (p.dir && t <= 0.3) { const L2 = 8, ex = sx(a[0] + p.dir[0] * L2), ey = sy(a[1] + p.dir[1] * L2), ux = p.dir[0], uy = -p.dir[1], h = 8;
+        s += '<line x1="' + X + '" y1="' + Y + '" x2="' + ex + '" y2="' + ey + '" stroke="' + c + '" stroke-width="3"/><polygon points="' + (ex + ux * h) + "," + (ey + uy * h) + " " + (ex - uy * h * .6) + "," + (ey + ux * h * .6) + " " + (ex + uy * h * .6) + "," + (ey - ux * h * .6) + '" fill="' + c + '"/>'; }
+      s += '<g><circle cx="' + X + '" cy="' + Y + '" r="7.5" fill="' + p.color + '" stroke="' + (bad ? "#ef4444" : c) + '" stroke-width="3"/>' + (bad ? '<text x="' + X + '" y="' + (Y + 4) + '" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">✕</text>' : "") +
+        '<text x="' + (X + 10) + '" y="' + (Y - 8) + '" font-weight="700" font-size="11">' + esc(p.n) + "</text><title>" + esc(p.n) + " · marqué" + ((p.mate !== undefined ? p.mate : (p.near || p.partner)) ? ", paire avec " + esc(p.mate !== undefined ? p.mate : (p.near || p.partner)) : "") + (p.late_m != null ? " · " + String(p.late_m).replace(".", ",") + " m dans la dernière 1,5 s" : "") + (p.dist_m != null ? " · projeté de " + String(p.dist_m).replace(".", ",") + " m" : "") + (p.fell ? " · chute" : "") + (p.died ? " · mort" : "") + "</title></g>"; }
+    box.querySelector(".cwcanvas").innerHTML = s + "</svg>";
+  }
+  window.initCw = root => root.querySelectorAll(".cwmap:not([data-init])").forEach(box => {
+    box.dataset.init = "1"; const r = box.querySelector(".cwt"); draw(box);
+    box.querySelector(".cwsel").onchange = () => { r.value = -1.5; draw(box); };
+    r.oninput = () => draw(box);
+    const b = box.querySelector(".cwplay"); let timer = null;
+    const stop = () => { clearInterval(timer); timer = null; b.textContent = "▶ Lecture"; };
+    b.onclick = () => { if (timer) return stop();
+      if (+r.value >= 3) r.value = -4; b.textContent = "❚❚ Pause";
+      timer = setInterval(() => { r.value = Math.min(3, +r.value + 0.1 * +box.querySelector(".cwspd").value); draw(box); if (+r.value >= 3) stop(); }, 100); };
+  });
+  initCw(document);
+})();
