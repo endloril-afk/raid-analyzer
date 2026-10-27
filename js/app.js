@@ -400,6 +400,8 @@ document.addEventListener("change", e => {
     s += '<text x="' + (W - 12) + '" y="22" text-anchor="end" font-weight="700" font-size="13" fill="' + ph[1] + '">' + ph[0].toUpperCase() + "</text>";
     /* échelle 10 m */
     s += '<line x1="12" y1="' + (H - 14) + '" x2="' + (12 + 10 * k) + '" y2="' + (H - 14) + '" stroke="var(--muted)" stroke-width="2"/><text x="12" y="' + (H - 20) + '" fill="var(--muted)">10 m</text>';
+    /* flaques de venin au sol à l'instant t (rayon supposé 4 m) */
+    for (const q of m.puddles || []) if (q.t <= t) s += '<circle cx="' + sx(q.x) + '" cy="' + sy(q.y) + '" r="' + 4 * k + '" fill="#84cc16" fill-opacity=".18" stroke="#84cc16" stroke-opacity=".55" stroke-dasharray="3 3"><title>Flaque de venin (' + esc(q.src) + ")</title></circle>";
     /* traînées : 1,5 s avant t */
     for (const p of m.players) { const L = []; for (let u = Math.max(-4, t - 1.5); u <= t + 1e-6; u += 0.25) { const q = at(p, u); if (q) L.push(q); }
       if (L.length < 2) continue; const mv = Math.hypot(L[L.length - 1][0] - L[0][0], L[L.length - 1][1] - L[0][1]);
