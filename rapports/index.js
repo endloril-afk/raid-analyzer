@@ -8,7 +8,7 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1793044121863,
-  "generated": 1793098002306,
+  "generated": 1793098025652,
   "pulls": 33,
   "note": 7.3,
   "bosses": [
