@@ -507,10 +507,10 @@
   "title": "The Venomous Abyss",
   "guild": "Exaltés au Cimetière",
   "server": "Garona",
-  "next_update": null,
+  "next_update": 1793092830623,
   "zone": "The Venomous Abyss",
   "raid_date": 1792608753141,
-  "generated": 1793054862954,
+  "generated": 1793092614435,
   "pulls": 19,
   "note": 7.6,
   "bosses": [
@@ -1147,8 +1147,8 @@
    }
   ],
   "complete": false,
-  "auto": false,
-  "extension_version": "0.40.74",
+  "auto": true,
+  "extension_version": "0.40.76",
   "file": "rapports/Raid_2026-10-21_The_Venomous_Abyss_tC9nXpmLDavrF4xB.html",
   "json": "rapports/Raid_2026-10-21_The_Venomous_Abyss_tC9nXpmLDavrF4xB.json"
  },
