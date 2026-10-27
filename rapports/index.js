@@ -1161,9 +1161,9 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792435634241,
-  "generated": 1793089181337,
+  "generated": 1793092308956,
   "pulls": 13,
-  "note": 7.5,
+  "note": 7.6,
   "bosses": [
    {
     "name": "Nek'zali the Soulcoiler",
@@ -1444,7 +1444,7 @@ window.RAPPORTS_INDEX = [
       "class": "DeathKnight",
       "role": "tank",
       "sub": null,
-      "note": 5.9,
+      "note": 6.4,
       "pulls": 10
      },
      {
@@ -1468,7 +1468,7 @@ window.RAPPORTS_INDEX = [
       "class": "Monk",
       "role": "tank",
       "sub": null,
-      "note": 6,
+      "note": 6.5,
       "pulls": 10
      },
      {
@@ -1500,7 +1500,7 @@ window.RAPPORTS_INDEX = [
       "class": "Paladin",
       "role": "tank",
       "sub": null,
-      "note": 7.5,
+      "note": 7.6,
       "pulls": 10
      },
      {
@@ -1713,7 +1713,7 @@ window.RAPPORTS_INDEX = [
     "class": "Monk",
     "role": "tank",
     "sub": null,
-    "note": 6.2,
+    "note": 6.5,
     "pulls": 13,
     "deaths": 5
    },
@@ -1758,7 +1758,7 @@ window.RAPPORTS_INDEX = [
     "class": "DeathKnight",
     "role": "tank",
     "sub": null,
-    "note": 6.5,
+    "note": 6.9,
     "pulls": 13,
     "deaths": 3
    },
@@ -1776,14 +1776,14 @@ window.RAPPORTS_INDEX = [
     "class": "Paladin",
     "role": "tank",
     "sub": null,
-    "note": 7.5,
+    "note": 7.6,
     "pulls": 10,
     "deaths": 1
    }
   ],
   "complete": true,
   "auto": false,
-  "extension_version": "0.40.75",
+  "extension_version": "0.40.76",
   "file": "rapports/Raid_2026-10-19_The_Venomous_Abyss_Z1vNp7AGR4XYdqPF.html",
   "json": "rapports/Raid_2026-10-19_The_Venomous_Abyss_Z1vNp7AGR4XYdqPF.json"
  },
