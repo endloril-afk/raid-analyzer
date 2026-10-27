@@ -635,3 +635,4 @@ table.mini{border-collapse:collapse}table.mini td{padding:4px 6px;border-bottom:
 .anplayers td:nth-child(3){width:auto}
 .anplayers td:nth-child(n+4),.anplayers th:nth-child(n+4){width:1%;white-space:nowrap;text-align:right;padding-left:14px}
 .anplayers td:last-child{min-width:0}
+.legend i.d{width:10px;height:10px;border-radius:50%;flex:none;box-sizing:border-box;vertical-align:-1px;margin-right:5px}
