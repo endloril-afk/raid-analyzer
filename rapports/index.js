@@ -1158,10 +1158,10 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": "Exaltés au Cimetière",
   "server": "Garona",
-  "next_update": null,
+  "next_update": 1793087330295,
   "zone": "The Venomous Abyss",
   "raid_date": 1792435634241,
-  "generated": 1793054835362,
+  "generated": 1793086430302,
   "pulls": 13,
   "note": 7.5,
   "bosses": [
@@ -1492,7 +1492,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "dps",
       "sub": "ranged",
-      "note": 9,
+      "note": 8.7,
       "pulls": 10
      },
      {
@@ -1525,7 +1525,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "hybrid": "Hybride (DPS sur 7 pulls, heal sur 3 pulls)",
-      "note": 7.9,
+      "note": 8,
       "pulls": 10
      },
      {
@@ -1677,7 +1677,7 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.9,
+    "note": 8.7,
     "pulls": 13,
     "deaths": 4
    },
@@ -1749,7 +1749,7 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "healer",
     "sub": null,
-    "note": 8.1,
+    "note": 8.2,
     "pulls": 13,
     "deaths": 0
    },
@@ -1782,8 +1782,8 @@ window.RAPPORTS_INDEX = [
    }
   ],
   "complete": false,
-  "auto": false,
-  "extension_version": "0.40.74",
+  "auto": true,
+  "extension_version": "0.40.75",
   "file": "rapports/Raid_2026-10-19_The_Venomous_Abyss_Z1vNp7AGR4XYdqPF.html",
   "json": "rapports/Raid_2026-10-19_The_Venomous_Abyss_Z1vNp7AGR4XYdqPF.json"
  },
