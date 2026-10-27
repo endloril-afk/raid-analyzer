@@ -1120,7 +1120,7 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792435634241,
-  "generated": 1793119305612,
+  "generated": 1793139376389,
   "pulls": 13,
   "note": 7.6,
   "bosses": [
@@ -1451,7 +1451,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.7,
+      "note": 9,
       "pulls": 10
      },
      {
@@ -1484,7 +1484,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "hybrid": "Hybride (DPS sur 7 pulls, heal sur 3 pulls)",
-      "note": 8,
+      "note": 7.9,
       "pulls": 10
      },
      {
@@ -1636,7 +1636,7 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.7,
+    "note": 8.9,
     "pulls": 13,
     "deaths": 4
    },
@@ -1708,7 +1708,7 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "healer",
     "sub": null,
-    "note": 8.2,
+    "note": 8.1,
     "pulls": 13,
     "deaths": 0
    },
