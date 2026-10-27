@@ -377,6 +377,11 @@ document.addEventListener("change", e => {
   const at = (p, t) => { let b = null, n = null; for (const q of p.pts) { if (q[0] <= t) b = q; else { n = q; break; } }
     if (b && n && n[0] - b[0] <= 4) { const k = (t - b[0]) / (n[0] - b[0]); return [b[1] + (n[1] - b[1]) * k, b[2] + (n[2] - b[2]) * k]; }
     return b && t - b[0] <= 2.5 ? [b[1], b[2]] : n && n[0] - t <= 1 ? [n[1], n[2]] : null; };
+  /* position affichée : interpolée si possible, sinon le dernier relevé connu (ou le premier à venir), marquée « ancienne »
+     au-delà de 1,5 s : un joueur ne disparaît plus faute de relevé */
+  const atH = (p, t) => { const q = at(p, t); if (q) return { x: q[0], y: q[1], stale: false };
+    let b = null, n = null; for (const r of p.pts) { if (r[0] <= t) b = r; else { n = r; break; } }
+    const r = b || n; return r ? { x: r[1], y: r[2], stale: true, age: Math.abs(t - r[0]) } : null; };
   function prep(m) {
     if (m.bounds) return;
     const all = m.players.flatMap(p => p.pts.filter(q => q[0] <= 1)), xs = all.map(q => q[1]).sort((a, b) => a - b), ys = all.map(q => q[2]).sort((a, b) => a - b), qn = (a, f) => a[Math.floor(f * (a.length - 1))];
@@ -402,6 +407,9 @@ document.addEventListener("change", e => {
     s += '<line x1="12" y1="' + (H - 14) + '" x2="' + (12 + 10 * k) + '" y2="' + (H - 14) + '" stroke="var(--muted)" stroke-width="2"/><text x="12" y="' + (H - 20) + '" fill="var(--muted)">10 m</text>';
     /* flaques de venin au sol à l'instant t (rayon supposé 4 m) */
     for (const q of m.puddles || []) if (q.t <= t) s += '<circle cx="' + sx(q.x) + '" cy="' + sy(q.y) + '" r="' + 4 * k + '" fill="#84cc16" fill-opacity=".18" stroke="#84cc16" stroke-opacity=".55" stroke-dasharray="3 3"><title>Flaque de venin (' + esc(q.src) + ")</title></circle>";
+    /* boss (position lue sur ses lancers et sur les coups de mêlée qu'il reçoit) */
+    { let bq = null; for (const q of m.boss || []) { if (q[0] <= t + 0.25) bq = q; else break; } if (!bq && (m.boss || []).length) bq = m.boss[0];
+      if (bq) { const X = sx(bq[1]), Y = sy(bq[2]); s += '<g><path d="M' + X + " " + (Y - 13) + "l13 13-13 13-13-13z" + '" fill="#ef4444" fill-opacity=".75" stroke="#fff" stroke-width="1.5"/><text x="' + (X + 16) + '" y="' + (Y + 4) + '" font-weight="700" style="fill:#ef4444">' + esc(m.boss_name || "Boss") + "</text></g>"; } }
     /* traînées : 1,5 s avant t */
     for (const p of m.players) { const L = []; for (let u = Math.max(-4, t - 1.5); u <= t + 1e-6; u += 0.25) { const q = at(p, u); if (q) L.push(q); }
       if (L.length < 2) continue; const mv = Math.hypot(L[L.length - 1][0] - L[0][0], L[L.length - 1][1] - L[0][1]);
@@ -414,13 +422,16 @@ document.addEventListener("change", e => {
         s += '<line x1="' + sx(A[0]) + '" y1="' + sy(A[1]) + '" x2="' + sx(B[0]) + '" y2="' + sy(B[1]) + '" stroke="' + m.col[p.n] + '" stroke-width="1.5" stroke-dasharray="6 4"/>';
         s += '<text x="' + ((sx(A[0]) + sx(B[0])) / 2 + 4) + '" y="' + ((sy(A[1]) + sy(B[1])) / 2 - 4) + '" fill="' + m.col[p.n] + '" font-weight="700">' + Math.round(d) + " m</text>"; } }
     /* joueurs */
-    for (const p of m.players) { const a = at(p, t); if (!a) continue; const X = sx(a[0]), Y = sy(a[1]);
+    for (const p of m.players) { const h = atH(p, t); if (!h) continue; const a = [h.x, h.y], X = sx(a[0]), Y = sy(a[1]);
+      const dead = p.death_t != null && t >= p.death_t;
+      if (dead) { s += '<g><text x="' + X + '" y="' + (Y + 5) + '" text-anchor="middle" font-size="15" font-weight="700" style="fill:#ef4444">✕</text><text x="' + (X + 9) + '" y="' + (Y - 7) + '" style="fill:#ef4444">' + esc(p.n) + ' (mort)</text><title>' + esc(p.n) + " mort à " + fmt(p.death_t) + "</title></g>"; continue; }
+      if (h.stale) s += '<circle cx="' + X + '" cy="' + Y + '" r="' + (p.marked ? 11 : 7) + '" fill="none" stroke="var(--muted)" stroke-dasharray="2 2"><title>' + esc(p.n) + " : pas de relevé depuis " + h.age.toFixed(1).replace(".", ",") + " s (dernière position connue)</title></circle>";
       const late = (p.late_m ?? 0) >= 3, bad = (p.fell || p.died) && t > 0;
       if (!p.marked) { s += '<g><circle cx="' + X + '" cy="' + Y + '" r="4" fill="' + p.color + '" stroke="' + (bad ? "#ef4444" : "none") + '" stroke-width="2"/>' + (late || bad ? '<text x="' + (X + 7) + '" y="' + (Y - 5) + '">' + esc(p.n) + "</text>" : "") + "<title>" + esc(p.n) + (p.late_m != null ? " · " + String(p.late_m).replace(".", ",") + " m dans la dernière 1,5 s" : "") + (p.fell ? " · chute" : "") + (p.died ? " · mort" : "") + "</title></g>"; continue; }
       const c = m.col[p.n] || "#f59e0b";
       if (p.dir && t <= 0.3) { const L2 = 8, ex = sx(a[0] + p.dir[0] * L2), ey = sy(a[1] + p.dir[1] * L2), ux = p.dir[0], uy = -p.dir[1], h = 8;
         s += '<line x1="' + X + '" y1="' + Y + '" x2="' + ex + '" y2="' + ey + '" stroke="' + c + '" stroke-width="3"/><polygon points="' + (ex + ux * h) + "," + (ey + uy * h) + " " + (ex - uy * h * .6) + "," + (ey + ux * h * .6) + " " + (ex + uy * h * .6) + "," + (ey - ux * h * .6) + '" fill="' + c + '"/>'; }
-      s += '<g><circle cx="' + X + '" cy="' + Y + '" r="7.5" fill="' + p.color + '" stroke="' + (bad ? "#ef4444" : c) + '" stroke-width="3"/>' + (bad ? '<text x="' + X + '" y="' + (Y + 4) + '" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">✕</text>' : "") +
+      s += '<g><circle cx="' + X + '" cy="' + Y + '" r="7.5" fill="' + p.color + '" stroke="' + (bad ? "#ef4444" : c) + '" stroke-width="3"/>' + (bad ? '<text x="' + X + '" y="' + (Y + 4) + '" text-anchor="middle" font-size="11" font-weight="700" style="fill:#fff">✕</text>' : "") +
         '<text x="' + (X + 10) + '" y="' + (Y - 8) + '" font-weight="700" font-size="11">' + esc(p.n) + "</text><title>" + esc(p.n) + " · marqué" + ((p.mate !== undefined ? p.mate : (p.near || p.partner)) ? ", paire avec " + esc(p.mate !== undefined ? p.mate : (p.near || p.partner)) : "") + (p.late_m != null ? " · " + String(p.late_m).replace(".", ",") + " m dans la dernière 1,5 s" : "") + (p.dist_m != null ? " · projeté de " + String(p.dist_m).replace(".", ",") + " m" : "") + (p.fell ? " · chute" : "") + (p.died ? " · mort" : "") + "</title></g>"; }
     box.querySelector(".cwcanvas").innerHTML = s + "</svg>";
   }
