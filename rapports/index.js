@@ -1754,7 +1754,7 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1793119362400,
+  "generated": 1793142119122,
   "pulls": 21,
   "note": 8.2,
   "bosses": [
@@ -1844,7 +1844,7 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "healer",
       "sub": null,
-      "note": 8.1,
+      "note": 8.6,
       "pulls": 1
      },
      {
@@ -2349,7 +2349,7 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "healer",
       "sub": null,
-      "note": 8.9,
+      "note": 9.3,
       "pulls": 4
      },
      {
@@ -2590,7 +2590,7 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "healer",
     "sub": null,
-    "note": 8.5,
+    "note": 8.6,
     "pulls": 19,
     "deaths": 0
    },
