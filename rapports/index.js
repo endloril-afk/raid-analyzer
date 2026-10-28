@@ -8,8 +8,8 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1793217574504,
-  "generated": 1793225171738,
-  "pulls": 24,
+  "generated": 1793225438634,
+  "pulls": 25,
   "note": 9.5,
   "bosses": [
    {
@@ -59,15 +59,15 @@ window.RAPPORTS_INDEX = [
     "tried": true,
     "kills": 0,
     "best_pct": 55.1,
-    "pulls": 24,
+    "pulls": 25,
     "players": [
      {
       "name": "Lücîøle",
       "class": "Rogue",
       "role": "dps",
       "sub": "melee",
-      "note": 8.1,
-      "pulls": 24,
+      "note": 7.9,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -75,17 +75,8 @@ window.RAPPORTS_INDEX = [
       "class": "Warrior",
       "role": "dps",
       "sub": "melee",
-      "note": 8.8,
-      "pulls": 24,
-      "partial": true
-     },
-     {
-      "name": "Sylvaenya",
-      "class": "Druid",
-      "role": "healer",
-      "sub": null,
-      "note": 8.4,
-      "pulls": 24,
+      "note": 8.9,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -93,8 +84,8 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 9,
-      "pulls": 24,
+      "note": 8.6,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -103,7 +94,25 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 9.2,
-      "pulls": 24,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Sylvaenya",
+      "class": "Druid",
+      "role": "healer",
+      "sub": null,
+      "note": 8.8,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Jackychäm",
+      "class": "Shaman",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.5,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -112,7 +121,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 8.9,
-      "pulls": 24,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -121,7 +130,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.7,
-      "pulls": 24,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -130,7 +139,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 9.3,
-      "pulls": 24,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -139,7 +148,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.9,
-      "pulls": 24,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -148,7 +157,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.4,
-      "pulls": 24,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -157,7 +166,7 @@ window.RAPPORTS_INDEX = [
       "role": "healer",
       "sub": null,
       "note": 9.9,
-      "pulls": 24,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -166,7 +175,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.6,
-      "pulls": 24,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -175,7 +184,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.6,
-      "pulls": 24,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -184,16 +193,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.9,
-      "pulls": 24,
-      "partial": true
-     },
-     {
-      "name": "Jackychäm",
-      "class": "Shaman",
-      "role": "dps",
-      "sub": "ranged",
-      "note": 9.9,
-      "pulls": 24,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -202,7 +202,7 @@ window.RAPPORTS_INDEX = [
       "role": "healer",
       "sub": null,
       "note": 10,
-      "pulls": 24,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -211,7 +211,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 24,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -220,7 +220,7 @@ window.RAPPORTS_INDEX = [
       "role": "tank",
       "sub": null,
       "note": 9.9,
-      "pulls": 24,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -229,7 +229,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 24,
+      "pulls": 25,
       "partial": true
      },
      {
@@ -238,7 +238,7 @@ window.RAPPORTS_INDEX = [
       "role": "tank",
       "sub": null,
       "note": 10,
-      "pulls": 24,
+      "pulls": 25,
       "partial": true
      }
     ]
@@ -300,9 +300,9 @@ window.RAPPORTS_INDEX = [
     "class": "Rogue",
     "role": "dps",
     "sub": "melee",
-    "note": 8.1,
-    "pulls": 24,
-    "deaths": 7,
+    "note": 7.9,
+    "pulls": 25,
+    "deaths": 8,
     "partial": true
    },
    {
@@ -310,19 +310,9 @@ window.RAPPORTS_INDEX = [
     "class": "Warrior",
     "role": "dps",
     "sub": "melee",
-    "note": 8.8,
-    "pulls": 24,
+    "note": 8.9,
+    "pulls": 25,
     "deaths": 2,
-    "partial": true
-   },
-   {
-    "name": "Sylvaenya",
-    "class": "Druid",
-    "role": "healer",
-    "sub": null,
-    "note": 8.4,
-    "pulls": 24,
-    "deaths": 3,
     "partial": true
    },
    {
@@ -330,9 +320,9 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "healer",
     "sub": null,
-    "note": 9,
-    "pulls": 24,
-    "deaths": 1,
+    "note": 8.6,
+    "pulls": 25,
+    "deaths": 2,
     "partial": true
    },
    {
@@ -341,8 +331,28 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "melee",
     "note": 9.2,
-    "pulls": 24,
+    "pulls": 25,
     "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Sylvaenya",
+    "class": "Druid",
+    "role": "healer",
+    "sub": null,
+    "note": 8.8,
+    "pulls": 25,
+    "deaths": 3,
+    "partial": true
+   },
+   {
+    "name": "Jackychäm",
+    "class": "Shaman",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 9.5,
+    "pulls": 25,
+    "deaths": 2,
     "partial": true
    },
    {
@@ -351,7 +361,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 8.9,
-    "pulls": 24,
+    "pulls": 25,
     "deaths": 7,
     "partial": true
    },
@@ -361,7 +371,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 9.7,
-    "pulls": 24,
+    "pulls": 25,
     "deaths": 5,
     "partial": true
    },
@@ -371,7 +381,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "melee",
     "note": 9.3,
-    "pulls": 24,
+    "pulls": 25,
     "deaths": 4,
     "partial": true
    },
@@ -381,7 +391,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 9.9,
-    "pulls": 24,
+    "pulls": 25,
     "deaths": 3,
     "partial": true
    },
@@ -391,7 +401,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 9.4,
-    "pulls": 24,
+    "pulls": 25,
     "deaths": 3,
     "partial": true
    },
@@ -401,7 +411,7 @@ window.RAPPORTS_INDEX = [
     "role": "healer",
     "sub": null,
     "note": 9.9,
-    "pulls": 24,
+    "pulls": 25,
     "deaths": 2,
     "partial": true
    },
@@ -411,7 +421,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 9.6,
-    "pulls": 24,
+    "pulls": 25,
     "deaths": 2,
     "partial": true
    },
@@ -421,7 +431,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 9.6,
-    "pulls": 24,
+    "pulls": 25,
     "deaths": 2,
     "partial": true
    },
@@ -431,17 +441,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 9.9,
-    "pulls": 24,
-    "deaths": 2,
-    "partial": true
-   },
-   {
-    "name": "Jackychäm",
-    "class": "Shaman",
-    "role": "dps",
-    "sub": "ranged",
-    "note": 9.9,
-    "pulls": 24,
+    "pulls": 25,
     "deaths": 2,
     "partial": true
    },
@@ -451,7 +451,7 @@ window.RAPPORTS_INDEX = [
     "role": "healer",
     "sub": null,
     "note": 10,
-    "pulls": 24,
+    "pulls": 25,
     "deaths": 1,
     "partial": true
    },
@@ -461,7 +461,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 10,
-    "pulls": 24,
+    "pulls": 25,
     "deaths": 1,
     "partial": true
    },
@@ -471,7 +471,7 @@ window.RAPPORTS_INDEX = [
     "role": "tank",
     "sub": null,
     "note": 9.9,
-    "pulls": 24,
+    "pulls": 25,
     "deaths": 1,
     "partial": true
    },
@@ -481,7 +481,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 10,
-    "pulls": 24,
+    "pulls": 25,
     "deaths": 1,
     "partial": true
    },
@@ -491,7 +491,7 @@ window.RAPPORTS_INDEX = [
     "role": "tank",
     "sub": null,
     "note": 10,
-    "pulls": 24,
+    "pulls": 25,
     "deaths": 0,
     "partial": true
    }
