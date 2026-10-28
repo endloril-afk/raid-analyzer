@@ -8,8 +8,8 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1793217574504,
-  "generated": 1793222305840,
-  "pulls": 14,
+  "generated": 1793223420062,
+  "pulls": 16,
   "note": 9.5,
   "bosses": [
    {
@@ -59,7 +59,7 @@ window.RAPPORTS_INDEX = [
     "tried": true,
     "kills": 0,
     "best_pct": 67.4,
-    "pulls": 14,
+    "pulls": 16,
     "players": [
      {
       "name": "Lücîøle",
@@ -67,7 +67,16 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 8.4,
-      "pulls": 14,
+      "pulls": 16,
+      "partial": true
+     },
+     {
+      "name": "Sylvaenya",
+      "class": "Druid",
+      "role": "healer",
+      "sub": null,
+      "note": 8.2,
+      "pulls": 16,
       "partial": true
      },
      {
@@ -76,7 +85,7 @@ window.RAPPORTS_INDEX = [
       "role": "healer",
       "sub": null,
       "note": 9,
-      "pulls": 14,
+      "pulls": 16,
       "partial": true
      },
      {
@@ -85,25 +94,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 9.2,
-      "pulls": 14,
-      "partial": true
-     },
-     {
-      "name": "Sylvaenya",
-      "class": "Druid",
-      "role": "healer",
-      "sub": null,
-      "note": 8.5,
-      "pulls": 14,
-      "partial": true
-     },
-     {
-      "name": "Toufoux",
-      "class": "Hunter",
-      "role": "dps",
-      "sub": "ranged",
-      "note": 9.2,
-      "pulls": 14,
+      "pulls": 16,
       "partial": true
      },
      {
@@ -112,16 +103,16 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.4,
-      "pulls": 14,
+      "pulls": 16,
       "partial": true
      },
      {
-      "name": "Hazizoul",
-      "class": "Priest",
-      "role": "healer",
-      "sub": null,
-      "note": 9.5,
-      "pulls": 14,
+      "name": "Toufoux",
+      "class": "Hunter",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.3,
+      "pulls": 16,
       "partial": true
      },
      {
@@ -129,8 +120,8 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "dps",
       "sub": "ranged",
-      "note": 9.6,
-      "pulls": 14,
+      "note": 9.7,
+      "pulls": 16,
       "partial": true
      },
      {
@@ -138,8 +129,8 @@ window.RAPPORTS_INDEX = [
       "class": "Hunter",
       "role": "dps",
       "sub": "melee",
-      "note": 9.8,
-      "pulls": 14,
+      "note": 9.4,
+      "pulls": 16,
       "partial": true
      },
      {
@@ -148,7 +139,7 @@ window.RAPPORTS_INDEX = [
       "role": "healer",
       "sub": null,
       "note": 9.8,
-      "pulls": 14,
+      "pulls": 16,
       "partial": true
      },
      {
@@ -157,7 +148,25 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.5,
-      "pulls": 14,
+      "pulls": 16,
+      "partial": true
+     },
+     {
+      "name": "Lauenat",
+      "class": "Druid",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.5,
+      "pulls": 16,
+      "partial": true
+     },
+     {
+      "name": "Yörr",
+      "class": "Hunter",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.8,
+      "pulls": 16,
       "partial": true
      },
      {
@@ -166,7 +175,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 9.8,
-      "pulls": 14,
+      "pulls": 16,
       "partial": true
      },
      {
@@ -175,16 +184,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "melee",
       "note": 10,
-      "pulls": 14,
-      "partial": true
-     },
-     {
-      "name": "Lauenat",
-      "class": "Druid",
-      "role": "dps",
-      "sub": "ranged",
-      "note": 10,
-      "pulls": 14,
+      "pulls": 16,
       "partial": true
      },
      {
@@ -193,7 +193,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 14,
+      "pulls": 16,
       "partial": true
      },
      {
@@ -202,16 +202,7 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 14,
-      "partial": true
-     },
-     {
-      "name": "Yörr",
-      "class": "Hunter",
-      "role": "dps",
-      "sub": "ranged",
-      "note": 10,
-      "pulls": 14,
+      "pulls": 16,
       "partial": true
      },
      {
@@ -220,7 +211,7 @@ window.RAPPORTS_INDEX = [
       "role": "tank",
       "sub": null,
       "note": 9.9,
-      "pulls": 14,
+      "pulls": 16,
       "partial": true
      },
      {
@@ -229,7 +220,16 @@ window.RAPPORTS_INDEX = [
       "role": "dps",
       "sub": "ranged",
       "note": 10,
-      "pulls": 14,
+      "pulls": 16,
+      "partial": true
+     },
+     {
+      "name": "Hazizoul",
+      "class": "Priest",
+      "role": "healer",
+      "sub": null,
+      "note": 10,
+      "pulls": 16,
       "partial": true
      },
      {
@@ -238,7 +238,7 @@ window.RAPPORTS_INDEX = [
       "role": "tank",
       "sub": null,
       "note": 10,
-      "pulls": 14,
+      "pulls": 16,
       "partial": true
      }
     ]
@@ -301,7 +301,17 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "melee",
     "note": 8.4,
-    "pulls": 14,
+    "pulls": 16,
+    "deaths": 3,
+    "partial": true
+   },
+   {
+    "name": "Sylvaenya",
+    "class": "Druid",
+    "role": "healer",
+    "sub": null,
+    "note": 8.2,
+    "pulls": 16,
     "deaths": 3,
     "partial": true
    },
@@ -311,7 +321,7 @@ window.RAPPORTS_INDEX = [
     "role": "healer",
     "sub": null,
     "note": 9,
-    "pulls": 14,
+    "pulls": 16,
     "deaths": 0,
     "partial": true
    },
@@ -321,28 +331,8 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "melee",
     "note": 9.2,
-    "pulls": 14,
+    "pulls": 16,
     "deaths": 0,
-    "partial": true
-   },
-   {
-    "name": "Sylvaenya",
-    "class": "Druid",
-    "role": "healer",
-    "sub": null,
-    "note": 8.5,
-    "pulls": 14,
-    "deaths": 3,
-    "partial": true
-   },
-   {
-    "name": "Toufoux",
-    "class": "Hunter",
-    "role": "dps",
-    "sub": "ranged",
-    "note": 9.2,
-    "pulls": 14,
-    "deaths": 2,
     "partial": true
    },
    {
@@ -351,18 +341,18 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 9.4,
-    "pulls": 14,
+    "pulls": 16,
     "deaths": 1,
     "partial": true
    },
    {
-    "name": "Hazizoul",
-    "class": "Priest",
-    "role": "healer",
-    "sub": null,
-    "note": 9.5,
-    "pulls": 14,
-    "deaths": 0,
+    "name": "Toufoux",
+    "class": "Hunter",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 9.3,
+    "pulls": 16,
+    "deaths": 2,
     "partial": true
    },
    {
@@ -370,8 +360,8 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "dps",
     "sub": "ranged",
-    "note": 9.6,
-    "pulls": 14,
+    "note": 9.7,
+    "pulls": 16,
     "deaths": 3,
     "partial": true
    },
@@ -380,9 +370,9 @@ window.RAPPORTS_INDEX = [
     "class": "Hunter",
     "role": "dps",
     "sub": "melee",
-    "note": 9.8,
-    "pulls": 14,
-    "deaths": 2,
+    "note": 9.4,
+    "pulls": 16,
+    "deaths": 3,
     "partial": true
    },
    {
@@ -391,7 +381,7 @@ window.RAPPORTS_INDEX = [
     "role": "healer",
     "sub": null,
     "note": 9.8,
-    "pulls": 14,
+    "pulls": 16,
     "deaths": 2,
     "partial": true
    },
@@ -401,7 +391,27 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 9.5,
-    "pulls": 14,
+    "pulls": 16,
+    "deaths": 2,
+    "partial": true
+   },
+   {
+    "name": "Lauenat",
+    "class": "Druid",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 9.5,
+    "pulls": 16,
+    "deaths": 2,
+    "partial": true
+   },
+   {
+    "name": "Yörr",
+    "class": "Hunter",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 9.8,
+    "pulls": 16,
     "deaths": 2,
     "partial": true
    },
@@ -411,7 +421,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 9.8,
-    "pulls": 14,
+    "pulls": 16,
     "deaths": 2,
     "partial": true
    },
@@ -421,17 +431,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "melee",
     "note": 10,
-    "pulls": 14,
-    "deaths": 1,
-    "partial": true
-   },
-   {
-    "name": "Lauenat",
-    "class": "Druid",
-    "role": "dps",
-    "sub": "ranged",
-    "note": 10,
-    "pulls": 14,
+    "pulls": 16,
     "deaths": 1,
     "partial": true
    },
@@ -441,7 +441,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 10,
-    "pulls": 14,
+    "pulls": 16,
     "deaths": 1,
     "partial": true
    },
@@ -451,17 +451,7 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 10,
-    "pulls": 14,
-    "deaths": 1,
-    "partial": true
-   },
-   {
-    "name": "Yörr",
-    "class": "Hunter",
-    "role": "dps",
-    "sub": "ranged",
-    "note": 10,
-    "pulls": 14,
+    "pulls": 16,
     "deaths": 1,
     "partial": true
    },
@@ -471,7 +461,7 @@ window.RAPPORTS_INDEX = [
     "role": "tank",
     "sub": null,
     "note": 9.9,
-    "pulls": 14,
+    "pulls": 16,
     "deaths": 1,
     "partial": true
    },
@@ -481,8 +471,18 @@ window.RAPPORTS_INDEX = [
     "role": "dps",
     "sub": "ranged",
     "note": 10,
-    "pulls": 14,
+    "pulls": 16,
     "deaths": 1,
+    "partial": true
+   },
+   {
+    "name": "Hazizoul",
+    "class": "Priest",
+    "role": "healer",
+    "sub": null,
+    "note": 10,
+    "pulls": 16,
+    "deaths": 0,
     "partial": true
    },
    {
@@ -491,7 +491,7 @@ window.RAPPORTS_INDEX = [
     "role": "tank",
     "sub": null,
     "note": 10,
-    "pulls": 14,
+    "pulls": 16,
     "deaths": 0,
     "partial": true
    }
