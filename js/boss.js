@@ -232,7 +232,6 @@ function vashnikView(vk, pull) {
         { h: x.totems_destroyed ? `${x.totems_destroyed}${x.totems_alive != null ? `/${x.totems_alive}` : ""} · ${side(x.by_side)}` : x.totems_alive === 0 ? '<span class="muted small">pas de totem en jeu</span>' : chip(`aucun${x.totems_alive ? ` sur ${x.totems_alive}` : ""}`, "warn"), v: x.totems_destroyed },
         { h: x.after_cut ? '<span class="muted small">après la coupure : non jugée</span>' : x.not_judged ? `<span class="muted small">${esc(x.not_judged)} : non jugée</span>` : x.goal == null ? '<span class="muted small">—</span>' : `${chip(x.enough ? `assez (${x.totems_destroyed}/${x.goal})` : `pas assez (${x.totems_destroyed}/${x.goal})`, x.enough ? "good" : "bad")}${x.left_after ? ` <small class="muted">${x.left_after} laissé${x.left_after > 1 ? "s" : ""} aux Plague Froth suivantes${x.imb_next != null ? ` (Imbibe à ${mmss(x.imb_next)})` : ""}</small>` : ""}`, v: x.goal == null ? -1 : x.enough ? 1 : 0 },
         { h: (x.wave_hits || []).length ? x.wave_hits.map(h => `${esc(h.player)} <small class="muted">${kk(h.damage)}${h.hits > 1 ? ` · ${h.hits} coups` : ""}</small>${h.died ? " ☠" : ""}`).join("<br>") : '<span class="good small">personne</span>', v: (x.wave_hits || []).reduce((a, h) => a + h.damage, 0) }])) : muted("Aucune Plague Froth dans la partie analysée : phase non atteinte.")) +
-    vkMap(fr_) +
     (pc && vk.froth_players.length ? `<h4>Par joueur (soirée)</h4>${table([{ l: "Joueur" }, { l: "Plague Froth", num: 1 }, { l: "Immobile (< 3 m) avec totems en jeu", num: 1 }, { l: "Déplacement moyen", num: 1 }, { l: "Vagues avec totems détruits", num: 1 }, { l: "Vagues où l'objectif est atteint (collectif)" }, { l: "Touché par les vagues (soirée)", num: 1 }],
       vk.froth_players.map(x => [x.player, x.waves, { h: x.still ? chip(x.still, "bad") : "0", v: x.still }, { h: x.avg_moved_m != null ? fr(x.avg_moved_m) + " m" : "—", v: x.avg_moved_m ?? -1 }, `${x.waves_with_kills}/${x.waves}`,
         { h: x.totem_waves ? chip(`${x.totem_waves_ok}/${x.totem_waves} assez (${x.wave_destroyed}/${x.wave_goal} totems)`, x.totem_waves_ok === x.totem_waves ? "good" : x.totem_waves_ok ? "warn" : "bad") : '<span class="muted small">pas de totem en jeu</span>', v: x.totem_waves ? x.totem_waves_ok / x.totem_waves : -1 }, (() => { const h = (vk.wave_hits || []).find(y => y.player === x.player); return h ? { h: `${h.hits} coup${h.hits > 1 ? "s" : ""}, ${kk(h.damage)}${h.deaths ? ` · ☠ ${h.deaths}` : ""}`, v: h.damage } : { h: "—", v: 0 }; })()]))}` : ""));
@@ -273,7 +272,7 @@ function vashnikView(vk, pull) {
   const I = vk.icons || {};
   return mechFilter("vashnik", [
     { id: "totems", label: "Malignant Totem", icon: I["Malignant Totem"], html: burst + totems },
-    { id: "froth", label: "Plague Froth", icon: I["Plague Froth"] || I["Plague Wave"], html: froth + hitsAll },
+    { id: "froth", label: "Plague Froth", icon: I["Plague Froth"] || I["Plague Wave"], html: (vkMap(fr_) ? card("Carte de la Plague Froth (lecteur)", vkMap(fr_)) : "") + froth + hitsAll },
     { id: "dispel", label: "Exploding Infection (dispels)", icon: I["Exploding Infection"], html: disp + infc },
     { id: "adds", label: "Burning Venom (adds feu)", icon: I["Burning Venom"], html: ccs + fkc + adds },
     { id: "morts", label: "Morts", icon: "spell_shadow_deathscream", html: deaths }]) + muted(vk.notes.map(esc).join(" "));
@@ -827,10 +826,15 @@ function szMap(w) {
   const vict = new Set(m.hits.map(h => h.victim)), from = new Set(m.hits.map(h => h.from).filter(Boolean));
   let g = "";
   for (const p of P.filter(p => !p.no_burst && !p.other)) { const c = from.has(p.n) ? "#f97316" : "#94a3b8", o = from.has(p.n) ? 0.8 : 0.25;
-    g += `<line x1="${sx(p.x - ARM)}" x2="${sx(p.x + ARM)}" y1="${sy(p.y)}" y2="${sy(p.y)}" stroke="${c}" stroke-opacity="${o}" stroke-width="3"/><line x1="${sx(p.x)}" x2="${sx(p.x)}" y1="${sy(p.y - ARM)}" y2="${sy(p.y + ARM)}" stroke="${c}" stroke-opacity="${o}" stroke-width="3"/>`; }
+    const A = p.shape === "x" ? ARM / Math.SQRT2 : 0, B = p.shape === "x" ? ARM / Math.SQRT2 : ARM;
+    g += p.shape === "x"
+      ? `<line x1="${sx(p.x - A)}" x2="${sx(p.x + A)}" y1="${sy(p.y - A)}" y2="${sy(p.y + A)}" stroke="${c}" stroke-opacity="${o}" stroke-width="3"/><line x1="${sx(p.x - A)}" x2="${sx(p.x + A)}" y1="${sy(p.y + A)}" y2="${sy(p.y - A)}" stroke="${c}" stroke-opacity="${o}" stroke-width="3"/>`
+      : `<line x1="${sx(p.x - B)}" x2="${sx(p.x + B)}" y1="${sy(p.y)}" y2="${sy(p.y)}" stroke="${c}" stroke-opacity="${o}" stroke-width="3"/><line x1="${sx(p.x)}" x2="${sx(p.x)}" y1="${sy(p.y - B)}" y2="${sy(p.y + B)}" stroke="${c}" stroke-opacity="${o}" stroke-width="3"/>`; }
   if (m.boss) g += `<g><path d="M${sx(m.boss.x)} ${sy(m.boss.y) - 12}l12 12-12 12-12-12z" fill="#ef4444" fill-opacity=".75" stroke="#fff" stroke-width="1.5"/><text x="${sx(m.boss.x) + 15}" y="${sy(m.boss.y) + 4}" class="szl" font-weight="700" style="fill:#ef4444">Sszorak</text></g>`;
   /* flaques de venin déjà au sol (éclatements précédents, coups de venin au sol) : rayon supposé 4 m */
   for (const q of m.puddles || []) g += `<circle cx="${sx(q.x)}" cy="${sy(q.y)}" r="${4 * k}" fill="#84cc16" fill-opacity=".18" stroke="#84cc16" stroke-opacity=".5" stroke-dasharray="3 3"><title>Flaque de venin (${esc(q.src)}) — rayon supposé 4 m</title></circle>`;
+  /* trajet des 3 s avant l'éclatement (relevés du log), en fin gris */
+  for (const p of P) if ((p.tr || []).length > 1) g += `<polyline points="${p.tr.map(q => sx(q[0]).toFixed(1) + "," + sy(q[1]).toFixed(1)).join(" ")}" fill="none" stroke="#94a3b8" stroke-width="1" stroke-opacity=".55" stroke-dasharray="2 2"><title>${esc(p.n)} : trajet des 3 s avant l'éclatement</title></polyline>`;
   /* trajet de la dernière 1,5 s avant l'éclatement : orange si 3 m ou plus */
   for (const p of P) if (p.px != null) { const d = Math.hypot(p.x - p.px, p.y - p.py); if (d < 1) continue;
     g += `<line x1="${sx(p.px)}" y1="${sy(p.py)}" x2="${sx(p.x)}" y2="${sy(p.y)}" stroke="${d >= 3 ? "#22d3ee" : "#94a3b8"}" stroke-width="${d >= 3 ? 3 : 1.2}" stroke-opacity="${d >= 3 ? 0.95 : 0.5}" stroke-linecap="round"><title>${esc(p.n)} : ${fr(Math.round(d * 10) / 10)} m dans la dernière 1,5 s</title></line><circle cx="${sx(p.px)}" cy="${sy(p.py)}" r="2.5" fill="${d >= 3 ? "#22d3ee" : "#94a3b8"}"/>`; }
@@ -842,7 +846,7 @@ function szMap(w) {
   const lost = m.hits.filter(h => !P.some(p => p.n === h.victim));
   return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:${W}px;background:var(--bg2,transparent)" role="img" aria-label="Carte de la Virulence">${g}</svg>` +
     (lost.length ? `<p class="small muted">Hors carte (position inconnue) : ${lost.map(h => `${esc(h.victim)} touché par la croix de ${esc(h.from || "?")}`).join(", ")}.</p>` : "") +
-    `<div class="legend"><span><b style="color:#94a3b8">✚</b> croix d'un porteur (12 m, approximative)</span><span><b style="color:#f97316">✚</b> croix qui a touché quelqu'un</span><span><i class="d" style="background:#ef4444"></i>joueur pris dans une ligne</span><span><i class="d" style="background:#9ca3af"></i>joueur (couleur de classe ; sans croix = pas de Virulence)</span><span><b style="color:#ef4444">◆</b> Sszorak</span><span><b style="color:#ef4444">- - -</b> porteur → joueur touché</span><span><b style="color:#94a3b8">—</b> trajet de la dernière 1,5 s (petit point = position 1,5 s avant)</span><span><b style="color:#22d3ee">━</b> a bougé de 3 m ou plus</span><span><i class="d" style="background:transparent;border:2.5px solid #facc15"></i><b style="color:#facc15">⚠</b> coupable</span><span><i class="d" style="background:transparent;border:2px dashed #facc15"></i>a bougé en sortant d'une flaque (contraint)</span><span><i class="d" style="background:#84cc1655;border:1.5px dashed #84cc16"></i>flaque de venin (rayon supposé 4 m)</span></div>`;
+    `<div class="legend"><span><b style="color:#94a3b8">✚ ✖</b> croix d'un porteur, en « + » ou en « × » selon son débuff (12 m, approximative)</span><span><b style="color:#94a3b8">┄</b> trajet des 3 s avant l'éclatement</span><span><b style="color:#f97316">✚</b> croix qui a touché quelqu'un</span><span><i class="d" style="background:#ef4444"></i>joueur pris dans une ligne</span><span><i class="d" style="background:#9ca3af"></i>joueur (couleur de classe ; sans croix = pas de Virulence)</span><span><b style="color:#ef4444">◆</b> Sszorak</span><span><b style="color:#ef4444">- - -</b> porteur → joueur touché</span><span><b style="color:#94a3b8">—</b> dernière 1,5 s (petit point = position 1,5 s avant)</span><span><b style="color:#22d3ee">━</b> a bougé de 3 m ou plus</span><span><i class="d" style="background:transparent;border:2.5px solid #facc15"></i><b style="color:#facc15">⚠</b> coupable</span><span><i class="d" style="background:transparent;border:2px dashed #facc15"></i>a bougé en sortant d'une flaque (contraint)</span><span><i class="d" style="background:#84cc1655;border:1.5px dashed #84cc16"></i>flaque de venin (rayon supposé 4 m)</span></div>`;
 }
 function sszorakView(sz, pull) {
   const P = x => pull == null || x.pull === pull, pc = pull == null;
@@ -867,9 +871,10 @@ function sszorakView(sz, pull) {
     (V.length ? table([...pcol, { l: "Vague", num: 1 }, { l: "Éclatement", num: 1 }, { l: "Porteurs", num: 1 }, { l: "Lignes prises (victime ← porteur, distance)" }],
       V.map(w => [...pv(w), w.wave, { h: mmss(w.burst_s) + (w.after_cut ? ' <small class="muted">après la coupure</small>' : ""), v: w.burst_s }, w.carriers,
         { h: w.hits.length ? w.hits.map(h => `<span class="${h.died ? "bad" : "warn"}">${esc(h.victim)}</span> ← ${esc(h.from || "?")}${h.dist_m != null ? ` <small class="muted">${fr(h.dist_m)} m</small>` : ""}${h.died ? " (mort)" : ""}${h.culprit ? `<br><small>${h.forced ? "a bougé (contraint)" : "coupable"} : <b>${h.culprit === "both" ? "les deux" : esc(h.culprit)}</b> <span class="muted">(${esc(h.why)})</span></small>` : ""}`).join("<br>") : '<span class="good">aucune</span>', v: w.hits.length }])) : muted("Aucune Virulence sur cette vue.")) +
-    (vp.length ? `<h4>Par joueur</h4>` + table([{ l: "Joueur" }, { l: "Lignes prises", num: 1 }, { l: "Joueurs touchés par sa croix", num: 1 }, { l: "Coupable", num: 1, title: "Lignes dont il est seul responsable : il a bougé dans la dernière 1,5 s (porteur qui amène sa croix sur un joueur immobile, ou joueur qui entre dans une ligne), l'autre non. Les cas « les deux » (placement, ou les deux ont bougé) ne sont pas comptés." }, { l: "Morts", num: 1 }], vp.map(x => [{ h: pl(x.player, x.class), v: x.player }, x.hit, x.caused, { h: x.guilty ? `<b class="bad">${x.guilty}</b>` : "0", v: x.guilty || 0 }, x.deaths])) : "") +
-    (() => { const M = V.filter(w => w.map); return M.length ? `<h4>Carte des éclatements</h4>${muted("Position de chaque joueur au moment où il éclate (les éclatements s'enchaînent sur environ 1 s, un joueur après l'autre). Coupable : la victime était-elle déjà sur une ligne du porteur 1,5 s avant ? Si oui, c'est le placement (les deux). Sinon, celui qui a bougé dans la dernière 1,5 s a créé l'alignement : le porteur qui amène sa croix sur un joueur immobile, ou le joueur qui entre dans une ligne.")}` +
-      M.map((w, i) => `<details${i === 0 ? " open" : ""}><summary>Pull ${w.pull} — vague ${w.wave} (${mmss(w.burst_s)}) · ${w.hits.length} ligne(s) prise(s)${w.hits.length ? " : " + w.hits.map(h => `${esc(h.victim)} ← ${esc(h.from || "?")}`).join(", ") : ""}</summary>${szMap(w)}</details>`).join("") : ""; })());
+    (vp.length ? `<h4>Par joueur</h4>` + table([{ l: "Joueur" }, { l: "Lignes prises", num: 1 }, { l: "Joueurs touchés par sa croix", num: 1 }, { l: "Coupable", num: 1, title: "Lignes dont il est seul responsable : il a bougé dans la dernière 1,5 s (porteur qui amène sa croix sur un joueur immobile, ou joueur qui entre dans une ligne), l'autre non. Les cas « les deux » (placement, ou les deux ont bougé) ne sont pas comptés." }, { l: "Morts", num: 1 }], vp.map(x => [{ h: pl(x.player, x.class), v: x.player }, x.hit, x.caused, { h: x.guilty ? `<b class="bad">${x.guilty}</b>` : "0", v: x.guilty || 0 }, x.deaths])) : ""));
+
+  const virMap = (() => { const h = (() => { const M = V.filter(w => w.map); return M.length ? `${muted("Position de chaque joueur au moment où il éclate (les éclatements s'enchaînent sur environ 1 s, un joueur après l'autre). Coupable : la victime était-elle déjà sur une ligne du porteur 1,5 s avant ? Si oui, c'est le placement (les deux). Sinon, celui qui a bougé dans la dernière 1,5 s a créé l'alignement : le porteur qui amène sa croix sur un joueur immobile, ou le joueur qui entre dans une ligne.")}` +
+      M.map((w, i) => `<details${i === 0 ? " open" : ""}><summary>Pull ${w.pull} — vague ${w.wave} (${mmss(w.burst_s)}) · ${w.hits.length} ligne(s) prise(s)${w.hits.length ? " : " + w.hits.map(h => `${esc(h.victim)} ← ${esc(h.from || "?")}`).join(", ") : ""}</summary>${szMap(w)}</details>`).join("") : ""; })(); return h ? card("2 bis. Carte des éclatements de Virulence", h) : ""; })();
   const X = sz.crosswinds.filter(P);
   const cw = card("3. Raging Crosswinds", muted("Joueurs marqués par paires (posés au même instant, directions opposées) : se rentrer dedans en l'air, ou grip / rescue. Chute ou mort dans les 8 s après la projection = paire ratée. Paladins, Prêtres et Chamans : partenaire assigné à l'avance.") +
     (X.length ? table([...pcol, { l: "Set", num: 1 }, { l: "Projection", num: 1 }, { l: "Paires" }, { l: "Chute" }, { l: "Mort" }],
@@ -929,8 +934,8 @@ function sszorakView(sz, pull) {
   return mechFilter("sszorak", [
     { id: "frise", label: "Frise des erreurs", icon: "inv_misc_pocketwatch_01", html: tl },
     { id: "fury", label: "Serpent's Fury", icon: I["Serpent's Fury"], html: fury },
-    { id: "vir", label: "Virulence", icon: I["Virulence"], html: vir },
-    { id: "cw", label: "Raging Crosswinds", icon: I["Raging Crosswinds"], html: cw + cwm + buc },
+    { id: "vir", label: "Virulence", icon: I["Virulence"], html: virMap + vir },
+    { id: "cw", label: "Raging Crosswinds", icon: I["Raging Crosswinds"], html: cwm + cw + buc },
     { id: "mut", label: "Mutilate", icon: I["Mutilate"], html: mut + sgc },
     { id: "cyst", label: "Viscous Cyst", icon: I["Viscous Cyst"], html: cy },
     { id: "inter", label: "Intermission", icon: I["Howling Maelstrom"], html: rpc },
@@ -1055,11 +1060,12 @@ function nymrissaView(ny, pull) {
       TO.map(x => [...pv(x), { h: mmss(x.time_s), v: x.time_s }, x.player, { h: x.min_hp != null ? x.min_hp + " %" : "—", v: x.min_hp ?? 101 }, { h: x.died ? chip("mort", "bad") : x.min_hp != null && x.min_hp < 30 ? chip("survécu de justesse", "warn") : chip("survécu", "good"), v: x.died ? 2 : 0 }])) + `</details>` : "")) : "";
   const I = ny.icons || {};
   return mechFilter("nymrissa", [
+    { id: "film", label: "Film du combat", icon: I["Lingering Frost"] || "inv_misc_spyglass_03", html: film },
     { id: "orb", label: "Frost Orb et Abyssal Rain", icon: I["Frost Orb"] || I["Abyssal Rain"], html: orbCard + serCard + perCard },
     { id: "adds", label: "Adds (Bubblefin) et switchs", icon: "inv_misc_fish_turtle_02", html: addCard + swCard },
     { id: "boss", label: "DPS sur le boss", icon: "ability_dualwield", html: bossCard },
     { id: "tanks", label: "Morts des tanks (orbe + Water Jet)", icon: I["Water Jet"], html: tankCard },
-    { id: "film", label: "Film du combat", icon: I["Lingering Frost"] || "inv_misc_spyglass_03", html: film }]) + (ny.notes || []).map(n => muted(esc(n))).join("");
+    ]) + (ny.notes || []).map(n => muted(esc(n))).join("");
 }
 
 /* ---------- Erreurs du fight : uniquement ce qui ne va pas, try après try ---------- */
