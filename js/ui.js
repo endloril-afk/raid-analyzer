@@ -139,3 +139,30 @@ document.addEventListener("click", e => {
   const h0 = th.parentNode.children[0], byPull = h0 && h0.textContent.trim().startsWith("Pull");
   rows.forEach((r, k) => r.classList.toggle("psep", byPull && k > 0 && (r.cells[0].dataset.v ?? r.cells[0].textContent) !== (rows[k - 1].cells[0].dataset.v ?? rows[k - 1].cells[0].textContent)));
 });
+
+/* Filtre des mécaniques d'une analyse de boss : un bouton (icône Wowhead + nom) par mécanique, qui affiche ou masque ses
+   cartes. Choix retenu par boss dans le navigateur (localStorage). groups : [{ id, label, icon, html }] */
+function mechFilter(key, groups) {
+  const G = groups.filter(g => g.html);
+  if (G.length < 2) return G.map(g => g.html).join("");
+  return `<div class="mechf" data-key="${esc(key)}"><div class="mechbar"><button type="button" class="mbtn all" data-m="*">Tout</button>` +
+    G.map(g => `<button type="button" class="mbtn on" data-m="${esc(g.id)}" title="Afficher / masquer : ${esc(g.label)}">${img(g.icon || "inv_misc_questionmark", 18)}<span>${esc(g.label)}</span></button>`).join("") + `</div>` +
+    G.map(g => `<div class="mechsec" data-m="${esc(g.id)}">${g.html}</div>`).join("") + `</div>`;
+}
+(function () {
+  const load = k => { try { return JSON.parse(localStorage.getItem("mech:" + k) || "null"); } catch { return null; } };
+  const save = (k, v) => { try { localStorage.setItem("mech:" + k, JSON.stringify(v)); } catch { /* stockage indisponible */ } };
+  const apply = (box, off) => { box.querySelectorAll(".mbtn[data-m]:not(.all)").forEach(b => b.classList.toggle("on", !off.includes(b.dataset.m)));
+    box.querySelectorAll(":scope > .mechsec").forEach(s => { s.hidden = off.includes(s.dataset.m); }); };
+  window.initMech = root => (root || document).querySelectorAll(".mechf:not([data-init])").forEach(box => { box.dataset.init = "1"; apply(box, load(box.dataset.key) || []); });
+  document.addEventListener("click", e => {
+    const b = e.target.closest(".mechf .mbtn"); if (!b) return;
+    const box = b.closest(".mechf"), all = [...box.querySelectorAll(".mbtn:not(.all)")].map(x => x.dataset.m);
+    let off = load(box.dataset.key) || [];
+    if (b.dataset.m === "*") off = [];
+    else if (e.ctrlKey || e.metaKey || e.shiftKey) off = all.filter(m => m !== b.dataset.m); /* Ctrl/Maj + clic : cette mécanique seule */
+    else off = off.includes(b.dataset.m) ? off.filter(m => m !== b.dataset.m) : [...off, b.dataset.m];
+    save(box.dataset.key, off); apply(box, off);
+  });
+  if (document.readyState !== "loading") initMech(document); else document.addEventListener("DOMContentLoaded", () => initMech(document));
+})();
