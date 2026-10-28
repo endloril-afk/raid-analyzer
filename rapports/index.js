@@ -8,7 +8,7 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1793044121863,
-  "generated": 1793098025652,
+  "generated": 1793172560585,
   "pulls": 33,
   "note": 7.3,
   "bosses": [
@@ -98,7 +98,7 @@ window.RAPPORTS_INDEX = [
       "class": "Paladin",
       "role": "healer",
       "sub": null,
-      "note": 5.3,
+      "note": 5.2,
       "pulls": 33
      },
      {
@@ -106,7 +106,7 @@ window.RAPPORTS_INDEX = [
       "class": "Hunter",
       "role": "dps",
       "sub": "melee",
-      "note": 8,
+      "note": 7.9,
       "pulls": 33
      },
      {
@@ -130,7 +130,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.9,
+      "note": 9.2,
       "pulls": 33
      },
      {
@@ -138,7 +138,7 @@ window.RAPPORTS_INDEX = [
       "class": "DemonHunter",
       "role": "dps",
       "sub": "ranged",
-      "note": 6.9,
+      "note": 7,
       "pulls": 33
      },
      {
@@ -162,7 +162,7 @@ window.RAPPORTS_INDEX = [
       "class": "Mage",
       "role": "dps",
       "sub": "ranged",
-      "note": 7.8,
+      "note": 8.3,
       "pulls": 33
      },
      {
@@ -316,7 +316,7 @@ window.RAPPORTS_INDEX = [
     "class": "Paladin",
     "role": "healer",
     "sub": null,
-    "note": 5.3,
+    "note": 5.2,
     "pulls": 33,
     "deaths": 10
    },
@@ -325,7 +325,7 @@ window.RAPPORTS_INDEX = [
     "class": "Hunter",
     "role": "dps",
     "sub": "melee",
-    "note": 8,
+    "note": 7.9,
     "pulls": 33,
     "deaths": 8
    },
@@ -352,7 +352,7 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.9,
+    "note": 9.2,
     "pulls": 33,
     "deaths": 7
    },
@@ -361,7 +361,7 @@ window.RAPPORTS_INDEX = [
     "class": "DemonHunter",
     "role": "dps",
     "sub": "ranged",
-    "note": 6.9,
+    "note": 7,
     "pulls": 33,
     "deaths": 6
    },
@@ -388,7 +388,7 @@ window.RAPPORTS_INDEX = [
     "class": "Mage",
     "role": "dps",
     "sub": "ranged",
-    "note": 7.8,
+    "note": 8.3,
     "pulls": 33,
     "deaths": 4
    },
@@ -458,7 +458,7 @@ window.RAPPORTS_INDEX = [
   ],
   "complete": true,
   "auto": false,
-  "extension_version": "0.40.76",
+  "extension_version": "0.40.82",
   "file": "rapports/Raid_2026-10-26_The_Venomous_Abyss_CkGvX2PVKxTdJc6L.html",
   "json": "rapports/Raid_2026-10-26_The_Venomous_Abyss_CkGvX2PVKxTdJc6L.json"
  },
