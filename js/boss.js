@@ -270,7 +270,13 @@ function vashnikView(vk, pull) {
     (() => { const names = [...new Set(AD.flatMap(x => Object.keys(x.by_add)))];
       return table([{ l: "Joueur" }, ...names.map(n => ({ l: esc(n), num: 1 })), { l: "Total", num: 1 }, { l: "DPS sur les adds", num: 1 }],
         AD.map(x => [x.player, ...names.map(n => ({ h: short(x.by_add[n] ?? 0), v: x.by_add[n] ?? 0 })), { h: short(x.total), v: x.total }, { h: short(x.dps), v: x.dps ?? 0 }])); })()) : "";
-  return burst + totems + froth + hitsAll + disp + infc + ccs + fkc + deaths + adds + muted(vk.notes.map(esc).join(" "));
+  const I = vk.icons || {};
+  return mechFilter("vashnik", [
+    { id: "totems", label: "Malignant Totem", icon: I["Malignant Totem"], html: burst + totems },
+    { id: "froth", label: "Plague Froth", icon: I["Plague Froth"] || I["Plague Wave"], html: froth + hitsAll },
+    { id: "dispel", label: "Exploding Infection (dispels)", icon: I["Exploding Infection"], html: disp + infc },
+    { id: "adds", label: "Burning Venom (adds feu)", icon: I["Burning Venom"], html: ccs + fkc + adds },
+    { id: "morts", label: "Morts", icon: "spell_shadow_deathscream", html: deaths }]) + muted(vk.notes.map(esc).join(" "));
 }
 
 /* ---------- Comparaison au top : commun Healers et Gameplay ---------- */
@@ -761,6 +767,7 @@ function renderView(el) {
   if (window.initVk) initVk(el);
   if (window.initNy) initNy(el);
   if (window.initCw) initCw(el);
+  if (window.initMech) initMech(el);
 }
 
 /* ---------- Analyse détaillée de Sszorak (boss.deep.sszorak) : frise des erreurs, Serpent's Fury, Virulence, Crosswinds, Mutilate, kystes ---------- */
@@ -917,7 +924,17 @@ function sszorakView(sz, pull) {
   const HC = (sz.heal_charts || []).filter(P);
   const hcc = HC.length ? card("10. Soins, dégâts subis, CD et compétences du boss", muted("Par pull : dégâts subis par le raid (zone rouge) et soins du raid (courbe verte) par tranches de 5 s, CD de soin des healers (une ligne par healer) et compétences du boss (une ligne par sort). Zones grises = intermissions, croix = morts. Survole un élément pour le détail.") +
     HC.map((h, i) => `<details class="tlw"${i === 0 || !pc ? " open" : ""}><summary>Pull ${h.pull} · ${mmss(h.dur_s)}</summary>${szHealChart(h)}</details>`).join("")) : "";
-  return tl + fury + vir + cw + cwm + mut + cy + sgc + buc + rpc + rvc + hcc + (sz.notes || []).map(n => muted(esc(n))).join("");
+  const I = sz.icons || {};
+  return mechFilter("sszorak", [
+    { id: "frise", label: "Frise des erreurs", icon: "inv_misc_pocketwatch_01", html: tl },
+    { id: "fury", label: "Serpent's Fury", icon: I["Serpent's Fury"], html: fury },
+    { id: "vir", label: "Virulence", icon: I["Virulence"], html: vir },
+    { id: "cw", label: "Raging Crosswinds", icon: I["Raging Crosswinds"], html: cw + cwm + buc },
+    { id: "mut", label: "Mutilate", icon: I["Mutilate"], html: mut + sgc },
+    { id: "cyst", label: "Viscous Cyst", icon: I["Viscous Cyst"], html: cy },
+    { id: "inter", label: "Intermission", icon: I["Howling Maelstrom"], html: rpc },
+    { id: "ravage", label: "Ravage (tanks)", icon: I["Ravage"], html: rvc },
+    { id: "heal", label: "Soins et CD", icon: "spell_holy_flashheal", html: hcc }]) + (sz.notes || []).map(n => muted(esc(n))).join("");
 }
 /* Courbes superposées d'un pull de Sszorak : dégâts subis (zone), soins (ligne), CD des healers, compétences du boss */
 function szHealChart(h) {
@@ -1035,7 +1052,13 @@ function nymrissaView(ny, pull) {
         { h: x.defensives_unknown ? '<span class="muted small">non chargés</span>' : ((x.defensives_active.length ? "actifs : " + x.defensives_active.map(esc).join(", ") : '<span class="bad small">aucun actif</span>') + (x.defensives_30s.length ? `<br><small class="muted">utilisés dans les 30 s : ${x.defensives_30s.map(esc).join(", ")}</small>` : "")), v: x.defensives_active.length }])) + `</details>` : "") +
     (TO.length ? `<details><summary>Moments à risque (${TO.length})</summary>` + table([...pcol, { l: "Heure", num: 1 }, { l: "Tank" }, { l: "Vie la plus basse", num: 1 }, { l: "Issue" }],
       TO.map(x => [...pv(x), { h: mmss(x.time_s), v: x.time_s }, x.player, { h: x.min_hp != null ? x.min_hp + " %" : "—", v: x.min_hp ?? 101 }, { h: x.died ? chip("mort", "bad") : x.min_hp != null && x.min_hp < 30 ? chip("survécu de justesse", "warn") : chip("survécu", "good"), v: x.died ? 2 : 0 }])) + `</details>` : "")) : "";
-  return orbCard + serCard + perCard + addCard + swCard + bossCard + tankCard + film + (ny.notes || []).map(n => muted(esc(n))).join("");
+  const I = ny.icons || {};
+  return mechFilter("nymrissa", [
+    { id: "orb", label: "Frost Orb et Abyssal Rain", icon: I["Frost Orb"] || I["Abyssal Rain"], html: orbCard + serCard + perCard },
+    { id: "adds", label: "Adds (Bubblefin) et switchs", icon: "inv_misc_fish_turtle_02", html: addCard + swCard },
+    { id: "boss", label: "DPS sur le boss", icon: "ability_dualwield", html: bossCard },
+    { id: "tanks", label: "Morts des tanks (orbe + Water Jet)", icon: I["Water Jet"], html: tankCard },
+    { id: "film", label: "Film du combat", icon: I["Lingering Frost"] || "inv_misc_spyglass_03", html: film }]) + (ny.notes || []).map(n => muted(esc(n))).join("");
 }
 
 /* ---------- Erreurs du fight : uniquement ce qui ne va pas, try après try ---------- */
