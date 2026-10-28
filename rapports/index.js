@@ -8,7 +8,7 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1793044121863,
-  "generated": 1793176983149,
+  "generated": 1793177876403,
   "pulls": 33,
   "note": 7.3,
   "bosses": [
@@ -170,7 +170,7 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "dps",
       "sub": "ranged",
-      "note": 9.3,
+      "note": 9.1,
       "pulls": 33
      },
      {
@@ -397,7 +397,7 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "dps",
     "sub": "ranged",
-    "note": 9.3,
+    "note": 9.1,
     "pulls": 33,
     "deaths": 4
    },
@@ -458,7 +458,7 @@ window.RAPPORTS_INDEX = [
   ],
   "complete": true,
   "auto": false,
-  "extension_version": "0.40.85",
+  "extension_version": "0.40.86",
   "file": "rapports/Raid_2026-10-26_The_Venomous_Abyss_CkGvX2PVKxTdJc6L.html",
   "json": "rapports/Raid_2026-10-26_The_Venomous_Abyss_CkGvX2PVKxTdJc6L.json"
  },
