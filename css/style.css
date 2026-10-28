@@ -637,3 +637,8 @@ table.mini{border-collapse:collapse}table.mini td{padding:4px 6px;border-bottom:
 .anplayers td:last-child{min-width:0}
 .legend i.d{width:10px;height:10px;border-radius:50%;flex:none;box-sizing:border-box;vertical-align:-1px;margin-right:5px}
 tr.psep>td{border-top:3px solid color-mix(in srgb,var(--fg) 35%,transparent)}
+.mechbar{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px;position:sticky;top:0;z-index:5;padding:6px 0;background:var(--bg)}
+.mbtn{display:inline-flex;align-items:center;gap:6px;font:inherit;font-size:13px;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;padding:3px 10px 3px 4px;cursor:pointer;opacity:.55}
+.mbtn.on{opacity:1;color:var(--fg);border-color:color-mix(in srgb,var(--accent,#60a5fa) 60%,var(--line))}
+.mbtn.all{padding:3px 12px;opacity:1}
+.mbtn img.ic{border-radius:50%}
