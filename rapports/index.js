@@ -2216,7 +2216,7 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792005216467,
-  "generated": 1793178004119,
+  "generated": 1793369800080,
   "pulls": 21,
   "note": 8.2,
   "bosses": [
@@ -2282,7 +2282,7 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "dps",
       "sub": "ranged",
-      "note": 9.6,
+      "note": 9.7,
       "pulls": 1
      },
      {
@@ -2306,7 +2306,7 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "healer",
       "sub": null,
-      "note": 8.6,
+      "note": 8.1,
       "pulls": 1
      },
      {
@@ -2453,7 +2453,7 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.4,
+      "note": 8.6,
       "pulls": 12
      },
      {
@@ -2787,7 +2787,7 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "dps",
       "sub": "ranged",
-      "note": 9.1,
+      "note": 9.2,
       "pulls": 4
      },
      {
@@ -2811,7 +2811,7 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "healer",
       "sub": null,
-      "note": 9.3,
+      "note": 8.9,
       "pulls": 4
      },
      {
@@ -3025,7 +3025,7 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.3,
+    "note": 8.4,
     "pulls": 19,
     "deaths": 2
    },
@@ -3043,7 +3043,7 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.5,
+    "note": 8.6,
     "pulls": 19,
     "deaths": 1
    },
@@ -3052,7 +3052,7 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "healer",
     "sub": null,
-    "note": 8.6,
+    "note": 8.5,
     "pulls": 19,
     "deaths": 0
    },
@@ -3149,7 +3149,7 @@ window.RAPPORTS_INDEX = [
   ],
   "complete": true,
   "auto": false,
-  "extension_version": "0.40.86",
+  "extension_version": "0.40.88",
   "file": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.html",
   "json": "rapports/Raid_2026-10-14_The_Venomous_Abyss_DQL8tpg3bGjKT7Rq.json"
  }
