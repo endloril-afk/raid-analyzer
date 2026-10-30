@@ -932,9 +932,9 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792608753141,
-  "generated": 1793177930027,
+  "generated": 1793369838866,
   "pulls": 19,
-  "note": 7.7,
+  "note": 7.6,
   "bosses": [
    {
     "name": "Nek'zali the Soulcoiler",
@@ -990,7 +990,7 @@ window.RAPPORTS_INDEX = [
       "class": "Hunter",
       "role": "dps",
       "sub": "melee",
-      "note": 7.8,
+      "note": 7.9,
       "pulls": 9
      },
      {
@@ -1030,7 +1030,7 @@ window.RAPPORTS_INDEX = [
       "class": "Evoker",
       "role": "healer",
       "sub": null,
-      "note": 6.9,
+      "note": 7,
       "pulls": 9
      },
      {
@@ -1078,7 +1078,7 @@ window.RAPPORTS_INDEX = [
       "class": "Mage",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.8,
+      "note": 8.6,
       "pulls": 9
      },
      {
@@ -1086,7 +1086,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "dps",
       "sub": "ranged",
-      "note": 9.7,
+      "note": 9.4,
       "pulls": 9
      },
      {
@@ -1134,7 +1134,7 @@ window.RAPPORTS_INDEX = [
       "class": "DemonHunter",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.3,
+      "note": 8.1,
       "pulls": 9
      },
      {
@@ -1199,7 +1199,7 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "dps",
       "sub": "ranged",
-      "note": 7.2,
+      "note": 6.8,
       "pulls": 10
      },
      {
@@ -1303,7 +1303,7 @@ window.RAPPORTS_INDEX = [
       "class": "Shaman",
       "role": "dps",
       "sub": "ranged",
-      "note": 6.8,
+      "note": 7,
       "pulls": 10
      },
      {
@@ -1319,7 +1319,7 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.1,
+      "note": 8.4,
       "pulls": 10
      },
      {
@@ -1327,7 +1327,7 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.2,
+      "note": 8.3,
       "pulls": 10
      },
      {
@@ -1365,7 +1365,7 @@ window.RAPPORTS_INDEX = [
     "class": "Hunter",
     "role": "dps",
     "sub": "melee",
-    "note": 7.3,
+    "note": 7.4,
     "pulls": 19,
     "deaths": 3
    },
@@ -1464,7 +1464,7 @@ window.RAPPORTS_INDEX = [
     "class": "Mage",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.2,
+    "note": 8.1,
     "pulls": 19,
     "deaths": 1
    },
@@ -1473,7 +1473,7 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.4,
+    "note": 8,
     "pulls": 19,
     "deaths": 4
    },
@@ -1482,7 +1482,7 @@ window.RAPPORTS_INDEX = [
     "class": "Shaman",
     "role": "dps",
     "sub": "ranged",
-    "note": 7.3,
+    "note": 7.4,
     "pulls": 19,
     "deaths": 2
    },
@@ -1509,7 +1509,7 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.6,
+    "note": 8.7,
     "pulls": 19,
     "deaths": 2
    },
@@ -1518,7 +1518,7 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.2,
+    "note": 8.3,
     "pulls": 19,
     "deaths": 0
    },
@@ -1570,7 +1570,7 @@ window.RAPPORTS_INDEX = [
   ],
   "complete": true,
   "auto": false,
-  "extension_version": "0.40.86",
+  "extension_version": "0.40.88",
   "file": "rapports/Raid_2026-10-21_The_Venomous_Abyss_tC9nXpmLDavrF4xB.html",
   "json": "rapports/Raid_2026-10-21_The_Venomous_Abyss_tC9nXpmLDavrF4xB.json"
  },
