@@ -930,6 +930,14 @@ function sszorakView(sz, pull) {
   const HC = (sz.heal_charts || []).filter(P);
   const hcc = HC.length ? card("10. Soins, dégâts subis, CD et compétences du boss", muted("Par pull : dégâts subis par le raid (zone rouge) et soins du raid (courbe verte) par tranches de 5 s, CD de soin des healers (une ligne par healer) et compétences du boss (une ligne par sort). Zones grises = intermissions, croix = morts. Survole un élément pour le détail.") +
     HC.map((h, i) => `<details class="tlw"${i === 0 || !pc ? " open" : ""}><summary>Pull ${h.pull} · ${mmss(h.dur_s)}</summary>${szHealChart(h)}</details>`).join("")) : "";
+  /* 11. Tempest : tornades prises juste après une projection, et les autres */
+  const TPl = pc ? (sz.tempest_players || []) : [], TE = (sz.tempest || []).filter(P).filter(x => !x.after_cut);
+  const tpc = (TE.length || TPl.length) ? card("11. Tempest (tornades)", muted("Une prise = coups d'une même tornade sur un joueur à moins de 2 s d'écart. « Après une projection » : la prise commence dans les 6 s qui suivent une projection du joueur (Raging Crosswinds, qu'il soit marqué ou emporté sans l'être, ou explosion d'un kyste) : le joueur a été envoyé dans la tornade. « Autres » : tornade prise en se déplaçant normalement, à éviter. Après la coupure : non compté.") +
+    (pc && TPl.length ? `<h4>Par joueur (soirée)</h4>` + table([{ l: "Joueur" }, { l: "Autres tornades", num: 1 }, { l: "Dégâts (autres)", num: 1 }, { l: "Après une projection", num: 1 }, { l: "Dégâts (après projection)", num: 1 }, { l: "Morts", num: 1 }],
+      TPl.map(x => [{ h: pl(x.player, x.class), v: x.player }, { h: x.other ? `<b class="bad">${x.other}</b>` : "0", v: x.other }, { h: short(x.dmg_other), v: x.dmg_other }, x.after, { h: short(x.dmg_after), v: x.dmg_after }, x.died])) : "") +
+    (TE.length ? `<details${pc ? "" : " open"}><summary>Détail des prises (${TE.length}${pc ? "" : ` sur le pull ${pull}`})</summary>` + table([...pcol, { l: "Heure", num: 1 }, { l: "Joueur" }, { l: "Type" }, { l: "Dégâts", num: 1 }, { l: "Durée", num: 1 }],
+      TE.map(x => [...pv(x), { h: mmss(x.t_s), v: x.t_s }, { h: pl(x.player, x.class), v: x.player }, { h: x.after_bump ? chip(`après projection (${esc(x.after_bump)}, +${fr(x.bump_gap_s)} s)`, "warn") : chip("autre", "bad"), v: x.after_bump ? 0 : 1 },
+        { h: short(x.dmg) + (x.died ? ' <span class="bad">☠</span>' : ""), v: x.dmg }, { h: fr(x.dur_s) + " s", v: x.dur_s }])) + `</details>` : "")) : "";
   const I = sz.icons || {};
   return mechFilter("sszorak", [
     { id: "frise", label: "Frise des erreurs", icon: "inv_misc_pocketwatch_01", html: tl },
@@ -940,6 +948,7 @@ function sszorakView(sz, pull) {
     { id: "cyst", label: "Viscous Cyst", icon: I["Viscous Cyst"], html: cy },
     { id: "inter", label: "Intermission", icon: I["Howling Maelstrom"], html: rpc },
     { id: "ravage", label: "Ravage (tanks)", icon: I["Ravage"], html: rvc },
+    { id: "tempest", label: "Tempest (tornades)", icon: I["Tempest"], html: tpc },
     { id: "heal", label: "Soins et CD", icon: "spell_holy_flashheal", html: hcc }]) + (sz.notes || []).map(n => muted(esc(n))).join("");
 }
 /* Courbes superposées d'un pull de Sszorak : dégâts subis (zone), soins (ligne), CD des healers, compétences du boss */
@@ -1099,6 +1108,7 @@ function pullErrors(b, pull) {
     for (const x of (sz.crosswinds || []).filter(P)) { for (const n of x.fell) add("Crosswinds", n, "chute après la projection", x.knock_s); for (const n of x.died) add("Crosswinds", n, "mort après la projection", x.knock_s); }
     for (const x of (sz.mutilate || []).filter(P)) { if (x.low) add("Mutilate", "raid", `${x.count} soakers seulement (5 minimum)`, x.t_s); if (x.again.length) add("Mutilate", x.again.join(", "), "deux soaks de suite (alternance)", x.t_s); }
     for (const x of (sz.mutilate || []).filter(x => P(x) && !x.after_cut)) for (const n of x.missing || []) add("Mutilate", n, `n'a pas soaké le Mutilate ${x.n} alors que c'était le tour de son groupe${x.wrong_group ? " (l'autre groupe a soaké à sa place)" : ""}`, x.t_s);
+    for (const x of (sz.tempest || []).filter(x => P(x) && !x.after_cut && !x.after_bump)) add("Tempest", x.player, `tornade prise (${short(x.dmg)} de dégâts)${x.died ? ", mort" : ""}`, x.t_s);
     for (const x of (sz.cysts || []).filter(x => P(x) && !x.during_int)) add("Kystes", x.detonated_by || x.placed_by || "?", `kyste éclaté hors intermission (${x.hit} joueurs projetés)${x.detonated_by ? ` : détonné par ${x.detonated_by} (à ${fr(x.detonated_d)} m), posé par ${x.placed_by || "?"}` : ""}`, x.t_s);
     for (const p of (sz.pulls || []).filter(x => x.pull === pull && x.enrage_s != null)) add("Serpent's Fury", "boss", "enrage (Unbound Ferocity)", p.enrage_s);
     for (const b of (sz.bumps || []).filter(x => x.pull === pull && !x.after_cut)) { if (!b.stray && !b.far) continue; add("Crosswinds", b.player, b.stray ? `${b.sure ? "" : "probablement "}projeté sans être ciblé (${fr(b.dist_m)} m)` : `projeté trop loin (${fr(b.dist_m)} m)`, b.t_s); }
