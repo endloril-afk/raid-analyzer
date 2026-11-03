@@ -5,10 +5,10 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": "Exaltés au Cimetière",
   "server": "Garona",
-  "next_update": 1793715419294,
+  "next_update": 1793719110636,
   "zone": "The Venomous Abyss",
   "raid_date": 1793648648929,
-  "generated": 1793712331369,
+  "generated": 1793715559594,
   "pulls": 35,
   "note": null,
   "bosses": [
@@ -66,7 +66,7 @@ window.RAPPORTS_INDEX = [
       "class": "Rogue",
       "role": "dps",
       "sub": "melee",
-      "note": 7.8,
+      "note": 8,
       "pulls": 35,
       "partial": true
      },
@@ -84,7 +84,7 @@ window.RAPPORTS_INDEX = [
       "class": "Warrior",
       "role": "dps",
       "sub": "melee",
-      "note": 8.7,
+      "note": 8.9,
       "pulls": 35,
       "partial": true
      },
@@ -129,7 +129,7 @@ window.RAPPORTS_INDEX = [
       "class": "Mage",
       "role": "dps",
       "sub": "ranged",
-      "note": 9.5,
+      "note": 9.6,
       "pulls": 25,
       "partial": true
      },
@@ -174,27 +174,24 @@ window.RAPPORTS_INDEX = [
       "class": "Druid",
       "role": "healer",
       "sub": null,
-      "note": 9.3,
-      "pulls": 35,
-      "partial": true
+      "note": 7.6,
+      "pulls": 35
      },
      {
       "name": "Tyry",
       "class": "Priest",
       "role": "healer",
       "sub": null,
-      "note": 9.6,
-      "pulls": 35,
-      "partial": true
+      "note": 7.2,
+      "pulls": 35
      },
      {
       "name": "Shrakle",
       "class": "Evoker",
       "role": "healer",
       "sub": null,
-      "note": 9.6,
-      "pulls": 35,
-      "partial": true
+      "note": 7,
+      "pulls": 35
      },
      {
       "name": "Dyâlise",
@@ -210,7 +207,7 @@ window.RAPPORTS_INDEX = [
       "class": "Monk",
       "role": "tank",
       "sub": null,
-      "note": 9.6,
+      "note": 9.9,
       "pulls": 35,
       "partial": true
      },
@@ -237,9 +234,8 @@ window.RAPPORTS_INDEX = [
       "class": "Priest",
       "role": "healer",
       "sub": null,
-      "note": 10,
-      "pulls": 34,
-      "partial": true
+      "note": 8.4,
+      "pulls": 34
      },
      {
       "name": "Pattopaprika",
@@ -309,7 +305,7 @@ window.RAPPORTS_INDEX = [
     "class": "Rogue",
     "role": "dps",
     "sub": "melee",
-    "note": 7.8,
+    "note": 8,
     "pulls": 35,
     "deaths": 10,
     "partial": true
@@ -329,7 +325,7 @@ window.RAPPORTS_INDEX = [
     "class": "Warrior",
     "role": "dps",
     "sub": "melee",
-    "note": 8.7,
+    "note": 8.9,
     "pulls": 35,
     "deaths": 6,
     "partial": true
@@ -379,7 +375,7 @@ window.RAPPORTS_INDEX = [
     "class": "Mage",
     "role": "dps",
     "sub": "ranged",
-    "note": 9.5,
+    "note": 9.6,
     "pulls": 25,
     "deaths": 3,
     "partial": true
@@ -429,30 +425,27 @@ window.RAPPORTS_INDEX = [
     "class": "Druid",
     "role": "healer",
     "sub": null,
-    "note": 9.3,
+    "note": 7.6,
     "pulls": 35,
-    "deaths": 4,
-    "partial": true
+    "deaths": 4
    },
    {
     "name": "Tyry",
     "class": "Priest",
     "role": "healer",
     "sub": null,
-    "note": 9.6,
+    "note": 7.2,
     "pulls": 35,
-    "deaths": 3,
-    "partial": true
+    "deaths": 3
    },
    {
     "name": "Shrakle",
     "class": "Evoker",
     "role": "healer",
     "sub": null,
-    "note": 9.6,
+    "note": 7,
     "pulls": 35,
-    "deaths": 3,
-    "partial": true
+    "deaths": 3
    },
    {
     "name": "Dyâlise",
@@ -469,7 +462,7 @@ window.RAPPORTS_INDEX = [
     "class": "Monk",
     "role": "tank",
     "sub": null,
-    "note": 9.6,
+    "note": 9.9,
     "pulls": 35,
     "deaths": 2,
     "partial": true
@@ -499,10 +492,9 @@ window.RAPPORTS_INDEX = [
     "class": "Priest",
     "role": "healer",
     "sub": null,
-    "note": 10,
+    "note": 8.4,
     "pulls": 34,
-    "deaths": 1,
-    "partial": true
+    "deaths": 1
    },
    {
     "name": "Pattopaprika",
