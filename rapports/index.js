@@ -1,2 +1,525 @@
 /* Copie de rapports/index.json, chargée par index.html pour fonctionner sans serveur. */
-window.RAPPORTS_INDEX = [];
+window.RAPPORTS_INDEX = [
+ {
+  "code": "HAQh9YX2rZaNm1BF",
+  "title": "The Venomous Abyss",
+  "guild": "Exaltés au Cimetière",
+  "server": "Garona",
+  "next_update": 1793715419551,
+  "zone": "The Venomous Abyss",
+  "raid_date": 1793648648929,
+  "generated": 1793711879660,
+  "pulls": 35,
+  "note": null,
+  "bosses": [
+   {
+    "name": "Nek'zali the Soulcoiler",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Entombed Sentinels",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Vashnik the Malignant",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "The Lost Explorers",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Sszorak",
+    "key": "b0",
+    "difficulty": "Mythique",
+    "tried": true,
+    "kills": 0,
+    "best_pct": 54.3,
+    "pulls": 35,
+    "players": [
+     {
+      "name": "Lücîøle",
+      "class": "Rogue",
+      "role": "dps",
+      "sub": "melee",
+      "note": 7.8,
+      "pulls": 35,
+      "partial": true
+     },
+     {
+      "name": "Davïna",
+      "class": "Warlock",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 8.3,
+      "pulls": 10,
+      "partial": true
+     },
+     {
+      "name": "Höjö",
+      "class": "Warrior",
+      "role": "dps",
+      "sub": "melee",
+      "note": 8.7,
+      "pulls": 35,
+      "partial": true
+     },
+     {
+      "name": "Jackychäm",
+      "class": "Shaman",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.2,
+      "pulls": 34,
+      "partial": true
+     },
+     {
+      "name": "Dolmar",
+      "class": "Warrior",
+      "role": "dps",
+      "sub": "melee",
+      "note": 9.2,
+      "pulls": 35,
+      "partial": true
+     },
+     {
+      "name": "Drtyrran",
+      "class": "Shaman",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.3,
+      "pulls": 35,
+      "partial": true
+     },
+     {
+      "name": "Aelminster",
+      "class": "Mage",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.3,
+      "pulls": 35,
+      "partial": true
+     },
+     {
+      "name": "Absoludrÿ",
+      "class": "Mage",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.5,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Luluisback",
+      "class": "Hunter",
+      "role": "dps",
+      "sub": "melee",
+      "note": 9.5,
+      "pulls": 35,
+      "partial": true
+     },
+     {
+      "name": "Toufoux",
+      "class": "Hunter",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.9,
+      "pulls": 35,
+      "partial": true
+     },
+     {
+      "name": "Yörr",
+      "class": "Hunter",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.9,
+      "pulls": 35,
+      "partial": true
+     },
+     {
+      "name": "Harmoniaque",
+      "class": "Priest",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.3,
+      "pulls": 35,
+      "partial": true
+     },
+     {
+      "name": "Sylvaenya",
+      "class": "Druid",
+      "role": "healer",
+      "sub": null,
+      "note": 9.3,
+      "pulls": 35,
+      "partial": true
+     },
+     {
+      "name": "Tyry",
+      "class": "Priest",
+      "role": "healer",
+      "sub": null,
+      "note": 9.6,
+      "pulls": 35,
+      "partial": true
+     },
+     {
+      "name": "Shrakle",
+      "class": "Evoker",
+      "role": "healer",
+      "sub": null,
+      "note": 9.6,
+      "pulls": 35,
+      "partial": true
+     },
+     {
+      "name": "Dyâlise",
+      "class": "Paladin",
+      "role": "dps",
+      "sub": "melee",
+      "note": 9.6,
+      "pulls": 35,
+      "partial": true
+     },
+     {
+      "name": "Snøz",
+      "class": "Monk",
+      "role": "tank",
+      "sub": null,
+      "note": 9.6,
+      "pulls": 35,
+      "partial": true
+     },
+     {
+      "name": "Darlkira",
+      "class": "DemonHunter",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.7,
+      "pulls": 34,
+      "partial": true
+     },
+     {
+      "name": "Lauenat",
+      "class": "Druid",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 10,
+      "pulls": 35,
+      "partial": true
+     },
+     {
+      "name": "Hazizoul",
+      "class": "Priest",
+      "role": "healer",
+      "sub": null,
+      "note": 10,
+      "pulls": 34,
+      "partial": true
+     },
+     {
+      "name": "Pattopaprika",
+      "class": "DemonHunter",
+      "role": "tank",
+      "sub": null,
+      "note": 10,
+      "pulls": 35,
+      "partial": true
+     }
+    ]
+   },
+   {
+    "name": "The Twin Fangs",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "The Coiled Altar",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Ula'tek",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Nymrissa Wavecaller",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Kith'ix",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   }
+  ],
+  "players": [
+   {
+    "name": "Lücîøle",
+    "class": "Rogue",
+    "role": "dps",
+    "sub": "melee",
+    "note": 7.8,
+    "pulls": 35,
+    "deaths": 10,
+    "partial": true
+   },
+   {
+    "name": "Davïna",
+    "class": "Warlock",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 8.3,
+    "pulls": 10,
+    "deaths": 3,
+    "partial": true
+   },
+   {
+    "name": "Höjö",
+    "class": "Warrior",
+    "role": "dps",
+    "sub": "melee",
+    "note": 8.7,
+    "pulls": 35,
+    "deaths": 6,
+    "partial": true
+   },
+   {
+    "name": "Jackychäm",
+    "class": "Shaman",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 9.2,
+    "pulls": 34,
+    "deaths": 6,
+    "partial": true
+   },
+   {
+    "name": "Dolmar",
+    "class": "Warrior",
+    "role": "dps",
+    "sub": "melee",
+    "note": 9.2,
+    "pulls": 35,
+    "deaths": 6,
+    "partial": true
+   },
+   {
+    "name": "Drtyrran",
+    "class": "Shaman",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 9.3,
+    "pulls": 35,
+    "deaths": 5,
+    "partial": true
+   },
+   {
+    "name": "Aelminster",
+    "class": "Mage",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 9.3,
+    "pulls": 35,
+    "deaths": 5,
+    "partial": true
+   },
+   {
+    "name": "Absoludrÿ",
+    "class": "Mage",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 9.5,
+    "pulls": 25,
+    "deaths": 3,
+    "partial": true
+   },
+   {
+    "name": "Luluisback",
+    "class": "Hunter",
+    "role": "dps",
+    "sub": "melee",
+    "note": 9.5,
+    "pulls": 35,
+    "deaths": 4,
+    "partial": true
+   },
+   {
+    "name": "Toufoux",
+    "class": "Hunter",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 9.9,
+    "pulls": 35,
+    "deaths": 4,
+    "partial": true
+   },
+   {
+    "name": "Yörr",
+    "class": "Hunter",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 9.9,
+    "pulls": 35,
+    "deaths": 4,
+    "partial": true
+   },
+   {
+    "name": "Harmoniaque",
+    "class": "Priest",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 9.3,
+    "pulls": 35,
+    "deaths": 4,
+    "partial": true
+   },
+   {
+    "name": "Sylvaenya",
+    "class": "Druid",
+    "role": "healer",
+    "sub": null,
+    "note": 9.3,
+    "pulls": 35,
+    "deaths": 4,
+    "partial": true
+   },
+   {
+    "name": "Tyry",
+    "class": "Priest",
+    "role": "healer",
+    "sub": null,
+    "note": 9.6,
+    "pulls": 35,
+    "deaths": 3,
+    "partial": true
+   },
+   {
+    "name": "Shrakle",
+    "class": "Evoker",
+    "role": "healer",
+    "sub": null,
+    "note": 9.6,
+    "pulls": 35,
+    "deaths": 3,
+    "partial": true
+   },
+   {
+    "name": "Dyâlise",
+    "class": "Paladin",
+    "role": "dps",
+    "sub": "melee",
+    "note": 9.6,
+    "pulls": 35,
+    "deaths": 3,
+    "partial": true
+   },
+   {
+    "name": "Snøz",
+    "class": "Monk",
+    "role": "tank",
+    "sub": null,
+    "note": 9.6,
+    "pulls": 35,
+    "deaths": 2,
+    "partial": true
+   },
+   {
+    "name": "Darlkira",
+    "class": "DemonHunter",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 9.7,
+    "pulls": 34,
+    "deaths": 2,
+    "partial": true
+   },
+   {
+    "name": "Lauenat",
+    "class": "Druid",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 10,
+    "pulls": 35,
+    "deaths": 1,
+    "partial": true
+   },
+   {
+    "name": "Hazizoul",
+    "class": "Priest",
+    "role": "healer",
+    "sub": null,
+    "note": 10,
+    "pulls": 34,
+    "deaths": 1,
+    "partial": true
+   },
+   {
+    "name": "Pattopaprika",
+    "class": "DemonHunter",
+    "role": "tank",
+    "sub": null,
+    "note": 10,
+    "pulls": 35,
+    "deaths": 0,
+    "partial": true
+   }
+  ],
+  "complete": false,
+  "partial": true,
+  "auto": true,
+  "extension_version": "0.40.90",
+  "file": "rapports/Raid_2026-11-02_The_Venomous_Abyss_HAQh9YX2rZaNm1BF.html",
+  "json": "rapports/Raid_2026-11-02_The_Venomous_Abyss_HAQh9YX2rZaNm1BF.json"
+ }
+];
