@@ -519,10 +519,10 @@ window.RAPPORTS_INDEX = [
   "title": "The Venomous Abyss",
   "guild": "Exaltés au Cimetière",
   "server": "Garona",
-  "next_update": 1793715419551,
+  "next_update": 1793719110244,
   "zone": "The Venomous Abyss",
   "raid_date": 1792608753141,
-  "generated": 1793712837339,
+  "generated": 1793715629081,
   "pulls": 19,
   "note": 7.6,
   "bosses": [
@@ -660,7 +660,7 @@ window.RAPPORTS_INDEX = [
       "class": "Monk",
       "role": "tank",
       "sub": null,
-      "note": 6.4,
+      "note": 6.9,
       "pulls": 9
      },
      {
@@ -1045,7 +1045,7 @@ window.RAPPORTS_INDEX = [
     "class": "Monk",
     "role": "tank",
     "sub": null,
-    "note": 6.9,
+    "note": 7.1,
     "pulls": 19,
     "deaths": 3
    },
