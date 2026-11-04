@@ -1137,9 +1137,9 @@ window.RAPPORTS_INDEX = [
   "next_update": null,
   "zone": "The Venomous Abyss",
   "raid_date": 1792435634241,
-  "generated": 1793719322855,
+  "generated": 1793788909422,
   "pulls": 13,
-  "note": 7.5,
+  "note": 7.4,
   "bosses": [
    {
     "name": "Nek'zali the Soulcoiler",
@@ -1287,7 +1287,7 @@ window.RAPPORTS_INDEX = [
       "class": "Mage",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.3,
+      "note": 7.7,
       "pulls": 3
      },
      {
@@ -1412,7 +1412,7 @@ window.RAPPORTS_INDEX = [
       "class": "Evoker",
       "role": "healer",
       "sub": null,
-      "note": 7.5,
+      "note": 7.8,
       "pulls": 10
      },
      {
@@ -1525,7 +1525,7 @@ window.RAPPORTS_INDEX = [
       "class": "DemonHunter",
       "role": "dps",
       "sub": "ranged",
-      "note": 8.5,
+      "note": 8.4,
       "pulls": 10
      },
      {
@@ -1617,7 +1617,7 @@ window.RAPPORTS_INDEX = [
     "class": "DemonHunter",
     "role": "dps",
     "sub": "ranged",
-    "note": 8.4,
+    "note": 8.3,
     "pulls": 13,
     "deaths": 1
    },
@@ -1680,7 +1680,7 @@ window.RAPPORTS_INDEX = [
     "class": "Evoker",
     "role": "healer",
     "sub": null,
-    "note": 7.5,
+    "note": 7.8,
     "pulls": 13,
     "deaths": 1
    },
@@ -1698,7 +1698,7 @@ window.RAPPORTS_INDEX = [
     "class": "Mage",
     "role": "dps",
     "sub": "ranged",
-    "note": 7.8,
+    "note": 7.6,
     "pulls": 13,
     "deaths": 2
    },
@@ -1759,7 +1759,7 @@ window.RAPPORTS_INDEX = [
   ],
   "complete": true,
   "auto": false,
-  "extension_version": "0.40.90",
+  "extension_version": "0.40.92",
   "file": "rapports/Raid_2026-10-19_The_Venomous_Abyss_Z1vNp7AGR4XYdqPF.html",
   "json": "rapports/Raid_2026-10-19_The_Venomous_Abyss_Z1vNp7AGR4XYdqPF.json"
  },
