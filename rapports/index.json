@@ -1,5 +1,508 @@
 [
  {
+  "code": "bwpCAJyGvTm72XBx",
+  "title": "The Venomous Abyss",
+  "guild": "Exaltés au Cimetière",
+  "server": "Garona",
+  "next_update": 1794264342302,
+  "zone": "The Venomous Abyss",
+  "raid_date": 1794253531975,
+  "generated": 1794263742306,
+  "pulls": 25,
+  "note": null,
+  "bosses": [
+   {
+    "name": "Nek'zali the Soulcoiler",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Entombed Sentinels",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Vashnik the Malignant",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "The Lost Explorers",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Sszorak",
+    "key": "b0",
+    "difficulty": "Mythique",
+    "tried": true,
+    "kills": 1,
+    "best_pct": 0,
+    "pulls": 25,
+    "players": [
+     {
+      "name": "Pattocarbo",
+      "class": "Druid",
+      "role": "dps",
+      "sub": null,
+      "note": 8,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Trickdkk",
+      "class": "DeathKnight",
+      "role": "dps",
+      "sub": null,
+      "note": 8.5,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Dolmar",
+      "class": "Warrior",
+      "role": "dps",
+      "sub": null,
+      "note": 8.6,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Endloril",
+      "class": "Druid",
+      "role": "dps",
+      "sub": null,
+      "note": 9.4,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Vrassassin",
+      "class": "Rogue",
+      "role": "dps",
+      "sub": null,
+      "note": 9.5,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Lücîøle",
+      "class": "Rogue",
+      "role": "dps",
+      "sub": null,
+      "note": 9.5,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Jackychäm",
+      "class": "Shaman",
+      "role": "dps",
+      "sub": null,
+      "note": 9.5,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Luluisback",
+      "class": "Hunter",
+      "role": "dps",
+      "sub": null,
+      "note": 9.7,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Hazizoul",
+      "class": "Priest",
+      "role": "dps",
+      "sub": null,
+      "note": 9.7,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Dèàthstroke",
+      "class": "Hunter",
+      "role": "dps",
+      "sub": null,
+      "note": 9.8,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Toufoux",
+      "class": "Hunter",
+      "role": "dps",
+      "sub": null,
+      "note": 9.8,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Drtyrran",
+      "class": "Shaman",
+      "role": "dps",
+      "sub": null,
+      "note": 9.9,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Harmoniaque",
+      "class": "Priest",
+      "role": "dps",
+      "sub": null,
+      "note": 9.9,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Absoludrÿ",
+      "class": "Mage",
+      "role": "dps",
+      "sub": null,
+      "note": 9.9,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Yörr",
+      "class": "Hunter",
+      "role": "dps",
+      "sub": null,
+      "note": 9.9,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Darlkira",
+      "class": "DemonHunter",
+      "role": "dps",
+      "sub": null,
+      "note": 10,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Dyâlise",
+      "class": "Paladin",
+      "role": "dps",
+      "sub": null,
+      "note": 10,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Tyry",
+      "class": "Priest",
+      "role": "dps",
+      "sub": null,
+      "note": 10,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Shrakle",
+      "class": "Evoker",
+      "role": "dps",
+      "sub": null,
+      "note": 10,
+      "pulls": 25,
+      "partial": true
+     },
+     {
+      "name": "Cricrimi",
+      "class": "Paladin",
+      "role": "dps",
+      "sub": null,
+      "note": 10,
+      "pulls": 25,
+      "partial": true
+     }
+    ]
+   },
+   {
+    "name": "The Twin Fangs",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "The Coiled Altar",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Ula'tek",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Nymrissa Wavecaller",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Kith'ix",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   }
+  ],
+  "players": [
+   {
+    "name": "Pattocarbo",
+    "class": "Druid",
+    "role": "dps",
+    "sub": null,
+    "note": 8,
+    "pulls": 25,
+    "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Trickdkk",
+    "class": "DeathKnight",
+    "role": "dps",
+    "sub": null,
+    "note": 8.5,
+    "pulls": 25,
+    "deaths": 2,
+    "partial": true
+   },
+   {
+    "name": "Dolmar",
+    "class": "Warrior",
+    "role": "dps",
+    "sub": null,
+    "note": 8.6,
+    "pulls": 25,
+    "deaths": 3,
+    "partial": true
+   },
+   {
+    "name": "Endloril",
+    "class": "Druid",
+    "role": "dps",
+    "sub": null,
+    "note": 9.4,
+    "pulls": 25,
+    "deaths": 1,
+    "partial": true
+   },
+   {
+    "name": "Vrassassin",
+    "class": "Rogue",
+    "role": "dps",
+    "sub": null,
+    "note": 9.5,
+    "pulls": 25,
+    "deaths": 7,
+    "partial": true
+   },
+   {
+    "name": "Lücîøle",
+    "class": "Rogue",
+    "role": "dps",
+    "sub": null,
+    "note": 9.5,
+    "pulls": 25,
+    "deaths": 7,
+    "partial": true
+   },
+   {
+    "name": "Jackychäm",
+    "class": "Shaman",
+    "role": "dps",
+    "sub": null,
+    "note": 9.5,
+    "pulls": 25,
+    "deaths": 7,
+    "partial": true
+   },
+   {
+    "name": "Luluisback",
+    "class": "Hunter",
+    "role": "dps",
+    "sub": null,
+    "note": 9.7,
+    "pulls": 25,
+    "deaths": 5,
+    "partial": true
+   },
+   {
+    "name": "Hazizoul",
+    "class": "Priest",
+    "role": "dps",
+    "sub": null,
+    "note": 9.7,
+    "pulls": 25,
+    "deaths": 5,
+    "partial": true
+   },
+   {
+    "name": "Dèàthstroke",
+    "class": "Hunter",
+    "role": "dps",
+    "sub": null,
+    "note": 9.8,
+    "pulls": 25,
+    "deaths": 4,
+    "partial": true
+   },
+   {
+    "name": "Toufoux",
+    "class": "Hunter",
+    "role": "dps",
+    "sub": null,
+    "note": 9.8,
+    "pulls": 25,
+    "deaths": 4,
+    "partial": true
+   },
+   {
+    "name": "Drtyrran",
+    "class": "Shaman",
+    "role": "dps",
+    "sub": null,
+    "note": 9.9,
+    "pulls": 25,
+    "deaths": 3,
+    "partial": true
+   },
+   {
+    "name": "Harmoniaque",
+    "class": "Priest",
+    "role": "dps",
+    "sub": null,
+    "note": 9.9,
+    "pulls": 25,
+    "deaths": 3,
+    "partial": true
+   },
+   {
+    "name": "Absoludrÿ",
+    "class": "Mage",
+    "role": "dps",
+    "sub": null,
+    "note": 9.9,
+    "pulls": 25,
+    "deaths": 2,
+    "partial": true
+   },
+   {
+    "name": "Yörr",
+    "class": "Hunter",
+    "role": "dps",
+    "sub": null,
+    "note": 9.9,
+    "pulls": 25,
+    "deaths": 2,
+    "partial": true
+   },
+   {
+    "name": "Darlkira",
+    "class": "DemonHunter",
+    "role": "dps",
+    "sub": null,
+    "note": 10,
+    "pulls": 25,
+    "deaths": 1,
+    "partial": true
+   },
+   {
+    "name": "Dyâlise",
+    "class": "Paladin",
+    "role": "dps",
+    "sub": null,
+    "note": 10,
+    "pulls": 25,
+    "deaths": 1,
+    "partial": true
+   },
+   {
+    "name": "Tyry",
+    "class": "Priest",
+    "role": "dps",
+    "sub": null,
+    "note": 10,
+    "pulls": 25,
+    "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Shrakle",
+    "class": "Evoker",
+    "role": "dps",
+    "sub": null,
+    "note": 10,
+    "pulls": 25,
+    "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Cricrimi",
+    "class": "Paladin",
+    "role": "dps",
+    "sub": null,
+    "note": 10,
+    "pulls": 25,
+    "deaths": 0,
+    "partial": true
+   }
+  ],
+  "complete": false,
+  "partial": true,
+  "auto": true,
+  "extension_version": "0.40.92",
+  "file": "rapports/Raid_2026-11-09_The_Venomous_Abyss_bwpCAJyGvTm72XBx.html",
+  "json": "rapports/Raid_2026-11-09_The_Venomous_Abyss_bwpCAJyGvTm72XBx.json"
+ },
+ {
   "code": "TCNgW1QYak9nL7Df",
   "title": "The Venomous Abyss",
   "guild": null,
