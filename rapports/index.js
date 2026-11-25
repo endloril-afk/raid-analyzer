@@ -1,6 +1,690 @@
 /* Copie de rapports/index.json, chargée par index.html pour fonctionner sans serveur. */
 window.RAPPORTS_INDEX = [
  {
+  "code": "RJhdz8vjLWmkQ2Nc",
+  "title": "The Venomous Abyss",
+  "guild": null,
+  "server": null,
+  "next_update": null,
+  "zone": "The Venomous Abyss",
+  "raid_date": 1795636536373,
+  "generated": 1795640130497,
+  "pulls": 8,
+  "note": 7,
+  "bosses": [
+   {
+    "name": "Nek'zali the Soulcoiler",
+    "key": "b0",
+    "difficulty": "Mythique",
+    "tried": true,
+    "kills": 1,
+    "best_pct": 0,
+    "pulls": 1,
+    "players": [
+     {
+      "name": "Fhen",
+      "class": "Paladin",
+      "role": "dps",
+      "sub": "melee",
+      "note": 7.7,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Doum",
+      "class": "Mage",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 8.4,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Gretel",
+      "class": "Priest",
+      "role": "healer",
+      "sub": null,
+      "note": 8.5,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Brutac",
+      "class": "Shaman",
+      "role": "healer",
+      "sub": null,
+      "note": 8.7,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Frózen",
+      "class": "Mage",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 8.4,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Velkdio",
+      "class": "Rogue",
+      "role": "dps",
+      "sub": "melee",
+      "note": 9,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Keymon",
+      "class": "Rogue",
+      "role": "dps",
+      "sub": "melee",
+      "note": 8.6,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Vrassassin",
+      "class": "Rogue",
+      "role": "dps",
+      "sub": "melee",
+      "note": 9.1,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Hexxeen",
+      "class": "Druid",
+      "role": "healer",
+      "sub": null,
+      "note": 9.4,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Bärius",
+      "class": "Priest",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.6,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Mörphëüs",
+      "class": "Druid",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.6,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Dôlyprâne",
+      "class": "Priest",
+      "role": "healer",
+      "sub": null,
+      "note": 9.6,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Nogik",
+      "class": "Hunter",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 9.9,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Nazdrëg",
+      "class": "Warrior",
+      "role": "dps",
+      "sub": "melee",
+      "note": 9.6,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Pilouss",
+      "class": "DeathKnight",
+      "role": "tank",
+      "sub": null,
+      "note": 9.5,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Sarbed",
+      "class": "Evoker",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 10,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Hansel",
+      "class": "DemonHunter",
+      "role": "dps",
+      "sub": "melee",
+      "note": 10,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Cutosuïce",
+      "class": "Paladin",
+      "role": "dps",
+      "sub": "melee",
+      "note": 10,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Elchàa",
+      "class": "Druid",
+      "role": "tank",
+      "sub": null,
+      "note": 10,
+      "pulls": 1,
+      "partial": true
+     },
+     {
+      "name": "Draugounn",
+      "class": "Warrior",
+      "role": "dps",
+      "sub": "melee",
+      "note": 10,
+      "pulls": 1,
+      "partial": true
+     }
+    ]
+   },
+   {
+    "name": "Entombed Sentinels",
+    "key": "b1",
+    "difficulty": "Mythique",
+    "tried": true,
+    "kills": 0,
+    "best_pct": 60,
+    "pulls": 7,
+    "players": [
+     {
+      "name": "Vrassassin",
+      "class": "Rogue",
+      "role": "dps",
+      "sub": "melee",
+      "note": 6.4,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Keymon",
+      "class": "Rogue",
+      "role": "dps",
+      "sub": "melee",
+      "note": 6.9,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Draugounn",
+      "class": "Warrior",
+      "role": "dps",
+      "sub": "melee",
+      "note": 6.7,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Dôlyprâne",
+      "class": "Priest",
+      "role": "healer",
+      "sub": null,
+      "note": 7.6,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Hexxeen",
+      "class": "Druid",
+      "role": "healer",
+      "sub": null,
+      "note": 7.4,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Nogik",
+      "class": "Hunter",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 7.4,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Velkdio",
+      "class": "Rogue",
+      "role": "dps",
+      "sub": "melee",
+      "note": 8,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Bärius",
+      "class": "Priest",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 8.1,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Mörphëüs",
+      "class": "Druid",
+      "role": "dps",
+      "sub": "melee",
+      "note": 8.3,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Frózen",
+      "class": "Mage",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 8.4,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Cutosuïce",
+      "class": "Paladin",
+      "role": "dps",
+      "sub": "melee",
+      "note": 8.6,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Fhen",
+      "class": "Paladin",
+      "role": "dps",
+      "sub": "melee",
+      "note": 8.8,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Sarbed",
+      "class": "Evoker",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 8.9,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Hansel",
+      "class": "DemonHunter",
+      "role": "dps",
+      "sub": "melee",
+      "note": 8.9,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Brutac",
+      "class": "Shaman",
+      "role": "healer",
+      "sub": null,
+      "note": 8.9,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Nazdrëg",
+      "class": "Warrior",
+      "role": "dps",
+      "sub": "melee",
+      "note": 8.1,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Gretel",
+      "class": "Priest",
+      "role": "healer",
+      "sub": null,
+      "note": 9.4,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Elchàa",
+      "class": "Druid",
+      "role": "tank",
+      "sub": null,
+      "note": 9.5,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Pilouss",
+      "class": "DeathKnight",
+      "role": "tank",
+      "sub": null,
+      "note": 9.6,
+      "pulls": 7,
+      "partial": true
+     },
+     {
+      "name": "Doum",
+      "class": "Mage",
+      "role": "dps",
+      "sub": "ranged",
+      "note": 10,
+      "pulls": 7,
+      "partial": true
+     }
+    ]
+   },
+   {
+    "name": "Vashnik the Malignant",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "The Lost Explorers",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Sszorak",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "The Twin Fangs",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "The Coiled Altar",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Ula'tek",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Nymrissa Wavecaller",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   },
+   {
+    "name": "Kith'ix",
+    "key": null,
+    "difficulty": null,
+    "tried": false,
+    "kills": 0,
+    "best_pct": null,
+    "pulls": 0,
+    "players": []
+   }
+  ],
+  "players": [
+   {
+    "name": "Fhen",
+    "class": "Paladin",
+    "role": "dps",
+    "sub": "melee",
+    "note": 8.7,
+    "pulls": 8,
+    "deaths": 1,
+    "partial": true
+   },
+   {
+    "name": "Doum",
+    "class": "Mage",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 9.8,
+    "pulls": 8,
+    "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Gretel",
+    "class": "Priest",
+    "role": "healer",
+    "sub": null,
+    "note": 9.3,
+    "pulls": 8,
+    "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Brutac",
+    "class": "Shaman",
+    "role": "healer",
+    "sub": null,
+    "note": 8.9,
+    "pulls": 8,
+    "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Frózen",
+    "class": "Mage",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 8.4,
+    "pulls": 8,
+    "deaths": 1,
+    "partial": true
+   },
+   {
+    "name": "Velkdio",
+    "class": "Rogue",
+    "role": "dps",
+    "sub": "melee",
+    "note": 8.1,
+    "pulls": 8,
+    "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Keymon",
+    "class": "Rogue",
+    "role": "dps",
+    "sub": "melee",
+    "note": 7.1,
+    "pulls": 8,
+    "deaths": 1,
+    "partial": true
+   },
+   {
+    "name": "Vrassassin",
+    "class": "Rogue",
+    "role": "dps",
+    "sub": "melee",
+    "note": 6.7,
+    "pulls": 8,
+    "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Hexxeen",
+    "class": "Druid",
+    "role": "healer",
+    "sub": null,
+    "note": 7.7,
+    "pulls": 8,
+    "deaths": 1,
+    "partial": true
+   },
+   {
+    "name": "Bärius",
+    "class": "Priest",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 8.3,
+    "pulls": 8,
+    "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Mörphëüs",
+    "class": "Druid",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 8.5,
+    "pulls": 8,
+    "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Dôlyprâne",
+    "class": "Priest",
+    "role": "healer",
+    "sub": null,
+    "note": 7.9,
+    "pulls": 8,
+    "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Nogik",
+    "class": "Hunter",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 7.7,
+    "pulls": 8,
+    "deaths": 1,
+    "partial": true
+   },
+   {
+    "name": "Nazdrëg",
+    "class": "Warrior",
+    "role": "dps",
+    "sub": "melee",
+    "note": 8.3,
+    "pulls": 8,
+    "deaths": 3,
+    "partial": true
+   },
+   {
+    "name": "Pilouss",
+    "class": "DeathKnight",
+    "role": "tank",
+    "sub": null,
+    "note": 9.6,
+    "pulls": 8,
+    "deaths": 1,
+    "partial": true
+   },
+   {
+    "name": "Sarbed",
+    "class": "Evoker",
+    "role": "dps",
+    "sub": "ranged",
+    "note": 9,
+    "pulls": 8,
+    "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Hansel",
+    "class": "DemonHunter",
+    "role": "dps",
+    "sub": "melee",
+    "note": 9,
+    "pulls": 8,
+    "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Cutosuïce",
+    "class": "Paladin",
+    "role": "dps",
+    "sub": "melee",
+    "note": 8.8,
+    "pulls": 8,
+    "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Elchàa",
+    "class": "Druid",
+    "role": "tank",
+    "sub": null,
+    "note": 9.6,
+    "pulls": 8,
+    "deaths": 0,
+    "partial": true
+   },
+   {
+    "name": "Draugounn",
+    "class": "Warrior",
+    "role": "dps",
+    "sub": "melee",
+    "note": 7.1,
+    "pulls": 8,
+    "deaths": 1,
+    "partial": true
+   }
+  ],
+  "complete": true,
+  "partial": true,
+  "auto": false,
+  "extension_version": "0.40.92",
+  "file": "rapports/Raid_2026-11-25_The_Venomous_Abyss_RJhdz8vjLWmkQ2Nc.html",
+  "json": "rapports/Raid_2026-11-25_The_Venomous_Abyss_RJhdz8vjLWmkQ2Nc.json"
+ },
+ {
   "code": "bwpCAJyGvTm72XBx",
   "title": "The Venomous Abyss",
   "guild": "Exaltés au Cimetière",
